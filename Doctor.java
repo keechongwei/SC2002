@@ -106,7 +106,7 @@ public class Doctor extends user{
                 p.viewMedicalRecord();}
 
     public Patient findPatientByID(String patientID){
-        for (AppointmentSlot slot : AppointmentSlot.AppointmentSlotArray) { /*need to declare public static List<AppointmentSlot> AppointmentSlotArray = new ArrayList<>();*/
+        for (AppointmentSlot slot : AppointmentSlot.appointmentSlotArray) { /*need to declare public static List<AppointmentSlot> appointmentSlotArray = new ArrayList<>();*/
             if (slot.getPatientID().equals(patientID)) { /*need to declare getPatient*/
                     return slot.getPatient();
             }}
@@ -147,7 +147,7 @@ public class Doctor extends user{
     public void viewPersonalSchedule(){
         System.out.println("Doctor's Full Schedule:");
         System.out.println("Doctor's Upcoming Appointments");
-        for (AppointmentSlot slot : AppointmentSlot.AppointmentSlotArray) {
+        for (AppointmentSlot slot : AppointmentSlot.appointmentSlotArray) {
             if (slot.getDoctorID().equals(doctorID) && slot.getStatus() == AppointmentStatus.CONFIRMED) {
                 System.out.println("----------------------------------------------");
                 System.out.println("Date: " + slot.getDate());
@@ -171,7 +171,7 @@ public class Doctor extends user{
         String treatmentPlan = sc.nextLine();
         Patient p = findPatientByID(id);
         if (p != null) {//need to add updateOutcome
-            for (AppointmentSlot slot : AppointmentSlot.AppointmentSlotArray) {
+            for (AppointmentSlot slot : AppointmentSlot.appointmentSlotArray) {
             if (slot.getPatientID().equals(id) && slot.getStatus() == AppointmentStatus.CONFIRMED){
                     slot.setStatus(COMPLETED);
                     p.setMedicalReport(diagnosis, treatmentPlan);
@@ -184,7 +184,7 @@ public class Doctor extends user{
 
    public void viewUpcomingAppointment(){
         System.out.println("Doctor's Upcoming Appointments");
-        for (AppointmentSlot slot : AppointmentSlot.AppointmentSlotArray) {
+        for (AppointmentSlot slot : AppointmentSlot.appointmentSlotArray) {
             if (slot.getDoctorID().equals(doctorID) && slot.getStatus() == CONFIRMED) { //Appointment Slot add getStatus, getDoctorID
                 System.out.println("----------------------------------------------");
                 System.out.println("Date: " + slot.getDate());
@@ -198,7 +198,7 @@ public class Doctor extends user{
 
    
    public void acceptOrDeclineAppointments(){
-        for (AppointmentSlot slot : AppointmentSlot.AppointmentSlotArray) {
+        for (AppointmentSlot slot : AppointmentSlot.appointmentSlotArray) {
             if (slot.getDoctorID().equals(doctorID) && slot.getStatus() == AppointmentStatus.PENDING)
                 { 
                 System.out.println("----------------------------------------------");
@@ -232,7 +232,7 @@ public class Doctor extends user{
         String medicineType = sc.nextLine();
         System.out.print("Consultation note:");
         String consultationNote = sc.nextLine();
-        for (AppointmentSlot slot : AppointmentSlot.AppointmentSlotArray) 
+        for (AppointmentSlot slot : AppointmentSlot.appointmentSlotArray) 
             if (slot.getPatientID().equals(id) && slot.getDoctorID().equals(doctorID) && slot.getStatus() == AppointmentStatus.CONFIRMED) {
                     slot.updateOutcome(slot.getDate(), serviceType, medicineType, consultationNote);
                     System.out.println("Outcome recorded for patient ID: " + id);}
