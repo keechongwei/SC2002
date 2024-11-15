@@ -22,29 +22,27 @@ public class Pharmacist extends User{
         return pending;
     }
     
-    // public boolean updatePrescriptionStatus(Prescription prescription, Medication medication) {
-    //     if (prescription.getStatus() == PrescriptionStatus.PENDING) {
-    //         if (medication.removeStock(prescription.getDosage())) {
-    //             prescription.setStatus(PrescriptionStatus.DISPENSED);
-    //             pendingPrescriptions.remove(prescription);
-    //             return true;
-    //         } else {
-    //             System.out.println("Insufficient stock for " + medication.getMedicationName());
-    //             return false;
-    //         }
-    //     }
-    //     return false;
-    // }
+    public boolean updatePrescriptionStatus(Prescription prescription, Medication medication) {
+        if (prescription.getStatus() == PrescriptionStatus.PENDING) {
+            if (medication.removeStock(prescription.getDosage())) {
+                prescription.setStatus(PrescriptionStatus.DISPENSED);
+                pendingPrescriptions.remove(prescription);
+                return true;
+            } else {
+                System.out.println("Insufficient stock for " + medication.getMedicationName());
+                return false;
+            }
+        }
+        return false;
+    }
     
-    // public void viewInventory() {
-    //     // Implement viewInventory logic
-    //     System.out.println("Displaying Inventory: ");
-    // }
+    public void viewInventory(Inventory inventory) {
+        inventory.viewInventory();
+    }
     
-    // public void submitReplenishRequest(String medicationName, int stockAmount) {
-    //     // Implement submitReplenishRequest logic
-    //     System.out.println("Replenishment request submitted for: " + medicationName + " with quantity " + stockAmount);
-    // }
+    public void submitReplenishRequest(String medicationName, int stockAmount) {
+        System.out.println("Replenishment request submitted for: " + medicationName + " with quantity " + stockAmount);
+    }
     
     public String getGender() {
         return gender;

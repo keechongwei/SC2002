@@ -3,21 +3,54 @@ public class Medication {
 	private int _stock;
 	private boolean _lowStockAlert;
 	private int _lowStockValue;
-	public Inventory _unnamed_Inventory_;
 
-	public void setlowStockAlert() {
-		throw new UnsupportedOperationException();
+	public Medication(String _medicationName, int _stock, int _lowStockValue) {
+		this._medicationName = _medicationName;
+		this._stock = _stock;
+		this._lowStockValue = _lowStockValue;
+		this._lowStockAlert = _stock <= _lowStockValue;
 	}
 
-	public void addStock() {
-		throw new UnsupportedOperationException();
+	public String getMedicationName() {
+		return _medicationName;
 	}
 
-	public void removeStock() {
-		throw new UnsupportedOperationException();
+	public int getStock() {
+		return _stock;
 	}
 
-	public void updatelowStockLevelLine() {
-		throw new UnsupportedOperationException();
+	public boolean isLowStockAlert() {
+		return _lowStockAlert;
+	}
+
+	public int get_LowStockValue () {
+		return _lowStockValue;
+	}
+
+	public void setlowStockAlert(boolean alert) {
+		this._lowStockAlert = alert;
+	}
+
+	public void addStock(int amount) {
+		_stock += amount;
+		if (_stock > _lowStockValue) {
+			_lowStockAlert = false;
+		}
+	}
+
+	public void removeStock(int amount) {
+		if (_stock >= amount) {
+			_stock -= amount;
+			_lowStockAlert = _stock <= _lowStockValue;
+			return true;
+		} else {
+			return false;
+			System.out.println("Not enough stock!");
+		}
+	}
+
+	public void updatelowStockLevelLine(int newLimit) {
+		_lowStockValue = newLimit;
+		_lowStockAlert = stock <= _lowStockValue;
 	}
 }
