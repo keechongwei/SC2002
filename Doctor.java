@@ -138,16 +138,7 @@ public class Doctor extends User{
 
     public void viewPersonalSchedule(){
         System.out.println("Doctor's Full Schedule:");
-        System.out.println("Doctor's Upcoming Appointments");
-        for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
-            if (slot.getDoctorID().equals(super.getHospitalID()) && slot.getStatus() == AppointmentStatus.CONFIRMED) {
-                System.out.println("----------------------------------------------");
-                System.out.println("Date: " + slot.getDate());
-                System.out.println("Time: " + slot.getTime());
-                System.out.println("PatientID: " + slot.getPatientID());
-                System.out.println("----------------------------------------------");
-            }
-        }
+        this.viewUpcomingAppointment();
         System.out.println("Doctor's Available Timeslots:");
         for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
             if (slot.getDoctorID().equals(super.getHospitalID()) && slot.getStatus() == AppointmentStatus.AVAILABLE){
@@ -170,7 +161,7 @@ public class Doctor extends User{
         if (p != null) {//need to add updateOutcome
             for (AppointmentSlot slot : AppointmentSlot.appointmentSlotArray) {
             if (slot.getPatientID().equals(id) && slot.getStatus() == AppointmentStatus.CONFIRMED){
-                    slot.setStatus(COMPLETED);
+                    slot.setStatus(AppointmentStatus.COMPLETED);
                     p.setMedicalReport(diagnosis, treatmentPlan);
                     System.out.println("Updated patient record for patient ID: " + id);}
         }
@@ -180,18 +171,16 @@ public class Doctor extends User{
     }}
 
    public void viewUpcomingAppointment(){
-        System.out.println("Doctor's Upcoming Appointments");
-        for (AppointmentSlot slot : AppointmentSlot.appointmentSlotArray) {
-            if (slot.getDoctorID().equals(doctorID) && slot.getStatus() == CONFIRMED) { //Appointment Slot add getStatus, getDoctorID
-                System.out.println("----------------------------------------------");
-                System.out.println("Date: " + slot.getDate());
-                System.out.println("Time: " + slot.getTime());
-                System.out.println("Status: " + slot.getStatus());
-                System.out.println("DoctorID: " + slot.getDoctorID());
-                System.out.println("PatientID: " + slot.getPatientID());
-                System.out.println("Outcome: " + slot.getAppointmentOutcomeRecord());
-                System.out.println("----------------------------------------------");
-            }}}
+    System.out.println("Doctor's Upcoming Appointments");
+    for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
+        if (slot.getDoctorID().equals(super.getHospitalID()) && slot.getStatus() == AppointmentStatus.CONFIRMED) {
+            System.out.println("----------------------------------------------");
+            System.out.println("Date: " + slot.getDate());
+            System.out.println("Time: " + slot.getTime());
+            System.out.println("PatientID: " + slot.getPatientID());
+            System.out.println("----------------------------------------------");
+        }
+    }
 
    
    public void acceptOrDeclineAppointments(){
