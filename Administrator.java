@@ -361,15 +361,17 @@ public class Administrator extends User {
 		throw new UnsupportedOperationException();
 	}
 
-	public void manageInventory() {
+    // might need to add error checking for duplicates and other kinds of inputs
+	public void manageInventory() { 
         Inventory inventory = new Inventory("Medicine_List.csv");
     
         System.out.println("Course of Action: ");
         System.out.println("1 - View Inventory");
-        System.out.println("2 - Add Stock");
-        System.out.println("3 - Delete Stock");
-        System.out.println("4 - Update Stock");
-        System.out.println("5 - Update Stock Level Alert");
+        System.out.println("2 - Add to Current Stock");
+        System.out.println("3 - Add new Stock");
+        System.out.println("4 - Delete Stock");
+        System.out.println("5 - Update Stock");
+        System.out.println("6 - Update Stock Level Alert");
         int inventory_choice = input_scanner.nextInt();
         input_scanner.nextLine();
     
@@ -396,24 +398,45 @@ public class Administrator extends User {
                 );
                 inventory.writeCSVFile();
                 break;
+
+            case 3: // might need to add error checking for duplicates and other kinds of inputs
+                System.out.println("=== Adding New Stock ===");
+                System.out.println("Medication Name: ");
+                String new_med_choice = input_scanner.nextLine();
+                System.out.println("Stock: ");
+                int new_med_amount = input_scanner.nextInt();
+                input_scanner.nextLine();
+                System.out.println("Low Stock Value: ");
+                int alertValue = input_scanner.nextInt();
+                input_scanner.nextLine();
+
+                inventory.addNewMedication(new_med_choice, new_med_amount, alertValue);
+
+                inventory.getMedication(new_med_choice).ifPresentOrElse(
+                    med -> {
+                        System.out.println("Added new stock: " + med.getMedicationName() + " with stock: " + med.getStock());
+                    },
+                    () -> System.out.println("Medication " + new_med_choice + " not found.")
+                );
+
+                break;
     
-            case 3:
+            case 4:
                 System.out.println("=== Deleting Stock ===");
                 System.out.println("Medication Name: ");
                 String deleted_choice = input_scanner.nextLine();
     
                 inventory.getMedication(deleted_choice).ifPresentOrElse(
                     med -> {
-                        int total_stock_amount = med.getStock();
-                        med.removeStock(total_stock_amount);
-                        System.out.println("Deleted stock for: " + med.getMedicationName());
+                        inventory.removeMedication(deleted_choice);
+                        inventory.viewInventory();
+                        System.out.println("Deleted stock: " + med.getMedicationName());
                     },
                     () -> System.out.println("Medication " + deleted_choice + " not found.")
                 );
-                inventory.writeCSVFile();
                 break;
     
-            case 4:
+            case 5:
                 System.out.println("=== Updating Stock ===");
                 System.out.println("Medication Name: ");
                 String updated_choice = input_scanner.nextLine();
@@ -436,7 +459,7 @@ public class Administrator extends User {
                 inventory.writeCSVFile();
                 break;
     
-            case 5:
+            case 6:
                 System.out.println("=== Updating Stock Alert Level ===");
                 System.out.println("Medication Name: ");
                 String med_level_choice = input_scanner.nextLine();

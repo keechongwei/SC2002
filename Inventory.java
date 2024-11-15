@@ -1,10 +1,8 @@
 import java.io.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 
 public class Inventory {
     private List<Medication> listOfMedications;
@@ -77,6 +75,28 @@ public class Inventory {
             System.out.println(medication.getMedicationName() + ": " + medication.getStock() + " units in stock, Low stock alert: " + medication.isLowStockAlert());
         }
     }
+
+	public void addNewMedication(String medName, int stock, int lowStockValue) {
+		Medication medication = new Medication(medName, stock, lowStockValue);
+		listOfMedications.add(medication);
+		writeCSVFile();
+	}
+
+	public void removeMedication(String medName) {
+		List<Medication> temp = new ArrayList<>();
+		for(Medication medication: listOfMedications) {
+			System.out.println(medication.getMedicationName());
+			if (medication.getMedicationName().equals(medName)) {
+				continue;
+			} else {
+				temp.add(medication);
+			}
+		}
+		this.listOfMedications = temp;
+
+		writeCSVFile();
+	}
+
 
     public void writeCSVFile() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFilePath))) {
