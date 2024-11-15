@@ -21,30 +21,54 @@ public class Patient extends User{
     private static Scanner sc = new Scanner(System.in);
 
     //patient Constructor
-    public Patient(String patientID, String patientName, String dateofBirth, String gender, String bloodType, String phoneNumber, String emailAddress) {
-        super(patientID, "password");
+    public Patient(String patientID, String patientName, String dateofBirth, String gender, String bloodType, String phoneNumber, String emailAddress, String password) {
+        super(patientID, password);
         this.medicalRecord = new MedicalRecord(patientID, patientName, dateofBirth, gender, phoneNumber, emailAddress, bloodType);
-        //this.appointments = new ArrayList<>();
     }
 
     //creating patient object from csv
     //Patient ID;Name;Date of Birth;Gender;Blood Type;Contact Information
-    public static Patient fromCSV(String csvLine) {
-        String[] fields = csvLine.split(";");
-        if (fields.length < 6) {
-            throw new IllegalArgumentException("Invalid CSV line format");
-        }
 
-        String patientID = fields[0];
-        String name = fields[1];
-        String dateOfBirth = fields[2];
-        String gender = fields[3];
-        String bloodType = fields[4];
-        String contactInformation = fields[5];
-        String phoneNumber = "";
-        String emailAddress = contactInformation;
+    public void updatePersonalInfo() {
+        int choice;
 
-    return new Patient(patientID, name, dateOfBirth, gender, bloodType, phoneNumber, emailAddress);
+        do{
+            System.out.println("\n=== Update Personal Information ===");
+            System.out.println("1. Update phone number");
+            System.out.println("2. Update email address");
+            System.out.println("3. Exit");
+            System.out.println("\nEnter your choice (1-3): ");
+
+            choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1: 
+                    System.out.print("Enter new phone number: ");
+                    String newPhoneNumber = sc.nextLine();
+                    this.medicalRecord.setPhoneNumber(newPhoneNumber);
+                    System.out.println("Phone number updated. New phone number: "  + this.medicalRecord.getPhoneNumber());
+                    break;
+
+                case 2:
+                    System.out.print("Enter new email address: ");
+                    String newEmail = sc.nextLine();
+                    this.medicalRecord.setEmailAddress(newEmail);
+                    System.out.println("Email address updated. New email address: "  + this.medicalRecord.getEmailAddress());
+                    break;
+
+                case 3:
+                    System.out.println("Exiting personal information update...");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Please enter a choice from 1-3");
+                    break;
+
+            }
+
+        } while(choice < 3);
+
     }
 
     public void viewMedicalRecord() {
@@ -66,23 +90,23 @@ public class Patient extends User{
         //personal info
         System.out.println("\nPERSONAL INFORMATION:");
         System.out.println("-".repeat(30));
-        System.out.printf("%-15s: %s%n", "Patient ID", medicalRecord.getPatientID());
-        System.out.printf("%-15s: %s%n", "Name", medicalRecord.getName());
-        System.out.printf("%-15s: %s%n", "Date of Birth", medicalRecord.getDateOfBirth());
-        System.out.printf("%-15s: %s%n", "Gender", medicalRecord.getGender());
-        System.out.printf("%-15s: %s%n", "Blood Type", medicalRecord.getBloodType());
+        System.out.printf("%-15s: %s%n", "Patient ID", this.medicalRecord.getPatientID());
+        System.out.printf("%-15s: %s%n", "Name", this.medicalRecord.getName());
+        System.out.printf("%-15s: %s%n", "Date of Birth", this.medicalRecord.getDateOfBirth());
+        System.out.printf("%-15s: %s%n", "Gender", this.medicalRecord.getGender());
+        System.out.printf("%-15s: %s%n", "Blood Type", this.medicalRecord.getBloodType());
 
         //contact info
         System.out.println("\nCONTACT INFORMATION:");
         System.out.println("-".repeat(30));
-        System.out.printf("%-15s: %s%n", "Phone", medicalRecord.getPhoneNumber());
-        System.out.printf("%-15s: %s%n", "Email", medicalRecord.getEmailAddress());
+        System.out.printf("%-15s: %s%n", "Phone", this.medicalRecord.getPhoneNumber());
+        System.out.printf("%-15s: %s%n", "Email", this.medicalRecord.getEmailAddress());
 
         //past diagnosis
         System.out.println("\nPAST DIAGNOSES AND TREATMENT:");
         System.out.println("-".repeat(30));
-        List<String> diagnoses = medicalRecord.getPastDiagnoses();
-        List<String> treatments = medicalRecord.getPastTreatments();
+        List<String> diagnoses = this.medicalRecord.getPastDiagnoses();
+        List<String> treatments = this.medicalRecord.getPastTreatments();
         if (diagnoses.isEmpty()) {
             System.out.println("No past diagnoses recorded");
         } else {
@@ -159,7 +183,7 @@ public class Patient extends User{
         for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
             if(slot.getAppointmentID() == selectedSlot.getAppointmentID()) {
                 slot.setStatus(AppointmentStatus.PENDING);
-                slot.setPatientID(medicalRecord.getPatientID());
+                slot.setPatientID(this.medicalRecord.getPatientID());
                 System.out.println("Appointment scheduled, status: pending.");
             }
         }
@@ -172,7 +196,7 @@ public class Patient extends User{
 
         //show current appts, check if empty 
         List<AppointmentSlot> curSlots = new ArrayList<>();
-        for (AppointmentSlot slot :  AppointmentManager.getAppointmentsByPatient(medicalRecord.getPatientID())) {
+        for (AppointmentSlot slot :  AppointmentManager.getAppointmentsByPatient(this.medicalRecord.getPatientID())) {
             if(slot.getStatus() == AppointmentStatus.PENDING || slot.getStatus() == AppointmentStatus.CONFIRMED) {
                 curSlots.add(slot);   
             }
@@ -256,7 +280,7 @@ public class Patient extends User{
         for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
             if(slot.getAppointmentID() == newSlot.getAppointmentID()) {
                 slot.setStatus(AppointmentStatus.PENDING);
-                slot.setPatientID(medicalRecord.getPatientID());
+                slot.setPatientID(this.medicalRecord.getPatientID());
                 System.out.println("Appointment rescheduled successfully!");
                 System.out.printf("%s. Date: %s, Time: %s, Doctor: %s, Status: %s%n",
                 "New appointment:",
@@ -277,7 +301,7 @@ public class Patient extends User{
 
         //show current appt
         List<AppointmentSlot> curSlots = new ArrayList<>();
-        for (AppointmentSlot slot :  AppointmentManager.getAppointmentsByPatient(medicalRecord.getPatientID())) {
+        for (AppointmentSlot slot :  AppointmentManager.getAppointmentsByPatient(this.medicalRecord.getPatientID())) {
             if(slot.getStatus() == AppointmentStatus.PENDING || slot.getStatus() == AppointmentStatus.CONFIRMED) {
                 curSlots.add(slot);   
             }
@@ -328,7 +352,7 @@ public class Patient extends User{
         System.out.println("\n=== Current Appointments Status ===");
 
         //show cur appts
-        List<AppointmentSlot> curSlots = AppointmentManager.getAppointmentsByPatient(medicalRecord.getPatientID());
+        List<AppointmentSlot> curSlots = AppointmentManager.getAppointmentsByPatient(this.medicalRecord.getPatientID());
 
         if(curSlots.isEmpty()) {
             System.out.println("No current appointments.");
@@ -354,7 +378,7 @@ public class Patient extends User{
 
         //get completed slots
         List<AppointmentSlot> curSlots = new ArrayList<>();
-        for (AppointmentSlot slot :  AppointmentManager.getAppointmentsByPatient(medicalRecord.getPatientID())) {
+        for (AppointmentSlot slot :  AppointmentManager.getAppointmentsByPatient(this.medicalRecord.getPatientID())) {
             if(slot.getStatus() == AppointmentStatus.COMPLETED) {
                 curSlots.add(slot);   
             }
@@ -382,33 +406,6 @@ public class Patient extends User{
             System.out.println(record.getConsultationNotes());
             
         }
-    }
-
-
-    public static void main(String[] args) {
-        // Create a patient from CSV data
-        Patient patient = Patient.fromCSV("P001;John Doe;1990-05-15;Male;AB+;123-456-7890;johndoe@email.com");
-    
-        // View medical record
-        patient.viewMedicalRecord();
-    
-        // View available appointment slots
-        patient.viewAvailAppointmentSlot();
-    
-        // Schedule an appointment
-        patient.scheduleAppointments();
-    
-        // Reschedule an appointment
-        patient.rescheduleAppointment();
-    
-        // Cancel an appointment
-        patient.cancelAppointment();
-    
-        // View appointment status
-        patient.viewAppointmentStatus();
-    
-        // View appointment outcome record
-        patient.viewAppointmentOutcomeRecord();
     }
 
 }
