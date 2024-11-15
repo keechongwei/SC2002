@@ -18,52 +18,52 @@ public class Doctor extends user{
         this.gender = gender;
         this.age = age;
     }
+    // login page already has doctor menu
+    // public static void main(String[] args){
+    //     System.out.println("Doctor Menu:");
+    //     System.out.println("1. View Patient Medical Records");
+    //     System.out.println("2. Update Patient Medical Records");
+    //     System.out.println("3. View Personal Schedule");
+    //     System.out.println("4. Set Availability for Appointments");
+    //     System.out.println("5. Accept or Decline Appointment Requests");
+    //     System.out.println("6. View Upcoming Appointments");
+    //     System.out.println("7. Record Appointment Outcome");
+    //     System.out.println("8. Logout");
+    //     int choice;
+    //     do{
+    //         System.out.println("Please type your option:");
+    //         choice = sc.nextInt();
+    //         sc.nextLine();
+    //         switch (choice) {
+    //            case 1: 
+    //                 viewPatientRecords();
+    //                 break;
+    //            case 2: 
+    //                  updatePatientRecord();
+    //                  break;
+    //            case 3: 
+    //                  viewPersonalSchedule();
+    //                  break;
+    //            case 4: 
+    //                  setAvailabilityForAppointments();
+    //                  break;
+    //            case 5: 
+    //                  acceptOrDeclineAppointments();
+    //                  break;
+    //            case 6: 
+    //                  viewUpcomingAppointment();
+    //                  break;
+    //            case 7: 
+    //                 appointmentOutcomeRecord();
+    //                 break;
+    //            case 8:
+    //                 System.out.println("Log out...");
+    //                 break;
+    //            default:
+    //                 System.out.println("Invalid option. Please try again.");
+    //      }} while (choice < 9);
 
-    public static void main(String[] args){
-        System.out.println("Doctor Menu:");
-        System.out.println("1. View Patient Medical Records");
-        System.out.println("2. Update Patient Medical Records");
-        System.out.println("3. View Personal Schedule");
-        System.out.println("4. Set Availability for Appointments");
-        System.out.println("5. Accept or Decline Appointment Requests");
-        System.out.println("6. View Upcoming Appointments");
-        System.out.println("7. Record Appointment Outcome");
-        System.out.println("8. Logout");
-        int choice;
-        do{
-            System.out.println("Please type your option:");
-            choice = sc.nextInt();
-            sc.nextLine();
-            switch (choice) {
-               case 1: 
-                    viewPatientRecords();
-                    break;
-               case 2: 
-                     updatePatientRecord();
-                     break;
-               case 3: 
-                     viewPersonalSchedule();
-                     break;
-               case 4: 
-                     setAvailabilityForAppointments();
-                     break;
-               case 5: 
-                     acceptOrDeclineAppointments();
-                     break;
-               case 6: 
-                     viewUpcomingAppointment();
-                     break;
-               case 7: 
-                    appointmentOutcomeRecord();
-                    break;
-               case 8:
-                    System.out.println("Log out...");
-                    break;
-               default:
-                    System.out.println("Invalid option. Please try again.");
-         }} while (choice < 9);
-
-    }
+    // }
 
     public String getGender() {
         return gender;
