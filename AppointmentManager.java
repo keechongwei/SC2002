@@ -16,7 +16,7 @@ public class AppointmentManager {
     public static int numberofSlots = 10;
     public static int nextAppointmentID = 1;
 
-    public static void makeDailyAppointments(){
+    public static void makeDailyAppointments(List<List<String>> staffs){
         // hour determines starting hour
         int hour = 9;
         for(int i = 0; i < numberofSlots; i++){
@@ -28,7 +28,12 @@ public class AppointmentManager {
             else{
                 timeString = String.valueOf(hour) + ":00";
             }
-            AppointmentSlot slot = new AppointmentSlot(dateString, timeString, "AVAILABLE"," "," ");
+            for (List<String> staff : staffs){
+                if (staff.get(2).equals("Doctor")) { // role 
+                    String doctorID = staff.get(0);
+                    AppointmentSlot slot = new AppointmentSlot(dateString, timeString, "AVAILABLE", doctorID," ");
+                } 
+            }
             hour++;
         }
     }
@@ -96,7 +101,7 @@ public class AppointmentManager {
                 AppointmentStatus status = AppointmentStatus.valueOf(ApptSlotfields[5]);
                 String outcome = ApptSlotfields.length > 6 ? ApptSlotfields[6] : "";
                 AppointmentOutcomeRecord outcomeRecord = null;
-                if (!outcome.equals("")){
+                if (!outcome.equals("null")){
                     outcomeRecord = AppointmentOutcomeRecord.fromCSV(outcome);
                 }
                 appointmentSlotArray.add(new AppointmentSlot(date, time,status,doctorID,patientID,outcomeRecord,appointmentID));
