@@ -152,7 +152,7 @@ public class Login {
             loggedIn = true;
         }
         System.out.println("Successful Login!");
-        AppointmentManager.makeDailyAppointments();
+        AppointmentManager.makeDailyAppointments(staffs);
         AppointmentManager.loadAppointmentsFromCSV(AppointmentManager.csvFile);
         int choice = 0;
         switch(role){
