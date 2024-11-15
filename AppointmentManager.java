@@ -64,6 +64,17 @@ public class AppointmentManager {
         }
     }
 
+    // for patients to see pending appointments, get all slots depending on DoctorID
+    public static List<AppointmentSlot> getAppointmentsByPatient(String patientID) {
+        List<AppointmentSlot> result = new ArrayList<>();
+        for (AppointmentSlot slot : appointmentSlotArray) {
+            if (slot.getPatientID().equals(patientID)) {
+                result.add(slot);
+            }
+        }
+        return result;
+    }
+
     // for doctors to see pending appointments, get all slots depending on DoctorID
     public static List<AppointmentSlot> getAppointmentsByDoctor(String doctorID) {
         List<AppointmentSlot> result = new ArrayList<>();
