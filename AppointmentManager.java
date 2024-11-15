@@ -3,6 +3,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -10,8 +12,24 @@ import java.util.Scanner;
 public class AppointmentManager {
     public static List<AppointmentSlot> appointmentSlotArray = new ArrayList<>();
     public static final File csvFile = new File("appointments.csv");
+    public static int numberofSlots = 10;
     public static int nextAppointmentID = 1;
 
+    public static void makeDailyAppointments(){
+        int hour = 9;
+        for(int i = 0; i < numberofSlots; i++){
+            String dateString = DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.now());
+            String timeString = "";
+            if (hour < 10){
+                timeString = "0" + String.valueOf(hour) + ":00";
+            }
+            else{
+                timeString = String.valueOf(hour) + ":00";
+            }
+            AppointmentSlot slot = new AppointmentSlot(dateString, timeString, "AVAILABLE"," "," ");
+            hour++;
+        }
+    }
     public static void addAppointment(AppointmentSlot slot) {
         appointmentSlotArray.add(slot);
         appendAppointmentToCSV(slot);
@@ -76,6 +94,16 @@ public class AppointmentManager {
             System.out.println("Unable to load appointments from file.");
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args){
+        // AppointmentSlot test = new AppointmentSlot("2002-11-07", "07:00", "CONFIRMED","A001","P001");
+        // test.outcome = new AppointmentOutcomeRecord("2002-11-07","09:00","CONSULTATION", new Prescription("Panadol",PrescriptionStatus.valueOf("PENDING"),5), null);
+        //AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
+        // AppointmentManager.loadAppointmentsFromCSV(AppointmentManager.csvFile);
+        // for(AppointmentSlot appt : AppointmentManager.appointmentSlotArray){
+        //     System.out.println(appt.getDoctorID());
+        // }
     }
     // Other functions for filtering by patient, status, etc.
 }
