@@ -6,7 +6,8 @@ public class Medication {
 	public Inventory _unnamed_Inventory_;
 
 	public void setlowStockAlert() {
-		throw new UnsupportedOperationException();
+		
+		//throw new UnsupportedOperationException();
 	}
 
 	public void addStock() {
