@@ -1,3 +1,4 @@
+import java.io.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -7,10 +8,9 @@ import java.util.Optional;
 
 public class Inventory {
     private List<Medication> listOfMedications;
+	static String csvFilePath = "Medicine_List.csv"; // Replace with your actual CSV file path
 
-	public static void main(String[] args) {
-		// Define the path to your CSV file
-		String csvFilePath = "Medicine_List.csv"; // Replace with your actual CSV file path
+	public static void main(String[] args) {		
 	
 		// Create an Inventory object
 		Inventory inventory = new Inventory(csvFilePath);
@@ -77,4 +77,17 @@ public class Inventory {
             System.out.println(medication.getMedicationName() + ": " + medication.getStock() + " units in stock, Low stock alert: " + medication.isLowStockAlert());
         }
     }
+
+    public void writeCSVFile() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFilePath))) {
+            bw.write("MedicationName;Stock;LowStockValue\n"); // Write header
+            for (Medication medication : this.listOfMedications) {
+                bw.write(medication.toString());
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing to the CSV file: " + e.getMessage());
+        }
+    }
+
 }

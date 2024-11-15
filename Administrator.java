@@ -284,12 +284,7 @@ public class Administrator extends User {
             }
         }
     
-        if (found) {
-            writeCSVFile(lines);
-            System.out.println("Staff updated successfully.");
-        } else {
-            System.out.println("No staff found with HospitalID " + hospitalID + ".");
-        }
+
     }
     
 
@@ -399,6 +394,7 @@ public class Administrator extends User {
                     },
                     () -> System.out.println("Medication " + medication_choice + " not found.")
                 );
+                inventory.writeCSVFile();
                 break;
     
             case 3:
@@ -414,6 +410,7 @@ public class Administrator extends User {
                     },
                     () -> System.out.println("Medication " + deleted_choice + " not found.")
                 );
+                inventory.writeCSVFile();
                 break;
     
             case 4:
@@ -436,6 +433,7 @@ public class Administrator extends User {
                     },
                     () -> System.out.println("Medication " + updated_choice + " not found.")
                 );
+                inventory.writeCSVFile();
                 break;
     
             case 5:
@@ -445,14 +443,14 @@ public class Administrator extends User {
                 System.out.println("New Alert Level: ");
                 int new_limit = input_scanner.nextInt();
                 input_scanner.nextLine();
-    
                 inventory.getMedication(med_level_choice).ifPresentOrElse(
                     med -> {
-                        med.updatelowStockLevelLine(new_limit);
-                        System.out.println("Updated: " + med.getMedicationName() + " with limit: " + med.get_LowStockValue());
+                        med.updateLowStockLevel(new_limit);
+                        System.out.println("Updated: " + med.getMedicationName() + " with limit: " + med.getLowStockValue());
                     },
                     () -> System.out.println("Medication " + med_level_choice + " not found.")
-                );
+                ); 
+                inventory.writeCSVFile();
                 break;
     
             default:
