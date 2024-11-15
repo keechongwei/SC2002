@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 
 public class Login {
     enum Role{Unknown,Patient,Doctor,Pharmacist,Administrator}
-        /* remember to convert functions involving appointments to print name cause appointment slots only have ID
+    /* remember to convert functions involving appointments to print name cause appointment slots only have ID
        cause rn its just doctor and patient ID */
     static List<List<String>> patients = new ArrayList<>();
     static List<List<String>> staffs = new ArrayList<>();
@@ -202,11 +202,11 @@ public class Login {
             }
             break;
             case Doctor:
-            for (List<String> staff : staffs){
-                if (staff.get(0).equals(ID)){
-                    Doctor curDoc = new Doctor(ID,password,staff.get(1),staff.get(3),Integer.parseInt(staff.get(4)));
-                }
-            }
+            // for (Doctor doctor : doctors){
+            //     if (doctor.getDoctorID().equals(ID)){
+            //         doctor.setPassword(password);
+            //     }
+            // }
             choice = 0;
             while(choice != 8){
                 System.out.println("DOCTOR MENU, ENTER CHOICE");
