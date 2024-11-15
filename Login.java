@@ -8,7 +8,9 @@ public class Login {
     enum Role{Unknown,Patient,Doctor,Pharmacist,Administrator}
     /* remember to convert functions involving appointments to print name cause appointment slots only have ID
        cause rn its just doctor and patient ID */
-    static List<List<String>> patients = new ArrayList<>();
+    static List<Patient> patients = new ArrayList<Patient>();
+    /* convert staffs into lists of Administrators, Pharmacists and Doctors once classes are done
+     */
     static List<List<String>> staffs = new ArrayList<>();
     static List<List<String>> medicines = new ArrayList<>();
     static File medicineFile = new File("Medicine_List.csv");
@@ -29,11 +31,22 @@ public class Login {
                     getRecordFromLine(scanner.nextLine());
                 }
                 else{
-                    patients.add(getRecordFromLine(scanner.nextLine()));
+                        String line = scanner.nextLine();
+                        String[] patientFields = line.split(";");
+                        String patientID = patientFields[0];
+                        String name = patientFields[1];
+                        String dateofbirth = patientFields[2];
+                        String gender = patientFields[3];
+                        String bloodType = patientFields[4];
+                        String emailAddress = patientFields[5];
+                        String pastDiagnoses = patientFields.length > 6 ? patientFields[6] : "";
+                        String pastTreatments = patientFields.length > 7 ? patientFields[7] : "";
+                        String phoneNumber = "";
+                        Patient p = new Patient(patientID, name, dateofbirth, gender, bloodType, phoneNumber, emailAddress);
+                        patients.add(p);
                 }
             }
             System.out.println("Patients Information Retrieved Successfully!");
-            //System.out.println(patients);
         } catch (FileNotFoundException e){
             System.out.println("Unable to Retrieve Patients Information!");
             e.printStackTrace();
@@ -86,8 +99,8 @@ public class Login {
         return values;
     }
     private static void IDCheck(String ID){
-        for(List<String> patient : patients){
-            if (patient.get(0).equals(ID)){
+        for(Patient p : patients){
+            if (p.getHospitalID() == ID){
                 validID = true;
                 role = Role.Patient;
             } 
