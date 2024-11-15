@@ -16,8 +16,6 @@ public class AppointmentSlot {
     private String doctorID;
     private String patientID;
     private AppointmentOutcomeRecord outcome;
-    // moved to calendar object 
- //   public static List<AppointmentSlot> appointmentSlotArray = new ArrayList<>();
 
     public AppointmentSlot(Date date, String time, AppointmentStatus status, String doctorID, String patientID) {
         this.date = date;
@@ -26,7 +24,7 @@ public class AppointmentSlot {
         this.doctorID = doctorID;
         this.patientID = patientID;
         this.outcome = null;
-        appointmentSlotArray.add(this); 
+        AppointmentManager.addAppointment(this); 
     }
 
     public String getPatientID() {
