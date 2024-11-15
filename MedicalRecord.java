@@ -4,7 +4,7 @@ import java.util.Date;
 public class MedicalRecord {
     private String patientID;
     private String name;
-    private Date dateOfBirth;
+    private String dateOfBirth;
     private String gender;
     private String phoneNumber;
     private String emailAddress;
@@ -12,7 +12,7 @@ public class MedicalRecord {
     private ArrayList<String> pastDiagnoses;
     private ArrayList<String> pastTreatments;
 
-    public MedicalRecord(String patientID, String name, Date dateOfBirth, String gender, String phoneNumber, String emailAddress, String bloodType) {
+    public MedicalRecord(String patientID, String name, String dateOfBirth, String gender, String phoneNumber, String emailAddress, String bloodType) {
         this.patientID = patientID;
         this.name = name;
         this.dateOfBirth = dateOfBirth;
