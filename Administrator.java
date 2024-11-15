@@ -14,7 +14,10 @@ import java.io.IOException;
 public class Administrator extends User {
     enum Filter_type{Name,Role,Gender,Age}
     static List<List<String>> staffs = new ArrayList<>();
-    static File staffRecordsFile = new File("Staff_List.csv");
+    //static File staffRecordsFile = new File("Staff_List.csv");
+    static String staffRecordsCSV = "Staff_List.csv";
+    static String replenishRecordsCSV = "Replenish_Request_List.csv";
+
 
     Scanner input_scanner = new Scanner(System.in);
 
@@ -42,29 +45,40 @@ public class Administrator extends User {
 
         //admin.manageStaff();
 
-        admin.manageInventory();
+        //admin.manageInventory();
+
+        admin.approveReplenishmentRequest();
     }
 
     private static void initialise_staff_details(){
         boolean headerline = true;
+        // Scanner scanner = new Scanner(staffRecordsFile);
+        // while (scanner.hasNextLine()) {
+        //     if(headerline){
+        //         headerline = false;
+        //         getRecordFromLine(scanner.nextLine());
+        //     }
+        //     else{
+        //         staffs.add(getRecordFromLine(scanner.nextLine()));
+        //     }
+        // }
+        List<String> temp = readCSVFile(staffRecordsCSV);
 
-        try{
-            Scanner scanner = new Scanner(staffRecordsFile);
-            while (scanner.hasNextLine()) {
-                if(headerline){
-                    headerline = false;
-                    getRecordFromLine(scanner.nextLine());
-                }
-                else{
-                    staffs.add(getRecordFromLine(scanner.nextLine()));
-                }
+            // Loop through the lines, skipping the header
+        for (String line : temp) {
+            if (headerline) {
+                headerline = false; // Skip the header line
+                continue;
             }
-            System.out.println("Staff Information Retrieved Successfully!");
-            //System.out.println(staffs);
-        } catch (FileNotFoundException e){
-            System.out.println("Unable to Retrieve Staff Information!");
-            e.printStackTrace();
+
+            // Split each line by ';' and add as a list to 'staffs'
+            List<String> staffDetails = List.of(line.split(";"));
+            staffs.add(staffDetails);
         }
+
+        
+        System.out.println("Staff Information Retrieved Successfully!");
+        //System.out.println(staffs);
     }
 
     // function used to read data from csv files
@@ -180,7 +194,7 @@ public class Administrator extends User {
         System.out.println("Enter HospitalID: ");
         String hospitalID = input_scanner.nextLine();
 
-        List<String> lines = readCSVFile();
+        List<String> lines = readCSVFile(staffRecordsCSV);
         boolean removed = lines.removeIf(line -> line.startsWith(hospitalID + ";"));
 
         if (removed) {
@@ -195,12 +209,10 @@ public class Administrator extends User {
         System.out.println("Enter HospitalID: ");
         String hospitalID = input_scanner.nextLine();
     
-        List<String> lines = readCSVFile();
-        boolean found = false;
+        List<String> lines = readCSVFile(staffRecordsCSV);
     
         for (int i = 0; i < lines.size(); i++) {
             if (lines.get(i).startsWith(hospitalID + ";")) {
-                found = true;
     
                 // Split the existing line to get the current details
                 String[] details = lines.get(i).split(";");
@@ -282,8 +294,8 @@ public class Administrator extends User {
                 lines.set(i, String.join(";", hospitalID, name, role, gender, age));
                 break;
             }
-        }
-    
+        } 
+        writeCSVFile(lines);
 
     }
     
@@ -304,7 +316,7 @@ public class Administrator extends User {
 
         String hospitalID = getNextID(filteredStaffs);
 
-        List<String> lines = readCSVFile();
+        List<String> lines = readCSVFile(staffRecordsCSV);
         lines.add(String.join(";", hospitalID, name, role, gender, age));
 
         writeCSVFile(lines);
@@ -333,9 +345,9 @@ public class Administrator extends User {
         return nextID;
     }
 
-    private List<String> readCSVFile() {
+    private static List<String> readCSVFile(String filename) {
         List<String> lines = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader("Staff_List.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = br.readLine()) != null) {
                 lines.add(line);
@@ -346,7 +358,7 @@ public class Administrator extends User {
         return lines;
     }
 
-    private void writeCSVFile(List<String> lines) {
+    private static void writeCSVFile(List<String> lines) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("Staff_List.csv"))) {
             for (String line : lines) {
                 bw.write(line);
@@ -484,8 +496,56 @@ public class Administrator extends User {
     
 
 	public void approveReplenishmentRequest() {
+        //Show all pending requests
+        List<String> lines = readCSVFile(replenishRecordsCSV);
 
-		//throw new UnsupportedOperationException();
+        // Split each line into fields (excluding the header)
+        for (int i = 1; i < lines.size(); i++) { // Start from index 1 to skip header
+            String[] fields = lines.get(i).split(";");
+            System.out.println("Request ID: " + fields[0] + " Medicine Name: " + fields[1] + " Add Amount: " + fields[2]);
+        }
+
+        //Select to approve by index
+        int index_to_approve = input_scanner.nextInt();
+        input_scanner.nextLine();
+        List<String> temp = new ArrayList<>();
+
+        for (String line : lines) { // Start from index 1 to skip header
+            String[] fields = line.split(";");
+            if (fields[0].equals(String.valueOf(index_to_approve))) {
+
+                // Get list of medicine already available
+                Inventory inventory = new Inventory("Medicine_List.csv");
+                List<Medication> medications = inventory.getInventory();
+                boolean medInInventory = false;
+                for(Medication medication : medications) {
+
+                    // If not new med, update stock amount
+                    if (fields[1].equals(medication.getMedicationName())) {
+
+                        //update stock value and csv fike
+                        medication.addStock(Integer.parseInt(fields[2]));
+                        inventory.writeCSVFile();
+                        System.out.println("Updated: " + medication.getMedicationName() + " with limit: " + medication.getLowStockValue());
+                        medInInventory = true;
+                        break;
+                    }   
+                }
+                
+                // If new med add to csv
+                if (medInInventory == false) {
+                    System.out.println("Enter Low Stock Value: ");
+                    int alertValue = input_scanner.nextInt();
+                    input_scanner.nextLine();
+
+                    inventory.addNewMedication(fields[1], Integer.parseInt(fields[2]), alertValue);
+                }
+                
+                continue;
+            } 
+
+            temp.add(line);
+        }
 	}
 }
 
