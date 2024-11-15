@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 
 public class Login {
     enum Role{Unknown,Patient,Doctor,Pharmacist,Administrator}
+        /* remember to convert functions involving appointments to print name cause appointment slots only have ID
+       cause rn its just doctor and patient ID */
     static List<List<String>> patients = new ArrayList<>();
     static List<List<String>> staffs = new ArrayList<>();
     static List<List<String>> medicines = new ArrayList<>();
