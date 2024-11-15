@@ -143,8 +143,8 @@ public class Doctor extends User{
         for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
             if (slot.getDoctorID().equals(super.getHospitalID()) && slot.getStatus() == AppointmentStatus.AVAILABLE){
                 System.out.println("----------------------------------------------");
-                System.out.println("Date: " + slot.getDate());
-                System.out.println("Time: " + slot.getTime());
+                System.out.println("Date: " + slot.getDate().toString());
+                System.out.println("Time: " + slot.getTime().toString());
                 System.out.println("----------------------------------------------");
             }
         }
@@ -175,11 +175,12 @@ public class Doctor extends User{
     for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
         if (slot.getDoctorID().equals(super.getHospitalID()) && slot.getStatus() == AppointmentStatus.CONFIRMED) {
             System.out.println("----------------------------------------------");
-            System.out.println("Date: " + slot.getDate());
-            System.out.println("Time: " + slot.getTime());
+            System.out.println("Date: " + slot.getDate().toString());
+            System.out.println("Time: " + slot.getTime().toString());
             System.out.println("PatientID: " + slot.getPatientID());
             System.out.println("----------------------------------------------");
         }
+    }
     }
 
    
