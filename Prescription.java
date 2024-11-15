@@ -23,8 +23,8 @@ public class Prescription {
         this.status = status;
     }
     
-    public void getDosage(int dosage){
-        this.dosage = dosage;
+    public int getDosage(){
+        return dosage;
     }
 
     // public Medication getMedication() {

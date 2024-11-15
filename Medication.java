@@ -134,7 +134,7 @@ public class Medication {
         updateLowStockAlert();
     }
 
-    public void removeStock(int amount) {
+    public boolean removeStock(int amount) {
         if (_stock >= amount) {
             _stock -= amount;
             updateLowStockAlert();

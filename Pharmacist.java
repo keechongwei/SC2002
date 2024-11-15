@@ -1,15 +1,16 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.util.Optional;
 
 public class Pharmacist extends User{
     private List <Prescription> pendingPrescriptions;
     private String gender;
     private int age;
 
-    public Pharmacist(String gender, int age) {
+    public Pharmacist(String HospitalID, String password) {
+        super(HospitalID, password);
         this.pendingPrescriptions = new ArrayList<>();
-        this.gender = gender;
-        this.age = age;
     }
     
     public List<Prescription> viewPendingPrescriptions() {
@@ -62,9 +63,12 @@ public class Pharmacist extends User{
 
     public static void main (String[] args) {
         Inventory inventory = new Inventory("Medicine_List.csv");
-        Pharmacist pharmacist = new Pharmacist("Female", 30);
-        Scanner scanner = new Scanner(System.in);
+        Pharmacist pharmacist = new Pharmacist("Pharm123", "securepass");
 
+        pharmacist.pendingPrescriptions.add(new Prescription("Paracetemol", PrescriptionStatus.PENDING, 10));
+        pharmacist.pendingPrescriptions.add(new Prescription("Ibuprofen", PrescriptionStatus.PENDING, 5));
+        
+        Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
         while (running) {
@@ -93,10 +97,10 @@ public class Pharmacist extends User{
                     } else {
                         for (int i = 0; i < pending.size(); i++) {
                             Prescription p = pending.get(i);
-                            
+                            System.out.println((i + 1) + ". Medication" + p.getMedicationName() + ", Dosage: " + p.getDosage());
                         }
                     }
-                    for (Presentation p : pharmacist.viewPendingPrescriptions()) {
+                    for (Prescription p : pharmacist.viewPendingPrescriptions()) {
                         System.out.println("Medication: " + p.getMedicationName() + ", Dosage: " + p.getDosage());
                     }
                     break;
