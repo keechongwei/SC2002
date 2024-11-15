@@ -2,7 +2,10 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 
 public class Patient extends User{
     //under medical record:
@@ -35,7 +38,7 @@ public class Patient extends User{
         String patientID = fields[0];
         String name = fields[1];
         String dateOfBirth = fields[2];
-        String gender = fields[3]
+        String gender = fields[3];
         String bloodType = fields[4];
         String contactInformation = fields[5];
         String phoneNumber = "";
@@ -90,76 +93,295 @@ public class Patient extends User{
         }
     }
 
-    private void viewAppointmentSlot() {
-        //ArrayList<AppointmentSlot> as = AppointmentManager.getAppointmentSlots();
-        //to be done
+    private void viewAvailAppointmentSlot() {//make it repeatedly ask user to select aft not able to select avail slots
+        //title
+        System.out.println("\n=== Available Appointment Slots ===");
+
+        //select avail slots
+        List<AppointmentSlot> availSlots = AppointmentManager.getAvailableAppointments();
+
+        if(availSlots.isEmpty()) {
+            System.out.println("No appointment slots available");
+            return;
+        }
+
+        System.out.printf("%-5s %-12s %-8s %-10s %-10s%n", "Appointment ID.", "Date", "Time", "Doctor", "Status");
+        System.out.println("-".repeat(50));
+
+        //show avail appt slots
+        for(AppointmentSlot slot : availSlots) {
+            System.out.printf("%-5s %-12s %-8s %-10s %-10s%n", slot.getAppointmentID(), 
+            slot.getDate(), slot.getTime(), slot.getDoctorID(), slot.getStatus());
+        }
     }
 
     private void scheduleAppointments() {
-        viewAppointmentSlot();
-        //to be done
-
+        //title
         System.out.println("\n=== Schedule New Appointment ===");
 
-        //select doctor
+        //select doctor buy ID
+        System.out.println("Enter Doctor ID to schedule appointment (e.g D001): ");
+        String selectedDoctorID = sc.nextLine().trim().toUpperCase();
+
+        //get avail slots for selected doctor
+        List<AppointmentSlot> availSlots = new ArrayList<>();
+        for (AppointmentSlot slot :  AppointmentManager.getAvailableAppointments()) {
+            if(slot.getDoctorID() == selectedDoctorID) {
+                availSlots.add(slot);   
+            }
+        }
+
+        if(availSlots.isEmpty()) {
+            System.out.println("No available appointment slots.");
+            return;
+        }
         
         //show avail appt slots
+        System.out.println("\nAvailable Appointment Slots: ");
+        for (int i=0; i<availSlots.size(); i++) {
+            AppointmentSlot slot = availSlots.get(i);
+            System.out.printf("%d. Date: %s, Time: %s, Doctor: %s, Status: %s%n", i+1, slot.getDate(), slot.getTime(), slot.getDoctorID(), slot.getStatus());
+        }
 
         //create and save the appt
+        System.out.print("\nSelect appointment slot (enter number): ");
+        int choice = sc.nextInt();
+        sc.nextLine();
 
-    }
+        if(choice<1 || choice>availSlots.size()) {
+            System.out.println("Invalid selection.");
+            return;
+        }
 
-    private void rescheduleAppointment() {
+        //update selected slot
+        AppointmentSlot selectedSlot = availSlots.get(choice-1);
 
-        //to be done
+        for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
+            if(slot.getAppointmentID() == selectedSlot.getAppointmentID()) {
+                slot.setStatus(AppointmentStatus.PENDING);
+                slot.setPatientID(medicalRecord.getPatientID());
+                System.out.println("Appointment scheduled, status: pending.");
+            }
+        }
+     }
+
+    private void rescheduleAppointment() { // need to clear patientID
+
+        //title
         System.out.println("\n=== Reschedule Appointment ===");
 
         //show current appts, check if empty 
-        //List<Appointment> currentAppointments = getCurrentAppointments();
+        List<AppointmentSlot> curSlots = new ArrayList<>();
+        for (AppointmentSlot slot :  AppointmentManager.getAppointmentsByPatient(medicalRecord.getPatientID())) {
+            if(slot.getStatus() == AppointmentStatus.PENDING || slot.getStatus() == AppointmentStatus.CONFIRMED) {
+                curSlots.add(slot);   
+            }
+        }
+
+        if(curSlots.isEmpty()) {
+            System.out.println("No scheduled appointment slots.");
+            return;
+        }
+
+        //show cur appts
+        System.out.println("\nYour Current Appointments:");
+        for (int i = 0; i < curSlots.size(); i++) {
+            AppointmentSlot slot = curSlots.get(i);
+            System.out.printf("%d. Date: %s, Time: %s, Doctor: %s, Status: %s%n",
+                i + 1,
+                slot.getDate(),
+                slot.getTime(),
+                slot.getDoctorID(),
+                slot.getStatus());
+        }
 
         //select appts to reschedule
+        System.out.print("\nSelect appointment to reschedule (enter number): ");
+        int choice = sc.nextInt();
+        sc.nextLine();
+
+        if(choice<1 || choice>curSlots.size()) {
+            System.out.println("Invalid selection.");
+            return;
+        }
+
+        AppointmentSlot oldSlot = curSlots.get(choice - 1);
 
         //check new avail appointmentslots for the doc
+        List<AppointmentSlot> availSlots = new ArrayList<>();
+        for (AppointmentSlot slot :  AppointmentManager.getAvailableAppointments()) {
+            if(slot.getDoctorID() == oldSlot.getDoctorID()) {
+                availSlots.add(slot);   
+            }
+        }
+
+        if (availSlots.isEmpty()) {
+            System.out.println("No available slots for rescheduling.");
+            return;
+        }
+
+        System.out.println("\nAvailable Slots:");
+        for (int i = 0; i < availSlots.size(); i++) {
+            AppointmentSlot slot = availSlots.get(i);
+            System.out.printf("%d. Date: %s, Time: %s, Doctor: %s, Status: %s%n",
+                i + 1,
+                slot.getDate(),
+                slot.getTime(),
+                slot.getDoctorID(),
+                slot.getStatus());
+        }
 
         //select new slot
+        System.out.print("\nSelect new appointment slot (enter number): ");
+        choice = sc.nextInt();
+        sc.nextLine(); // Clear buffer
+
+        if (choice < 1 || choice > availSlots.size()) {
+            System.out.println("Invalid selection.");
+            return;
+        }
+
+        AppointmentSlot newSlot = availSlots.get(choice-1);
 
         //update appt
+        //reset oldslot
+        for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
+            if(slot.getAppointmentID() == oldSlot.getAppointmentID()) {
+                slot.setStatus(AppointmentStatus.AVAILABLE);
+                slot.setPatientID("");
+                System.out.println("Current appointment cancelled, rescheduling to new appointment...");
+            }
+        }
+
+        for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
+            if(slot.getAppointmentID() == newSlot.getAppointmentID()) {
+                slot.setStatus(AppointmentStatus.PENDING);
+                slot.setPatientID(medicalRecord.getPatientID());
+                System.out.println("Appointment rescheduled successfully!");
+                System.out.printf("%s. Date: %s, Time: %s, Doctor: %s, Status: %s%n",
+                "New appointment:",
+                slot.getDate(),
+                slot.getTime(), 
+                slot.getDoctorID(),
+                slot.getStatus()
+                );
+            }
+        }
+
     }
 
-    private void cancelAppointment() {
-        //to be done
+    private void cancelAppointment() {// might have to improve choice section to go back and reprompt response
 
+        //title
         System.out.println("\n=== Cancel Appointment ===");
 
         //show current appt
+        List<AppointmentSlot> curSlots = new ArrayList<>();
+        for (AppointmentSlot slot :  AppointmentManager.getAppointmentsByPatient(medicalRecord.getPatientID())) {
+            if(slot.getStatus() == AppointmentStatus.PENDING || slot.getStatus() == AppointmentStatus.CONFIRMED) {
+                curSlots.add(slot);   
+            }
+        }
+
+        if(curSlots.isEmpty()) {
+            System.out.println("No current appointments to cancel.");
+            return;
+        }
+
+        System.out.println("\nYour Current Appointments:");
+        for (int i = 0; i < curSlots.size(); i++) {
+            AppointmentSlot slot = curSlots.get(i);
+            System.out.printf("%d. Date: %s, Time: %s, Doctor: %s, Status: %s%n",
+                i + 1,
+                slot.getDate(),
+                slot.getTime(),
+                slot.getDoctorID(),
+                slot.getStatus());
+        }
 
         //select appt to cancel
+        System.out.print("\nSelect appointment to cancel (enter number): ");
+        int choice = sc.nextInt();
+        sc.nextLine();
+
+        if(choice<1 || choice>curSlots.size()) {
+            System.out.println("Invalid selection.");
+            return;
+        }
+
+        AppointmentSlot selectedSlot = curSlots.get(choice - 1);
 
         //update appt and free appt slot
+        for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
+            if(slot.getAppointmentID() == selectedSlot.getAppointmentID()) {
+                slot.setStatus(AppointmentStatus.AVAILABLE);
+                slot.setPatientID("");
+                System.out.println("Appointment cancelled successfully!");
+            }
+        }
     }
 
     private void viewAppointmentStatus() {
         //to be done
 
+        //title
         System.out.println("\n=== Current Appointments Status ===");
 
-        // List<Appointment> currentAppointments = getCurrentAppointments();
-        // if (currentAppointments.isEmpty()) {
-        //     System.out.println("No current appointments!");
-        //     return;
-        // }
+        //show cur appts
+        List<AppointmentSlot> curSlots = AppointmentManager.getAppointmentsByPatient(medicalRecord.getPatientID());
 
-        // for (Appointment appointment : currentAppointments) {
-        //     System.out.printf("\nAppointment with Dr. %s%n", appointment.getDoctor().getName());
-        //     System.out.printf("Date/Time: %s%n", appointment.getSlot().getDateTime());
-        //     System.out.printf("Status: %s%n", appointment.getStatus());
-        // }
+        if(curSlots.isEmpty()) {
+            System.out.println("No current appointments.");
+            return;
+        }
 
+        for (int i = 0; i < curSlots.size(); i++) {
+            AppointmentSlot slot = curSlots.get(i);
+            System.out.printf("%d. Date: %s, Time: %s, Doctor: %s, Status: %s%n",
+                i + 1,
+                slot.getDate(),
+                slot.getTime(),
+                slot.getDoctorID(),
+                slot.getStatus());
+        }
     }
 
     private void viewAppointmentOutcomeRecord() {
         //to be done
+
+        //title
         System.out.println("\n=== Appointment Outcome Record ===");
+
+        //get completed slots
+        List<AppointmentSlot> curSlots = new ArrayList<>();
+        for (AppointmentSlot slot :  AppointmentManager.getAppointmentsByPatient(medicalRecord.getPatientID())) {
+            if(slot.getStatus() == AppointmentStatus.COMPLETED) {
+                curSlots.add(slot);   
+            }
+        }
+
+        if(curSlots.isEmpty()) {
+            System.out.println("No appointment outcome records.");
+            return;
+        }
+
+        for(AppointmentSlot slot : curSlots) {
+            AppointmentOutcomeRecord record = slot.getAppointmentOutcomeRecord();
+            System.out.printf("Date: %s%n", record.getDate());
+            System.out.printf("Time: %s%n", record.getTime());
+            System.out.printf("Service Type: %s%n", record.getTypeOfService());
+            
+            
+            System.out.println("\nPrescribed Medication:");
+            System.out.printf("- %s (Status: %s)%n", 
+                record.getPrescribedMedication().getMedicationName(),
+                record.getPrescribedMedication().getStatus());
+            
+        
+            System.out.println("\nConsultation Notes:");
+            System.out.println(record.getConsultationNotes());
+            
+        }
     }
 
 
