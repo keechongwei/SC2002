@@ -59,5 +59,54 @@ public class Pharmacist extends User{
     public void setAge(int age) {
         this.age = age;
     }
+
+    public static void main (String[] args) {
+        Inventory inventory = new Inventory("Medicine_List.csv");
+        Pharmacist pharmacist = new Pharmacist("Female", 30);
+        Scanner scanner = new Scanner(System.in);
+
+        boolean running = true;
+
+        while (running) {
+            System.out.println("\n==== Pharmacist Menu ====");
+            System.out.println("1. View Inventory");
+            System.out.println("2. View Pending Prescriptions");
+            System.out.println("3. Dispense Prescription");
+            System.out.println("4. Submit Replenish Request");
+            System.out.println("5. Exit");
+            System.out.println("Choose an option: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    System.out.println("\nInventory:");
+                    pharmacist.viewInventory(inventory);
+                    break;
+                case 2:
+                    System.out.println("\nPending Prescriptions:");
+                    List<Prescription> pending = pharmacist.viewPendingPrescriptions();
+                    if (pending.isEmpty()) {
+                        System.out.println("No pending prescriptions.");
+
+                    } else {
+                        for (int i = 0; i < pending.size(); i++) {
+                            Prescription p = pending.get(i);
+                            
+                        }
+                    }
+                    for (Presentation p : pharmacist.viewPendingPrescriptions()) {
+                        System.out.println("Medication: " + p.getMedicationName() + ", Dosage: " + p.getDosage());
+                    }
+                    break;
+                case 3:
+                    System.out.print("Enter medication name to dispense: ");
+                    String medToDispense = scanner.nextLine();
+
+            }
+        }
+
+    }
 }
 

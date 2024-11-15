@@ -51,6 +51,6 @@ public class Medication {
 
 	public void updatelowStockLevelLine(int newLimit) {
 		_lowStockValue = newLimit;
-		_lowStockAlert = stock <= _lowStockValue;
+		_lowStockAlert = _stock <= _lowStockValue;
 	}
 }
