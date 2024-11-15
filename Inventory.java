@@ -8,6 +8,31 @@ import java.util.Optional;
 public class Inventory {
     private List<Medication> listOfMedications;
 
+	public static void main(String[] args) {
+		// Define the path to your CSV file
+		String csvFilePath = "Medicine_List.csv"; // Replace with your actual CSV file path
+	
+		// Create an Inventory object
+		Inventory inventory = new Inventory(csvFilePath);
+	
+		// View the loaded inventory
+		System.out.println("=== View Initial Inventory ===");
+		inventory.viewInventory();
+	
+		// Search for a specific medication
+		System.out.println("\n=== Search for a Medication ===");
+		String searchMedication = "Paracetamol"; // Replace with an actual medication name in your CSV
+		inventory.getMedication(searchMedication).ifPresentOrElse(
+			medication -> System.out.println("Found: " + medication.getMedicationName() + " with stock: " + medication.getStock()),
+			() -> System.out.println("Medication " + searchMedication + " not found.")
+		);
+	
+		// Display the full inventory again to verify no changes
+		System.out.println("\n=== Full Inventory List ===");
+		inventory.viewInventory();
+	}
+
+
     public Inventory(String csvFilePath) {
         listOfMedications = new ArrayList<>();
         loadMedicationsFromCSV(csvFilePath);

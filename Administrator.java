@@ -40,7 +40,9 @@ public class Administrator extends User {
         System.out.println("Filtered Staff List:");
         admin.printDoubleList(filteredStaffs);
 
-        admin.manageStaff();
+        //admin.manageStaff();
+
+        admin.manageInventory();
     }
 
     private static void initialise_staff_details(){
@@ -132,7 +134,6 @@ public class Administrator extends User {
             filteredStaffs.clear();
             return filteredStaffs;
         }
-
 
         for (List<String> staff : staffs) {
             if (staff.get(index).contains(name_role_gender)) {
@@ -366,13 +367,104 @@ public class Administrator extends User {
 	}
 
 	public void manageInventory() {
-        
-
-		throw new UnsupportedOperationException();
-	}
+        Inventory inventory = new Inventory("Medicine_List.csv");
+    
+        System.out.println("Course of Action: ");
+        System.out.println("1 - View Inventory");
+        System.out.println("2 - Add Stock");
+        System.out.println("3 - Delete Stock");
+        System.out.println("4 - Update Stock");
+        System.out.println("5 - Update Stock Level Alert");
+        int inventory_choice = input_scanner.nextInt();
+        input_scanner.nextLine();
+    
+        switch (inventory_choice) {
+            case 1:
+                System.out.println("=== Inventory ===");
+                inventory.viewInventory();
+                break;
+    
+            case 2:
+                System.out.println("=== Adding Stock ===");
+                System.out.println("Medication Name: ");
+                String medication_choice = input_scanner.nextLine();
+                System.out.println("Amount to add: ");
+                int amount = input_scanner.nextInt();
+                input_scanner.nextLine();
+    
+                inventory.getMedication(medication_choice).ifPresentOrElse(
+                    med -> {
+                        med.addStock(amount);
+                        System.out.println("Updated: " + med.getMedicationName() + " with stock: " + med.getStock());
+                    },
+                    () -> System.out.println("Medication " + medication_choice + " not found.")
+                );
+                break;
+    
+            case 3:
+                System.out.println("=== Deleting Stock ===");
+                System.out.println("Medication Name: ");
+                String deleted_choice = input_scanner.nextLine();
+    
+                inventory.getMedication(deleted_choice).ifPresentOrElse(
+                    med -> {
+                        int total_stock_amount = med.getStock();
+                        med.removeStock(total_stock_amount);
+                        System.out.println("Deleted stock for: " + med.getMedicationName());
+                    },
+                    () -> System.out.println("Medication " + deleted_choice + " not found.")
+                );
+                break;
+    
+            case 4:
+                System.out.println("=== Updating Stock ===");
+                System.out.println("Medication Name: ");
+                String updated_choice = input_scanner.nextLine();
+                System.out.println("Updated Amount: ");
+                int updated_amount = input_scanner.nextInt();
+                input_scanner.nextLine();
+    
+                inventory.getMedication(updated_choice).ifPresentOrElse(
+                    med -> {
+                        int current_stock = med.getStock();
+                        if (updated_amount > current_stock) {
+                            med.addStock(updated_amount - current_stock);
+                        } else if (updated_amount < current_stock) {
+                            med.removeStock(current_stock - updated_amount);
+                        }
+                        System.out.println("Updated: " + med.getMedicationName() + " with stock: " + med.getStock());
+                    },
+                    () -> System.out.println("Medication " + updated_choice + " not found.")
+                );
+                break;
+    
+            case 5:
+                System.out.println("=== Updating Stock Alert Level ===");
+                System.out.println("Medication Name: ");
+                String med_level_choice = input_scanner.nextLine();
+                System.out.println("New Alert Level: ");
+                int new_limit = input_scanner.nextInt();
+                input_scanner.nextLine();
+    
+                inventory.getMedication(med_level_choice).ifPresentOrElse(
+                    med -> {
+                        med.updatelowStockLevelLine(new_limit);
+                        System.out.println("Updated: " + med.getMedicationName() + " with limit: " + med.get_LowStockValue());
+                    },
+                    () -> System.out.println("Medication " + med_level_choice + " not found.")
+                );
+                break;
+    
+            default:
+                System.out.println("Invalid choice.");
+                break;
+        }
+    }
+    
 
 	public void approveReplenishmentRequest() {
-		throw new UnsupportedOperationException();
+
+		//throw new UnsupportedOperationException();
 	}
 }
 
