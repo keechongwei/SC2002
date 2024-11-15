@@ -9,8 +9,7 @@ public class Doctor extends User{
     protected String name;
     protected int age;
     protected String gender;
-//    private List<Patient> patientRecords = new ArrayList<>();
- //   private List<String> scheduleAvailability = new ArrayList<>();
+    private List<Patient> patientList = new ArrayList<>();
     
     private static Scanner sc = new Scanner(System.in);
 
@@ -49,21 +48,27 @@ public class Doctor extends User{
         this.name = doctorName;
     } 
 
-    // public void viewPatientRecords(){
-    //     if (patientRecords.isEmpty()) {
-    //         System.out.println("No Patient Record Found");
-    //         return;}
-    //     for (Patient p : patientRecords)
-    //         if(p != null)
-    //             p.viewMedicalRecord();}
-
-    public Patient findPatientByID(String patientID){
-        for (AppointmentSlot slot : AppointmentSlot.appointmentSlotArray) { /*need to declare public static List<AppointmentSlot> appointmentSlotArray = new ArrayList<>();*/
-            if (slot.getPatientID().equals(patientID)) { /*need to declare getPatient*/
-                    return slot.getPatient();
-            }}
-        return null;
+    public void viewPatientRecords(String patientID){
+        if (patientList.isEmpty()) {
+            System.out.println("No Patient Record Found");
+            return;
+        }
+        else{
+            for (Patient p : patientList){
+                if (p.getHospitalID() == patientID){
+                    p.viewMedicalRecord();
+                }
+            }
+        }
     }
+
+    // public Patient findPatientByID(String patientID){
+    //     for (AppointmentSlot slot : AppointmentSlot.appointmentSlotArray) { /*need to declare public static List<AppointmentSlot> appointmentSlotArray = new ArrayList<>();*/
+    //         if (slot.getPatientID().equals(patientID)) { /*need to declare getPatient*/
+    //                 return slot.getPatient();
+    //         }}
+    //     return null;
+    // }
     
     // public void addPatientRecords(String patientID, AppointmentSlot a){
     //     Patient p = findPatientByID(patientID);
@@ -93,10 +98,10 @@ public class Doctor extends User{
         String choice = sc.nextLine().trim();
         for (AppointmentSlot changedslot : schedule){
             if (changedslot.getAppointmentID() == choice){
-                changedslot.setStatus("AVAILABLE");
+                changedslot.setStatus(AppointmentStatus.AVAILABLE);
                 for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray){
                     if (slot.getAppointmentID() == changedslot.getAppointmentID()){
-                        slot.setStatus("AVAILABLE");
+                        slot.setStatus(AppointmentStatus.AVAILABLE);
                     }
                 }
         }
@@ -119,10 +124,10 @@ public class Doctor extends User{
         String choice = sc.nextLine().trim();
         for (AppointmentSlot changedslot : schedule){
             if (changedslot.getAppointmentID() == choice){
-                changedslot.setStatus("UNAVAILABLE");
+                changedslot.setStatus(AppointmentStatus.UNAVAILABLE);
                 for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray){
                     if (slot.getAppointmentID() == changedslot.getAppointmentID()){
-                        slot.setStatus("UNAVAILABLE");
+                        slot.setStatus(AppointmentStatus.UNAVAILABLE);
                     }
                 }
         }
