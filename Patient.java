@@ -21,7 +21,7 @@ public class Patient extends User{
     public Patient(String patientID, String patientName, String dateofBirth, String gender, String bloodType, String phoneNumber, String emailAddress) {
         super(patientID, "password");
         this.medicalRecord = new MedicalRecord(patientID, patientName, dateofBirth, gender, phoneNumber, emailAddress, bloodType);
-        this.appointments = new ArrayList<>();
+        //this.appointments = new ArrayList<>();
     }
 
     //creating patient object from csv
@@ -91,7 +91,7 @@ public class Patient extends User{
     }
 
     private void viewAppointmentSlot() {
-        ArrayList<AppointmentSlot> as = AppointmentManager.getAppointmentSlots();
+        //ArrayList<AppointmentSlot> as = AppointmentManager.getAppointmentSlots();
         //to be done
     }
 
@@ -115,7 +115,7 @@ public class Patient extends User{
         System.out.println("\n=== Reschedule Appointment ===");
 
         //show current appts, check if empty 
-        List<Appointment> currentAppointments = getCurrentAppointments();
+        //List<Appointment> currentAppointments = getCurrentAppointments();
 
         //select appts to reschedule
 
@@ -143,17 +143,17 @@ public class Patient extends User{
 
         System.out.println("\n=== Current Appointments Status ===");
 
-        List<Appointment> currentAppointments = getCurrentAppointments();
-        if (currentAppointments.isEmpty()) {
-            System.out.println("No current appointments!");
-            return;
-        }
+        // List<Appointment> currentAppointments = getCurrentAppointments();
+        // if (currentAppointments.isEmpty()) {
+        //     System.out.println("No current appointments!");
+        //     return;
+        // }
 
-        for (Appointment appointment : currentAppointments) {
-            System.out.printf("\nAppointment with Dr. %s%n", appointment.getDoctor().getName());
-            System.out.printf("Date/Time: %s%n", appointment.getSlot().getDateTime());
-            System.out.printf("Status: %s%n", appointment.getStatus());
-        }
+        // for (Appointment appointment : currentAppointments) {
+        //     System.out.printf("\nAppointment with Dr. %s%n", appointment.getDoctor().getName());
+        //     System.out.printf("Date/Time: %s%n", appointment.getSlot().getDateTime());
+        //     System.out.printf("Status: %s%n", appointment.getStatus());
+        // }
 
     }
 
