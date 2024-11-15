@@ -3,6 +3,7 @@ public class User {
 
 	private String HospitalID;
 	private String Password;
+	private String test;
 
 	public User(String HospitalID, String password){
 		this.HospitalID = HospitalID;
