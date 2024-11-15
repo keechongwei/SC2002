@@ -8,10 +8,12 @@ public class AppointmentSlot {
     private LocalDate date;
     private LocalTime time;
     private AppointmentStatus status;
+    private String appointmentID;
     private String doctorID;
     private String patientID;
     private AppointmentOutcomeRecord outcome;
 
+    //  for constructing appointments from scratch?
     public AppointmentSlot(String date, String time, String status, String doctorID, String patientID) {
         this.date = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.time = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
@@ -19,21 +21,27 @@ public class AppointmentSlot {
         this.doctorID = doctorID;
         this.patientID = patientID;
         this.outcome = null;
+        this.appointmentID = "APT" + String.valueOf(AppointmentManager.nextAppointmentID);
         AppointmentManager.addAppointment(this); 
     }
 
-    public AppointmentSlot(String date, String time, AppointmentStatus status, String doctorID, String patientID, AppointmentOutcomeRecord outcome) {
+    // for constructing appointments from CSV
+    public AppointmentSlot(String date, String time, AppointmentStatus status, String doctorID, String patientID, AppointmentOutcomeRecord outcome, String appointmentID) {
         this.date = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.time = LocalTime.parse(time,  DateTimeFormatter.ofPattern("HH:mm"));
         this.status = status;
         this.doctorID = doctorID;
         this.patientID = patientID;
+        this.appointmentID = appointmentID;
         this.outcome = outcome;
     }
     public String getPatientID() {
         return this.patientID;
     }
 
+    public String getAppointmentID(){
+        return this.appointmentID;
+    }
     public String getDoctorID() {
         return this.doctorID;
     }
@@ -81,16 +89,16 @@ public class AppointmentSlot {
         String outcomeString = (outcome != null) ? outcome.toCSV() : "null";
     
         // Combine all attributes into a CSV string
-        return dateString + ";" + timeString + ";" + doctorID + ";" + patientID + ";" + status + ";" + outcomeString;
+        return dateString + ";" + timeString + ";" + appointmentID + ";" + doctorID + ";" + patientID + ";" + status + ";" + outcomeString;
     }
 
     public static void main(String[] args){
- //       AppointmentSlot test = new AppointmentSlot("2002-11-07", "07:00", "CONFIRMED","A001","P001");
-    //    test.outcome = new AppointmentOutcomeRecord("2002-11-07","09:00","CONSULTATION", new Prescription("Panadol",PrescriptionStatus.valueOf("PENDING"),5), null);
-     //   AppointmentManager.appendAppointmentToCSV(test);
-        AppointmentManager.loadAppointmentsFromCSV(AppointmentManager.csvFile);
-        for(AppointmentSlot appt : AppointmentManager.appointmentSlotArray){
-            System.out.println(appt.getDoctorID());
-        }
+        AppointmentSlot test = new AppointmentSlot("2002-11-07", "07:00", "CONFIRMED","A001","P001");
+        test.outcome = new AppointmentOutcomeRecord("2002-11-07","09:00","CONSULTATION", new Prescription("Panadol",PrescriptionStatus.valueOf("PENDING"),5), null);
+        AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
+        // AppointmentManager.loadAppointmentsFromCSV(AppointmentManager.csvFile);
+        // for(AppointmentSlot appt : AppointmentManager.appointmentSlotArray){
+        //     System.out.println(appt.getDoctorID());
+        // }
     }
 }
