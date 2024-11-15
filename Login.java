@@ -152,7 +152,6 @@ public class Login {
             loggedIn = true;
         }
         System.out.println("Successful Login!");
-        User curUser = new User(ID,password);
         int choice = 0;
         switch(role){
             case Patient:
@@ -199,7 +198,11 @@ public class Login {
             }
             break;
             case Doctor:
-            Doctor curDoc = (Doctor) curUser;
+            for (List<String> staff : staffs){
+                if (staff.get(0).equals(ID)){
+                    Doctor curDoc = new Doctor(ID,password,staff.get(1),staff.get(3),staff.get(4));
+                }
+            }
             choice = 0;
             while(choice != 8){
                 System.out.println("DOCTOR MENU, ENTER CHOICE");
