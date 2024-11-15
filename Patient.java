@@ -47,7 +47,7 @@ public class Patient extends User{
     return new Patient(patientID, name, dateOfBirth, gender, bloodType, phoneNumber, emailAddress);
     }
 
-    private void viewMedicalRecord() {
+    public void viewMedicalRecord() {
     // private String patientID;
     // private String name;
     // private String dateOfBirth;
@@ -93,7 +93,7 @@ public class Patient extends User{
         }
     }
 
-    private void viewAvailAppointmentSlot() {//make it repeatedly ask user to select aft not able to select avail slots
+    public void viewAvailAppointmentSlot() {//make it repeatedly ask user to select aft not able to select avail slots
         //title
         System.out.println("\n=== Available Appointment Slots ===");
 
@@ -115,7 +115,7 @@ public class Patient extends User{
         }
     }
 
-    private void scheduleAppointments() {
+    public void scheduleAppointments() {
         //title
         System.out.println("\n=== Schedule New Appointment ===");
 
@@ -165,7 +165,7 @@ public class Patient extends User{
         }
      }
 
-    private void rescheduleAppointment() { // need to clear patientID
+    public void rescheduleAppointment() { // need to clear patientID
 
         //title
         System.out.println("\n=== Reschedule Appointment ===");
@@ -270,7 +270,7 @@ public class Patient extends User{
 
     }
 
-    private void cancelAppointment() {// might have to improve choice section to go back and reprompt response
+    public void cancelAppointment() {// might have to improve choice section to go back and reprompt response
 
         //title
         System.out.println("\n=== Cancel Appointment ===");
@@ -321,7 +321,7 @@ public class Patient extends User{
         }
     }
 
-    private void viewAppointmentStatus() {
+    public void viewAppointmentStatus() {
         //to be done
 
         //title
@@ -346,7 +346,7 @@ public class Patient extends User{
         }
     }
 
-    private void viewAppointmentOutcomeRecord() {
+    public void viewAppointmentOutcomeRecord() {
         //to be done
 
         //title
@@ -385,7 +385,31 @@ public class Patient extends User{
     }
 
 
+    public static void main(String[] args) {
+        // Create a patient from CSV data
+        Patient patient = Patient.fromCSV("P001;John Doe;1990-05-15;Male;AB+;123-456-7890;johndoe@email.com");
     
+        // View medical record
+        patient.viewMedicalRecord();
+    
+        // View available appointment slots
+        patient.viewAvailAppointmentSlot();
+    
+        // Schedule an appointment
+        patient.scheduleAppointments();
+    
+        // Reschedule an appointment
+        patient.rescheduleAppointment();
+    
+        // Cancel an appointment
+        patient.cancelAppointment();
+    
+        // View appointment status
+        patient.viewAppointmentStatus();
+    
+        // View appointment outcome record
+        patient.viewAppointmentOutcomeRecord();
+    }
 
 }
 
