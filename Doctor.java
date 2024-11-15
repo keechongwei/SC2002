@@ -100,8 +100,8 @@ public class Doctor extends User{
     public void viewPersonalSchedule(){
         System.out.println("Doctor's Full Schedule:");
         System.out.println("Doctor's Upcoming Appointments");
-        for (AppointmentSlot slot : AppointmentSlot.appointmentSlotArray) {
-            if (slot.getDoctorID().equals(doctorID) && slot.getStatus() == AppointmentStatus.CONFIRMED) {
+        for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
+            if (slot.getDoctorID().equals(super.getHospitalID()) && slot.getStatus() == AppointmentStatus.CONFIRMED) {
                 System.out.println("----------------------------------------------");
                 System.out.println("Date: " + slot.getDate());
                 System.out.println("Time: " + slot.getTime());
@@ -176,18 +176,21 @@ public class Doctor extends User{
             }   
         }}  
 
-    public void appointmentOutcomeRecord(){
-        System.out.print("patientID to update of his/her record:");
+    public void makeAppointmentOutcomeRecord(){
+        System.out.print("patientID to update his/her record:");
         String id = sc.nextLine();
         System.out.print("The type of service of this diagnosis for the patient:");
         String serviceType = sc.nextLine();
         System.out.print("The prescribed medication of this diagnosis for the patient:");
         String medicineType = sc.nextLine();
+        System.out.print("The amount of prescribed medication of this diagnosis for the patient:");
+        String dosageAmount = sc.nextLine();
+        Prescription pres = Prescription(medicineType,Prescription.valueOf("PENDING"),Integer.parseInt(dosageAmount));
         System.out.print("Consultation note:");
         String consultationNote = sc.nextLine();
         for (AppointmentSlot slot : AppointmentSlot.appointmentSlotArray) 
             if (slot.getPatientID().equals(id) && slot.getDoctorID().equals(doctorID) && slot.getStatus() == AppointmentStatus.CONFIRMED) {
-                    slot.updateOutcome(slot.getDate(), serviceType, medicineType, consultationNote);
+                    slot.updateAppointmentOutcomeRecord(slot.getDate(),slot.getTime(),serviceType, pres, consultationNote);
                     System.out.println("Outcome recorded for patient ID: " + id);}
                     
         }
