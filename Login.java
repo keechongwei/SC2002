@@ -156,6 +156,7 @@ public class Login {
         int choice = 0;
         switch(role){
             case Patient:
+            Patient curPat = (Patient) curUser;
             choice = 0;
             while(choice != 9){
                 System.out.println("PATIENT MENU, ENTER CHOICE");
@@ -198,6 +199,7 @@ public class Login {
             }
             break;
             case Doctor:
+            Doctor curDoc = (Doctor) curUser;
             choice = 0;
             while(choice != 8){
                 System.out.println("DOCTOR MENU, ENTER CHOICE");
@@ -236,6 +238,7 @@ public class Login {
             }
             break;
             case Pharmacist:
+            Pharmacist curPharm = (Pharmacist) curUser;
             choice = 0;
             while(choice != 5){
                 System.out.println("PHARMACIST MENU, ENTER CHOICE");
@@ -262,6 +265,7 @@ public class Login {
             }
             break;
             case Administrator:
+            Administrator curAdmin = (Administrator) curUser;
             choice = 0;
             while(choice != 5){
                 System.out.println("ADMINISTRATOR MENU, ENTER CHOICE");
