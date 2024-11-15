@@ -5,18 +5,16 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Pharmacist extends User {
-    private List<Prescription> pendingPrescriptions;
     private String gender;
     private int age;
 
     public Pharmacist(String HospitalID, String password) {
         super(HospitalID, password);
-        this.pendingPrescriptions = new ArrayList<>();
-        loadPendingPrescriptionsFromCSV("pendingprescriptions.csv");
     }
 
     // Load pending prescriptions from CSV file
-    private void loadPendingPrescriptionsFromCSV(String fileName) {
+    public List<Prescription> viewPendingPrescriptionsFromCSV(String fileName) {
+        List<Prescription> prescriptions = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -84,7 +82,7 @@ public class Pharmacist extends User {
     public void submitReplenishRequest(String medicationName, int stockAmount) {
         System.out.println("Replenishment request submitted for: " + medicationName + " with quantity " + stockAmount);
 
-        try (PrintWriter writer = new PrintWriter(new FileWriter("Replenish_Request.csv", true))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("Replenish_Request_List.csv", true))) {
             writer.println(medicationName + "," + stockAmount + ", PENDING");
         } catch (IOException e) {
             System.out.println("Error writing replenish request: " + e.getMessage());
