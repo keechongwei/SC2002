@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 
 public class Login {
     enum Role{Unknown,Patient,Doctor,Pharmacist,Administrator}
-    static List<List<String>> patients = new ArrayList();
+    static List<List<String>> patients = new ArrayList<>();
     static List<List<String>> staffs = new ArrayList<>();
     static List<List<String>> medicines = new ArrayList<>();
     static File medicineFile = new File("Medicine_List.csv");
@@ -84,15 +84,15 @@ public class Login {
         return values;
     }
     private static void IDCheck(String ID){
-        for(int i = 0; i<patients.size();i++){
-            if (patients.get(i).get(0).equals(ID)){
+        for(List<String> patient : patients){
+            if (patient.get(0).equals(ID)){
                 validID = true;
                 role = Role.Patient;
             } 
         }
-        for(int i = 0; i<staffs.size();i++){
-            String temp = staffs.get(i).get(2);
-            if (staffs.get(i).get(0).equals(ID)){
+        for(List<String> staff : staffs){
+            String temp = staff.get(2);
+            if (staffs.get(0).equals(ID)){
                 validID = true;
                 if (temp.equals("Doctor")){
                     role = role.Doctor;
@@ -156,7 +156,7 @@ public class Login {
         int choice = 0;
         switch(role){
             case Patient:
-            Patient curPat = (Patient) curUser;
+            //Patient curPat = (Patient) curUser;
             choice = 0;
             while(choice != 9){
                 System.out.println("PATIENT MENU, ENTER CHOICE");
@@ -238,7 +238,7 @@ public class Login {
             }
             break;
             case Pharmacist:
-            Pharmacist curPharm = (Pharmacist) curUser;
+            //Pharmacist curPharm = (Pharmacist) curUser;
             choice = 0;
             while(choice != 5){
                 System.out.println("PHARMACIST MENU, ENTER CHOICE");
@@ -265,7 +265,7 @@ public class Login {
             }
             break;
             case Administrator:
-            Administrator curAdmin = (Administrator) curUser;
+            //Administrator curAdmin = (Administrator) curUser;
             choice = 0;
             while(choice != 5){
                 System.out.println("ADMINISTRATOR MENU, ENTER CHOICE");
