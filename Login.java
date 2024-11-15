@@ -92,7 +92,7 @@ public class Login {
         }
         for(List<String> staff : staffs){
             String temp = staff.get(2);
-            if (staffs.get(0).equals(ID)){
+            if (staff.get(0).equals(ID)){
                 validID = true;
                 if (temp.equals("Doctor")){
                     role = role.Doctor;
@@ -200,7 +200,7 @@ public class Login {
             case Doctor:
             for (List<String> staff : staffs){
                 if (staff.get(0).equals(ID)){
-                    Doctor curDoc = new Doctor(ID,password,staff.get(1),staff.get(3),staff.get(4));
+                    Doctor curDoc = new Doctor(ID,password,staff.get(1),staff.get(3),Integer.parseInt(staff.get(4)));
                 }
             }
             choice = 0;
