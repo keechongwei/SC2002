@@ -35,6 +35,10 @@ public class AppointmentSlot {
         this.appointmentID = appointmentID;
         this.outcome = outcome;
     }
+    public void setPatientID(String patientID){
+        this.patientID = patientID;
+    }
+
     public String getPatientID() {
         return this.patientID;
     }
@@ -42,6 +46,11 @@ public class AppointmentSlot {
     public String getAppointmentID(){
         return this.appointmentID;
     }
+    
+    public void setDoctorID(String doctorID){
+        this.doctorID = doctorID;
+    }
+
     public String getDoctorID() {
         return this.doctorID;
     }
@@ -90,15 +99,5 @@ public class AppointmentSlot {
     
         // Combine all attributes into a CSV string
         return dateString + ";" + timeString + ";" + appointmentID + ";" + doctorID + ";" + patientID + ";" + status + ";" + outcomeString;
-    }
-
-    public static void main(String[] args){
-        AppointmentSlot test = new AppointmentSlot("2002-11-07", "07:00", "CONFIRMED","A001","P001");
-        test.outcome = new AppointmentOutcomeRecord("2002-11-07","09:00","CONSULTATION", new Prescription("Panadol",PrescriptionStatus.valueOf("PENDING"),5), null);
-        AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
-        // AppointmentManager.loadAppointmentsFromCSV(AppointmentManager.csvFile);
-        // for(AppointmentSlot appt : AppointmentManager.appointmentSlotArray){
-        //     System.out.println(appt.getDoctorID());
-        // }
     }
 }
