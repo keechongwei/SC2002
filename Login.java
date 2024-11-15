@@ -152,6 +152,8 @@ public class Login {
             loggedIn = true;
         }
         System.out.println("Successful Login!");
+        AppointmentManager.makeDailyAppointments();
+        AppointmentManager.loadAppointmentsFromCSV(AppointmentManager.csvFile);
         int choice = 0;
         switch(role){
             case Patient:
