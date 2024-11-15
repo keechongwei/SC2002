@@ -11,57 +11,12 @@ public class Doctor extends User{
     
     private static Scanner sc = new Scanner(System.in);
 
-   public Doctor(String doctorName, String gender, int age) {
-        this.doctorName = name;
+   public Doctor(String HospitalID, String password, String doctorName, String gender, int age) {
+        super(HospitalID,password);
+        this.name = doctorName;
         this.gender = gender;
         this.age = age;
     }
-    // login page already has doctor menu
-    // public static void main(String[] args){
-    //     System.out.println("Doctor Menu:");
-    //     System.out.println("1. View Patient Medical Records");
-    //     System.out.println("2. Update Patient Medical Records");
-    //     System.out.println("3. View Personal Schedule");
-    //     System.out.println("4. Set Availability for Appointments");
-    //     System.out.println("5. Accept or Decline Appointment Requests");
-    //     System.out.println("6. View Upcoming Appointments");
-    //     System.out.println("7. Record Appointment Outcome");
-    //     System.out.println("8. Logout");
-    //     int choice;
-    //     do{
-    //         System.out.println("Please type your option:");
-    //         choice = sc.nextInt();
-    //         sc.nextLine();
-    //         switch (choice) {
-    //            case 1: 
-    //                 viewPatientRecords();
-    //                 break;
-    //            case 2: 
-    //                  updatePatientRecord();
-    //                  break;
-    //            case 3: 
-    //                  viewPersonalSchedule();
-    //                  break;
-    //            case 4: 
-    //                  setAvailabilityForAppointments();
-    //                  break;
-    //            case 5: 
-    //                  acceptOrDeclineAppointments();
-    //                  break;
-    //            case 6: 
-    //                  viewUpcomingAppointment();
-    //                  break;
-    //            case 7: 
-    //                 appointmentOutcomeRecord();
-    //                 break;
-    //            case 8:
-    //                 System.out.println("Log out...");
-    //                 break;
-    //            default:
-    //                 System.out.println("Invalid option. Please try again.");
-    //      }} while (choice < 9);
-
-    // }
 
     public String getGender() {
         return gender;
@@ -79,68 +34,68 @@ public class Doctor extends User{
         this.age = age;
     }
     
-    public String getDoctorID() {
-        return doctorID;
-    }
+    // public String getDoctorID() {
+    //     return doctorID;
+    // }
 
-    public void setDoctorID(String doctorID) {
-        this.doctorID = doctorID;
-    } 
+    // public void setDoctorID(String doctorID) {
+    //     this.doctorID = doctorID;
+    // } 
 
     public String getDoctorName() {
-        return doctorName;
+        return this.name;
     }
 
-    public void setDoctorName(String doctorName) {
-        this.doctorName = doctorName;
+    public void setName(String doctorName) {
+        this.name = doctorName;
     } 
 
-    public void viewPatientRecords(){
-        if (patientRecords.isEmpty()) {
-            System.out.println("No Patient Record Found");
-            return;}
-        for (Patient p : patientRecords)
-            if(p != null)
-                p.viewMedicalRecord();}
+    // public void viewPatientRecords(){
+    //     if (patientRecords.isEmpty()) {
+    //         System.out.println("No Patient Record Found");
+    //         return;}
+    //     for (Patient p : patientRecords)
+    //         if(p != null)
+    //             p.viewMedicalRecord();}
 
-    public Patient findPatientByID(String patientID){
-        for (AppointmentSlot slot : AppointmentSlot.appointmentSlotArray) { /*need to declare public static List<AppointmentSlot> appointmentSlotArray = new ArrayList<>();*/
-            if (slot.getPatientID().equals(patientID)) { /*need to declare getPatient*/
-                    return slot.getPatient();
-            }}
-        return null;
-    }
+    // public Patient findPatientByID(String patientID){
+    //     for (AppointmentSlot slot : AppointmentSlot.appointmentSlotArray) { /*need to declare public static List<AppointmentSlot> appointmentSlotArray = new ArrayList<>();*/
+    //         if (slot.getPatientID().equals(patientID)) { /*need to declare getPatient*/
+    //                 return slot.getPatient();
+    //         }}
+    //     return null;
+    // }
     
-    public void addPatientRecords(String patientID, AppointmentSlot a){
-        Patient p = findPatientByID(patientID);
-        if (p != null) {
-        patientRecords.add(p);
-        scheduleAvailability.add(a);}
-    }
+    // public void addPatientRecords(String patientID, AppointmentSlot a){
+    //     Patient p = findPatientByID(patientID);
+    //     if (p != null) {
+    //     patientRecords.add(p);
+    //     scheduleAvailability.add(a);}
+    // }
 
-    public void removePatientRecords(String patientID, AppointmentSlot a){  //useless, in case need it
-        Patient p = findPatientByID(patientID);
-        if (p != null) {
-        patientRecords.remove(p);
-        scheduleAvailability.remove(a);}
-    }
+    // public void removePatientRecords(String patientID, AppointmentSlot a){  //useless, in case need it
+    //     Patient p = findPatientByID(patientID);
+    //     if (p != null) {
+    //     patientRecords.remove(p);
+    //     scheduleAvailability.remove(a);}
+    // }
 
-    public void setAvailabilityForAppointments() {
-        System.out.println("Type date (MM/DD, example:12/10):");
-        String date = sc.nextLine();
-        System.out.println("Type time (example:1800-1900):");
-        String time = sc.nextLine();
-        String availability = "Date:" + date + "\nTime:" + time; 
-        scheduleAvailability.add(availability);  
-        System.out.println("Availability added: " + availability);
-    }
+    // public void setAvailabilityForAppointments() {
+    //     System.out.println("Type date (MM/DD, example:12/10):");
+    //     String date = sc.nextLine();
+    //     System.out.println("Type time (example:1800-1900):");
+    //     String time = sc.nextLine();
+    //     String availability = "Date:" + date + "\nTime:" + time; 
+    //     scheduleAvailability.add(availability);  
+    //     System.out.println("Availability added: " + availability);
+    // }
 
-    public void removeAvailabilityForAppointments(String date, String time) {
-        String check = "Date:" + date + "\nTime:" + time;
-        for(String checked:scheduleAvailability)
-            if(check.equals(checked))
-                scheduleAvailability.remove(checked);
-    }
+    // public void removeAvailabilityForAppointments(String date, String time) {
+    //     String check = "Date:" + date + "\nTime:" + time;
+    //     for(String checked:scheduleAvailability)
+    //         if(check.equals(checked))
+    //             scheduleAvailability.remove(checked);
+    // }
 
     public void viewPersonalSchedule(){
         System.out.println("Doctor's Full Schedule:");
