@@ -6,20 +6,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Doctor extends User{
-    protected String name;
-    protected int age;
-    protected String gender;
+    private String name;
+    private int age;
+    private String gender;
     private List<Patient> patientList = new ArrayList<>();
     
     private static Scanner sc = new Scanner(System.in);
 
-   public Doctor(String HospitalID, String password, String doctorName, String gender, int age) {
-        super(HospitalID,password);
+   public Doctor(String HospitalID, String doctorName, String gender, int age) {
+        super(HospitalID,"password");
         this.name = doctorName;
         this.gender = gender;
         this.age = age;
     }
 
+    public void setPassword(String password){
+        super.setPassword(password);
+    }
     public String getGender() {
         return gender;
     }
@@ -246,7 +249,6 @@ public class Doctor extends User{
             }
             break;
         }
-
     }
 }  
 
