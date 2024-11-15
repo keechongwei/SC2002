@@ -12,10 +12,12 @@ import java.util.Scanner;
 public class AppointmentManager {
     public static List<AppointmentSlot> appointmentSlotArray = new ArrayList<>();
     public static final File csvFile = new File("appointments.csv");
+    // decides how many slots will there be in a day
     public static int numberofSlots = 10;
     public static int nextAppointmentID = 1;
 
     public static void makeDailyAppointments(){
+        // hour determines starting hour
         int hour = 9;
         for(int i = 0; i < numberofSlots; i++){
             String dateString = DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.now());
@@ -57,6 +59,7 @@ public class AppointmentManager {
         }
     }
 
+    // for doctors to see pending appointments, get all slots depending on DoctorID
     public static List<AppointmentSlot> getAppointmentsByDoctor(String doctorID) {
         List<AppointmentSlot> result = new ArrayList<>();
         for (AppointmentSlot slot : appointmentSlotArray) {
@@ -67,6 +70,16 @@ public class AppointmentManager {
         return result;
     }
     
+    // for patients to schedule, get all appointments that are still available
+    public static List<AppointmentSlot> getAvailableAppointments(){
+        List<AppointmentSlot> availSlots = new ArrayList<AppointmentSlot>();
+        for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
+            if(slot.getStatus() == AppointmentStatus.AVAILABLE) {
+                availSlots.add(slot);   
+            }
+        }
+        return availSlots;
+    }
     public static List<AppointmentSlot> getAllAppointments() {
         return appointmentSlotArray;
     }
