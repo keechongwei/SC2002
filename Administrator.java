@@ -18,7 +18,6 @@ public class Administrator extends User {
     static String staffRecordsCSV = "Staff_List.csv";
     static String replenishRecordsCSV = "Replenish_Request_List.csv";
 
-
     Scanner input_scanner = new Scanner(System.in);
 
 	private Object _attribute;
@@ -47,7 +46,9 @@ public class Administrator extends User {
 
         //admin.manageInventory();
 
-        admin.approveReplenishmentRequest();
+        //admin.approveReplenishmentRequest();
+
+        Administrator.viewAllAppointments();
     }
 
     private static void initialise_staff_details(){
@@ -75,24 +76,13 @@ public class Administrator extends User {
             List<String> staffDetails = List.of(line.split(";"));
             staffs.add(staffDetails);
         }
-
         
         System.out.println("Staff Information Retrieved Successfully!");
         //System.out.println(staffs);
     }
 
-    // function used to read data from csv files
-    private static List<String> getRecordFromLine(String line) {
-        List<String> values = new ArrayList<String>();
-        Scanner rowScanner = new Scanner(line);
-        rowScanner.useDelimiter(";");
-            while (rowScanner.hasNext()) {
-                values.add(rowScanner.next());
-            }
-        return values;
-    }
     // For filtering staff by age
-	public List<List<String>>  filterStaff(Filter_type filter_type) {        
+	public static List<List<String>> filterStaff(Filter_type filter_type) {        
         if (filter_type != Filter_type.Age) {System.out.println("Please enter a valid integer value for age");}
 
         List<List<String>> filteredStaffs = new ArrayList<List<String>>(staffs);
@@ -110,7 +100,7 @@ public class Administrator extends User {
 	}
 
     // For sorting staff by age
-	public List<List<String>> filterStaff(Filter_type filter_type, int age) {
+	public static List<List<String>> filterStaff(Filter_type filter_type, int age) {
         
         if (filter_type != Filter_type.Age) {System.out.println("Please enter a valid integer value for age");}
 
@@ -129,19 +119,29 @@ public class Administrator extends User {
 	}
 
     // For filtering staff by name role and gender
-    public List<List<String>> filterStaff(Filter_type filterType, String name_role_gender) {
+    public static List<List<String>> filterStaff(Filter_type filterType, String name_role_gender) {
 
-        System.out.println(filterType);
+        //System.out.println("filterbystr");
+
         List<List<String>> filteredStaffs = new ArrayList<>();
         int index = -1;
 
+        // Edge case where user inputs null
+        name_role_gender = name_role_gender.trim();
+        if(name_role_gender == null) {
+            return filteredStaffs;
+        }
+        // Capitalise input so that can match csv
+        else {
+            name_role_gender = name_role_gender.substring(0, 1).toUpperCase() + name_role_gender.substring(1).toLowerCase();
+        }
+        
         switch (filterType){
             case Name: index = 1; break;
             case Role: index = 2; break;
             case Gender: index = 3; break;
             default: index = -1; break;
         };
-        System.out.println(index);
 
         if (index == -1) {
             System.out.println("Invalid filter type for String value.");
@@ -159,7 +159,7 @@ public class Administrator extends User {
 		//throw new UnsupportedOperationException();
 	}
 
-    public void printDoubleList(List<List<String>> doubList) { 
+    public static void printDoubleList(List<List<String>> doubList) { 
         for (List<String> singleList : doubList) {
             for (String string : singleList) {
                 System.out.print(string + " ");
@@ -171,18 +171,97 @@ public class Administrator extends User {
 	public void manageStaff() {
 
         // Search by ID
-        System.out.println("Enter choice: ");
-        System.out.println("1 - Remove Staff");
-        System.out.println("2 - Update Staff");
-        System.out.println("3 - Add Staff");
+        System.out.println("=== Staff Manager ===");
+        System.out.println("Course of Action: ");
+        System.out.println("1 - Search/ View Staff");
+        System.out.println("2 - Remove Staff");
+        System.out.println("3 - Update Staff");
+        System.out.println("4 - Add Staff");
 
         int input = input_scanner.nextInt();
         input_scanner.nextLine(); // Clear newline
 
         switch (input) {
-            case 1: removeStaff(); break;
-            case 2: updateStaff(); break;
-            case 3: addStaff(); break;
+            case 1: 
+                System.out.println("=== Staff List: ===");
+                System.out.println("Filter by:");
+                System.out.println("1 - Name");
+                System.out.println("2 - Role");
+                System.out.println("3 - Search by Age");
+                System.out.println("4 - Age (Ascending)");
+                System.out.println("5 - Gender");
+                System.out.println("6 - View All");
+
+                int manageStaff_choice = input_scanner.nextInt();
+                input_scanner.nextLine(); // Clear newline
+
+                // Filtered List of Staffs
+                List<List<String>> filteredStaffs = new ArrayList<>();
+
+                switch (manageStaff_choice) {
+                    case 1:
+                        System.out.println("Name: ");
+                        String searchByname = input_scanner.nextLine();
+
+                        filteredStaffs = Administrator.filterStaff(Filter_type.Name, searchByname);
+                        break;
+
+                    case 2:
+                        System.out.println("Pick the Role: ");
+                        System.out.println("1 - Doctor");
+                        System.out.println("2 - Pharmacist");
+                        System.out.println("3 - Administrator");
+                        int role_choice = input_scanner.nextInt();
+                        input_scanner.nextLine();
+                        String role = "";
+                    
+                        switch (role_choice) {
+                            case 1: role = "Doctor"; break;
+                            case 2: role = "Pharmacist"; break;
+                            case 3: role = "Administrator"; break;
+                            default: System.out.println("Invalid role choice."); break;
+                        }
+
+                        filteredStaffs = Administrator.filterStaff(Filter_type.Role, role);
+                        break;
+
+                    case 3:
+                        System.out.println("Age: ");
+                        int searchByAge = input_scanner.nextInt();
+                        input_scanner.nextLine();
+
+                        filteredStaffs = Administrator.filterStaff(Filter_type.Age, searchByAge);
+                        break;
+
+                    case 4:
+                        filteredStaffs = Administrator.filterStaff(Filter_type.Age);
+                        break;
+
+                    case 5:
+                        System.out.println("Gender: ");
+                        String gender_choice = input_scanner.nextLine();
+
+                        filteredStaffs = Administrator.filterStaff(Filter_type.Gender, gender_choice);
+                        break;    
+        
+                    case 6:
+                        filteredStaffs = Administrator.filterStaff(Filter_type.Age);
+                        break;
+
+                    default:
+                        System.out.println("Invalid Option.");
+                        break;
+                }
+
+                if (filteredStaffs.size() == 0) {
+                    System.out.println("None found.");
+                } else {
+                    Administrator.printDoubleList(filteredStaffs);
+                }
+                break;
+            case 2: removeStaff(); break;
+            case 3: updateStaff(); break;
+            case 4: addStaff(); break;
             default: System.out.println("1 to 3 you dummy, gtfo"); break;
         }
 
@@ -369,15 +448,11 @@ public class Administrator extends User {
         }
     }
 
-	public void viewScheduledAppointment() {
-		throw new UnsupportedOperationException();
-	}
-
     // might need to add error checking for duplicates and other kinds of inputs
 	public void manageInventory() { 
         Inventory inventory = new Inventory("Medicine_List.csv");
     
-        System.out.println("Course of Action: ");
+        System.out.println("=== Course of Action: ===");
         System.out.println("1 - View Inventory");
         System.out.println("2 - Add to Current Stock");
         System.out.println("3 - Add new Stock");
@@ -494,7 +569,6 @@ public class Administrator extends User {
         }
     }
     
-
 	public void approveReplenishmentRequest() {
         //Show all pending requests
         List<String> lines = readCSVFile(replenishRecordsCSV);
@@ -514,7 +588,7 @@ public class Administrator extends User {
             String[] fields = line.split(";");
             if (fields[0].equals(String.valueOf(index_to_approve))) {
 
-                // Get list of medicine already available
+                // Get list of medicine already available, run through list to see if requested med in already in inventory
                 Inventory inventory = new Inventory("Medicine_List.csv");
                 List<Medication> medications = inventory.getInventory();
                 boolean medInInventory = false;
@@ -545,6 +619,21 @@ public class Administrator extends User {
             } 
 
             temp.add(line);
+        }
+	}
+
+    public static void viewAllAppointments() {
+        AppointmentManager.loadAppointmentsFromCSV(AppointmentManager.csvFile);
+        List<AppointmentSlot> listofAppointmentSlots = AppointmentManager.getAllAppointments();
+
+
+        System.out.printf("%-5s %-12s %-8s %-10s %-10s%n", "Appointment ID.", "Date", "Time", "Doctor", "PatientID", "Status");
+        System.out.println("-".repeat(50));
+
+        //show all appt slots
+        for(AppointmentSlot apptSlot : listofAppointmentSlots) {
+            System.out.printf("%-5s %-12s %-8s %-10s %-10s%n", apptSlot.getAppointmentID(), 
+            apptSlot.getDate(), apptSlot.getTime(), apptSlot.getDoctorID(), apptSlot.getStatus());
         }
 	}
 }

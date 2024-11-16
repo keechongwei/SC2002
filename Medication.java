@@ -4,6 +4,10 @@ import java.util.List;
 // import java.util.List;
 // import java.util.Scanner;
 
+
+// Should consider changing Medication to only get and set methods for each medicine. (updating is considered set method for alert)
+// All writing to csv, adding, subtracting, remove medication/stock done inventory 
+
 public class Medication {
     static String filePath = "Medicine_List.csv";
     private String _medicationName;
@@ -209,7 +213,7 @@ public class Medication {
         updateLowStockAlert();
     }
 
-    private void updateLowStockAlert() {
+    public void updateLowStockAlert() {
         _lowStockAlert = _stock <= _lowStockValue;
     }
 

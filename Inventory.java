@@ -95,7 +95,6 @@ public class Inventory {
 			}
 		}
 		this.listOfMedications = temp;
-
 		writeCSVFile();
 	}
 
@@ -111,5 +110,12 @@ public class Inventory {
             System.err.println("Error writing to the CSV file: " + e.getMessage());
         }
     }
+
+	public void updateAllAlertLevels() {
+		for (Medication medication : listOfMedications) {
+			medication.updateLowStockAlert();
+		} 
+		writeCSVFile();
+	}	
 
 }
