@@ -14,21 +14,21 @@ public class Patient extends User{
     // protected int dateofBirth;
     // protected String gender;
     // protected String BloodType;
-    
     private MedicalRecord medicalRecord;
-    //private list of appointmentslots
     
     private static Scanner sc = new Scanner(System.in);
 
     //patient Constructor
-    public Patient(String patientID, String patientName, String dateofBirth, String gender, String bloodType, String phoneNumber, String emailAddress, String password) {
-        super(patientID, password);
+    public Patient(String patientID, String patientName, String dateofBirth, String gender, String bloodType, String phoneNumber, String emailAddress) {
+        super(patientID, "password");
         this.medicalRecord = new MedicalRecord(patientID, patientName, dateofBirth, gender, phoneNumber, emailAddress, bloodType);
     }
 
-    //creating patient object from csv
-    //Patient ID;Name;Date of Birth;Gender;Blood Type;Contact Information
+    public void setPassword(String password){
+        super.setPassword(password);
+    }
 
+    //update contact info in medical record
     public void updatePersonalInfo() {
         int choice;
 
@@ -139,7 +139,7 @@ public class Patient extends User{
         }
     }
 
-    public void scheduleAppointments() {
+    public void scheduleAppointments() {//when displaying, show appt id. After schedule. Show the appt info
         //title
         System.out.println("\n=== Schedule New Appointment ===");
 
@@ -150,7 +150,7 @@ public class Patient extends User{
         //get avail slots for selected doctor
         List<AppointmentSlot> availSlots = new ArrayList<>();
         for (AppointmentSlot slot :  AppointmentManager.getAvailableAppointments()) {
-            if(slot.getDoctorID() == selectedDoctorID) {
+            if(slot.getDoctorID().equals(selectedDoctorID)) {
                 availSlots.add(slot);   
             }
         }
@@ -164,7 +164,7 @@ public class Patient extends User{
         System.out.println("\nAvailable Appointment Slots: ");
         for (int i=0; i<availSlots.size(); i++) {
             AppointmentSlot slot = availSlots.get(i);
-            System.out.printf("%d. Date: %s, Time: %s, Doctor: %s, Status: %s%n", i+1, slot.getDate(), slot.getTime(), slot.getDoctorID(), slot.getStatus());
+            System.out.printf("%d. Appointment ID: %s, Date: %s, Time: %s, Doctor: %s, Status: %s%n", i+1, slot.getAppointmentID(), slot.getDate(), slot.getTime(), slot.getDoctorID(), slot.getStatus());
         }
 
         //create and save the appt
@@ -181,10 +181,11 @@ public class Patient extends User{
         AppointmentSlot selectedSlot = availSlots.get(choice-1);
 
         for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
-            if(slot.getAppointmentID() == selectedSlot.getAppointmentID()) {
+            if(slot.getAppointmentID().equals(selectedSlot.getAppointmentID())) {
                 slot.setStatus(AppointmentStatus.PENDING);
                 slot.setPatientID(this.medicalRecord.getPatientID());
                 System.out.println("Appointment scheduled, status: pending.");
+                System.out.printf("Appointment ID: %s, Date: %s, Time: %s, Doctor: %s, Status: %s%n", slot.getAppointmentID(), slot.getDate(), slot.getTime(), slot.getDoctorID(), slot.getStatus());
             }
         }
      }
@@ -197,7 +198,7 @@ public class Patient extends User{
         //show current appts, check if empty 
         List<AppointmentSlot> curSlots = new ArrayList<>();
         for (AppointmentSlot slot :  AppointmentManager.getAppointmentsByPatient(this.medicalRecord.getPatientID())) {
-            if(slot.getStatus() == AppointmentStatus.PENDING || slot.getStatus() == AppointmentStatus.CONFIRMED) {
+            if(slot.getStatus().equals(AppointmentStatus.PENDING) || slot.getStatus().equals(AppointmentStatus.CONFIRMED)) {
                 curSlots.add(slot);   
             }
         }
@@ -211,8 +212,9 @@ public class Patient extends User{
         System.out.println("\nYour Current Appointments:");
         for (int i = 0; i < curSlots.size(); i++) {
             AppointmentSlot slot = curSlots.get(i);
-            System.out.printf("%d. Date: %s, Time: %s, Doctor: %s, Status: %s%n",
+            System.out.printf("%d. Appointment ID: %s, Date: %s, Time: %s, Doctor: %s, Status: %s%n",
                 i + 1,
+                slot.getAppointmentID(),
                 slot.getDate(),
                 slot.getTime(),
                 slot.getDoctorID(),
@@ -234,7 +236,7 @@ public class Patient extends User{
         //check new avail appointmentslots for the doc
         List<AppointmentSlot> availSlots = new ArrayList<>();
         for (AppointmentSlot slot :  AppointmentManager.getAvailableAppointments()) {
-            if(slot.getDoctorID() == oldSlot.getDoctorID()) {
+            if(slot.getDoctorID().equals(oldSlot.getDoctorID())) {
                 availSlots.add(slot);   
             }
         }
@@ -247,8 +249,9 @@ public class Patient extends User{
         System.out.println("\nAvailable Slots:");
         for (int i = 0; i < availSlots.size(); i++) {
             AppointmentSlot slot = availSlots.get(i);
-            System.out.printf("%d. Date: %s, Time: %s, Doctor: %s, Status: %s%n",
+            System.out.printf("%d. Appointment ID: %s, Date: %s, Time: %s, Doctor: %s, Status: %s%n",
                 i + 1,
+                slot.getAppointmentID(),
                 slot.getDate(),
                 slot.getTime(),
                 slot.getDoctorID(),
@@ -270,20 +273,22 @@ public class Patient extends User{
         //update appt
         //reset oldslot
         for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
-            if(slot.getAppointmentID() == oldSlot.getAppointmentID()) {
+            if(slot.getAppointmentID().equals(oldSlot.getAppointmentID())) {
                 slot.setStatus(AppointmentStatus.AVAILABLE);
                 slot.setPatientID("");
                 System.out.println("Current appointment cancelled, rescheduling to new appointment...");
+                System.out.printf("%s. Appointment ID: %s, Date: %s, Time: %s, Doctor: %s, Status: %s%n", "Cancelled appointment: ", slot.getAppointmentID(), slot.getDate(), slot.getTime(), slot.getDoctorID(), "CANCELLED");
             }
         }
 
         for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
-            if(slot.getAppointmentID() == newSlot.getAppointmentID()) {
+            if(slot.getAppointmentID().equals(newSlot.getAppointmentID())) {
                 slot.setStatus(AppointmentStatus.PENDING);
                 slot.setPatientID(this.medicalRecord.getPatientID());
                 System.out.println("Appointment rescheduled successfully!");
-                System.out.printf("%s. Date: %s, Time: %s, Doctor: %s, Status: %s%n",
+                System.out.printf("%s. Appointment ID: %s, Date: %s, Time: %s, Doctor: %s, Status: %s%n",
                 "New appointment:",
+                slot.getAppointmentID(),
                 slot.getDate(),
                 slot.getTime(), 
                 slot.getDoctorID(),
@@ -302,7 +307,7 @@ public class Patient extends User{
         //show current appt
         List<AppointmentSlot> curSlots = new ArrayList<>();
         for (AppointmentSlot slot :  AppointmentManager.getAppointmentsByPatient(this.medicalRecord.getPatientID())) {
-            if(slot.getStatus() == AppointmentStatus.PENDING || slot.getStatus() == AppointmentStatus.CONFIRMED) {
+            if(slot.getStatus().equals(AppointmentStatus.PENDING) || slot.getStatus().equals(AppointmentStatus.CONFIRMED)) {
                 curSlots.add(slot);   
             }
         }
@@ -315,8 +320,9 @@ public class Patient extends User{
         System.out.println("\nYour Current Appointments:");
         for (int i = 0; i < curSlots.size(); i++) {
             AppointmentSlot slot = curSlots.get(i);
-            System.out.printf("%d. Date: %s, Time: %s, Doctor: %s, Status: %s%n",
+            System.out.printf("%d. Appointment ID: %s, Date: %s, Time: %s, Doctor: %s, Status: %s%n",
                 i + 1,
+                slot.getAppointmentID(),
                 slot.getDate(),
                 slot.getTime(),
                 slot.getDoctorID(),
@@ -337,10 +343,11 @@ public class Patient extends User{
 
         //update appt and free appt slot
         for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
-            if(slot.getAppointmentID() == selectedSlot.getAppointmentID()) {
+            if(slot.getAppointmentID().equals(selectedSlot.getAppointmentID())) {
                 slot.setStatus(AppointmentStatus.AVAILABLE);
                 slot.setPatientID("");
                 System.out.println("Appointment cancelled successfully!");
+                System.out.printf("%s. Appointment ID: %s, Date: %s, Time: %s, Doctor: %s, Status: %s%n", "Cancelled appointment: ", slot.getAppointmentID(), slot.getDate(), slot.getTime(), slot.getDoctorID(), "CANCELLED");
             }
         }
     }
@@ -361,8 +368,9 @@ public class Patient extends User{
 
         for (int i = 0; i < curSlots.size(); i++) {
             AppointmentSlot slot = curSlots.get(i);
-            System.out.printf("%d. Date: %s, Time: %s, Doctor: %s, Status: %s%n",
+            System.out.printf("%d. Appointment ID: %s, Date: %s, Time: %s, Doctor: %s, Status: %s%n",
                 i + 1,
+                slot.getAppointmentID(),
                 slot.getDate(),
                 slot.getTime(),
                 slot.getDoctorID(),
@@ -371,7 +379,6 @@ public class Patient extends User{
     }
 
     public void viewAppointmentOutcomeRecord() {
-        //to be done
 
         //title
         System.out.println("\n=== Appointment Outcome Record ===");
@@ -379,7 +386,7 @@ public class Patient extends User{
         //get completed slots
         List<AppointmentSlot> curSlots = new ArrayList<>();
         for (AppointmentSlot slot :  AppointmentManager.getAppointmentsByPatient(this.medicalRecord.getPatientID())) {
-            if(slot.getStatus() == AppointmentStatus.COMPLETED) {
+            if(slot.getStatus().equals(AppointmentStatus.COMPLETED)) {
                 curSlots.add(slot);   
             }
         }
@@ -391,6 +398,7 @@ public class Patient extends User{
 
         for(AppointmentSlot slot : curSlots) {
             AppointmentOutcomeRecord record = slot.getAppointmentOutcomeRecord();
+            System.out.printf("Appointment ID: %s%n", slot.getAppointmentID());
             System.out.printf("Date: %s%n", record.getDate());
             System.out.printf("Time: %s%n", record.getTime());
             System.out.printf("Service Type: %s%n", record.getTypeOfService());
