@@ -23,6 +23,20 @@ public class Login {
     static boolean loggedIn = false;
     static boolean validID = false;
     static boolean validPassword = false;
+
+    // initialises appointment array
+    public static void initializeAppointments() {
+        if (!((AppointmentManager.csvFile).exists()) || (AppointmentManager.csvFile).length() == 0) {
+            // File doesn't exist or is empty, create daily appointments
+            System.out.println("appointments.csv is empty or missing. Generating daily appointments...");
+            AppointmentManager.writeHeader(AppointmentManager.appointmentsCSVHeader);
+            AppointmentManager.makeDailyAppointments(staffs); // Replace getStaffList() with your method to get the staff data
+        } else {
+            // File exists and is not empty, load appointments from the CSV
+            System.out.println("Loading appointments from appointments.csv...");
+            AppointmentManager.loadAppointmentsFromCSV(AppointmentManager.csvFile);
+        }
+    }
     // function used to initialise patient, staff, medicine data
     private static void initialise(){
         boolean headerline = true;
@@ -183,9 +197,7 @@ public class Login {
             loggedIn = true;
         }
         System.out.println("Successful Login!");
-        AppointmentManager.writeHeader(AppointmentManager.appointmentsCSVHeader);
-        AppointmentManager.makeDailyAppointments(staffs);
-        AppointmentManager.loadAppointmentsFromCSV(AppointmentManager.csvFile);
+        initializeAppointments();
         int choice = 0;
         switch(role){
             case Patient:
