@@ -294,7 +294,7 @@ public class Login {
             break;
             case Pharmacist:
 
-            Pharmacist pharmacist = new Pharmacist("P001", "password");
+            Pharmacist pharmacist = new Pharmacist("P001", "password", "male", "29");
             choice = 0;
             while(choice != 6){
                 System.out.println("=== PHARMACIST MENU, ENTER CHOICE ===");

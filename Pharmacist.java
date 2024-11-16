@@ -28,6 +28,8 @@ public class Pharmacist extends User {
         this.name = name;
         this.gender = gender;
         this.age = Integer.valueOf(age);
+        this.inventory = new Inventory("Medicine_List.csv");
+
     }
 
     public void setPassword(String password){
