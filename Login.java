@@ -11,6 +11,9 @@ public class Login {
     static List<Patient> patients = new ArrayList<Patient>();
     /* convert staffs into lists of Administrators, Pharmacists and Doctors once classes are done
      */
+    static List<Pharmacist> pharmacists = new ArrayList<Pharmacist>();
+    static List<Administrator> administrators = new ArrayList<Administrator>();
+    static List<Doctor> doctors = new ArrayList<Doctor>();
     static List<List<String>> staffs = new ArrayList<>();
     static List<List<String>> medicines = new ArrayList<>();
     static File medicineFile = new File("Medicine_List.csv");
@@ -60,7 +63,20 @@ public class Login {
                     getRecordFromLine(scanner.nextLine());
                 }
                 else{
-                    staffs.add(getRecordFromLine(scanner.nextLine()));
+                     staffs.add(getRecordFromLine(scanner.nextLine()));
+                     // add once all classes completed
+                    //  String line = scanner.nextLine();
+                    //  String[] fields = line.split(";");
+                    //  if (fields[2].equals("Doctor")){
+                    //     Doctor d = new Doctor(fields[0],fields[1],fields[3],fields[4]);
+                    //     doctors.add(d);
+                    //  }
+                    //  else if (fields[2].equals("Pharmacist")){
+
+                    //  }
+                    //  else if (fields[2].equals("Administrator")){
+
+                    //  }
                 }
             }
             System.out.println("Staff Information Retrieved Successfully!");
