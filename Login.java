@@ -77,20 +77,22 @@ public class Login {
                     getRecordFromLine(scanner.nextLine());
                 }
                 else{
-                     staffs.add(getRecordFromLine(scanner.nextLine()));
-                     // add once all classes completed
-                    //  String line = scanner.nextLine();
-                    //  String[] fields = line.split(";");
-                    //  if (fields[2].equals("Doctor")){
-                    //     Doctor d = new Doctor(fields[0],fields[1],fields[3],fields[4]);
-                    //     doctors.add(d);
-                    //  }
-                    //  else if (fields[2].equals("Pharmacist")){
-
-                    //  }
-                    //  else if (fields[2].equals("Administrator")){
-
-                    //  }
+                     // staffs.add(getRecordFromLine(scanner.nextLine()));
+                     // create list of staff
+                     String line = scanner.nextLine();
+                     String[] fields = line.split(";");
+                     if (fields[2].equals("Doctor")){
+                        Doctor d = new Doctor(fields[0],fields[1],fields[3],fields[4]);
+                        doctors.add(d);
+                     }
+                     else if (fields[2].equals("Pharmacist")){
+                        Pharmacist ph = new Pharmacist(fields[0],fields[1],fields[3],fields[4]);
+                        pharmacists.add(ph);
+                     }
+                     else if (fields[2].equals("Administrator")){
+                        Administrator adm = new Administrator(fields[0],fields[1],fields[3],fields[4]);
+                        administrators.add(adm);
+                     }
                 }
             }
             System.out.println("Staff Information Retrieved Successfully!");
@@ -135,19 +137,22 @@ public class Login {
                 role = Role.Patient;
             } 
         }
-        for(List<String> staff : staffs){
-            String temp = staff.get(2);
-            if (staff.get(0).equals(ID)){
+        for(Doctor d : doctors){
+            if (d.getHospitalID().equals(ID)){
                 validID = true;
-                if (temp.equals("Doctor")){
-                    role = role.Doctor;
-                }
-                else if (temp.equals("Pharmacist")){
-                    role = role.Pharmacist;
-                }
-                else if (temp.equals("Administrator")){
-                    role = role.Administrator;
-                }
+                role = Role.Doctor;
+            } 
+        }
+        for(Pharmacist ph : pharmacists){
+            if (ph.getHospitalID().equals(ID)){
+                validID = true;
+                role = Role.Pharmacist;
+            } 
+        }
+        for(Administrator adm : administrators){
+            if (adm.getHospitalID().equals(ID)){
+                validID = true;
+                role = Role.Administrator;
             } 
         }
     }
