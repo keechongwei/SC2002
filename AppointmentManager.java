@@ -11,11 +11,20 @@ import java.util.Scanner;
 
 public class AppointmentManager {
     public static List<AppointmentSlot> appointmentSlotArray = new ArrayList<>();
+    public static String appointmentsCSVHeader = "Date;Time;Appointment ID; DoctorID; PatientID;Appointment Status; OutcomeDate | Outcome Time |  Type Of Service | Medication Name ^ Medication Status ^ Medication Dosage | Consultation Notes";
     public static final File csvFile = new File("appointments.csv");
     // decides how many slots will there be in a day
     public static int numberofSlots = 10;
     public static int nextAppointmentID = 1;
 
+    public static void writeHeader(String header){
+        try (FileWriter writer = new FileWriter(csvFile, true)) {
+            writer.write(header + "\n");
+        } catch (IOException e) {
+            System.out.println("Error writing header to CSV file.");
+            e.printStackTrace();
+        }
+    }
     public static void makeDailyAppointments(List<List<String>> staffs){
         // hour determines starting hour
         int hour = 9;
@@ -42,9 +51,13 @@ public class AppointmentManager {
         appendAppointmentToCSV(slot);
         nextAppointmentID++;
     }
+    
     // function to edit values of AppointmentSlots without creating rows
     public static void writeCSV(List<AppointmentSlot> appointments) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFile))) {
+            // Write the header line first
+            bw.write(appointmentsCSVHeader);
+            bw.newLine();
             for (AppointmentSlot appointment : appointments) {
                 bw.write(appointment.toCSV());
                 bw.newLine();
@@ -108,14 +121,20 @@ public class AppointmentManager {
         for(AppointmentSlot apptSlot : appointmentSlotArray) {
             System.out.printf("%-5s %-12s %-8s %-10s %-10s%n", apptSlot.getAppointmentID(), 
             apptSlot.getDate(), apptSlot.getTime(), apptSlot.getDoctorID(), apptSlot.getStatus());
-        }
+    }
         
     }
 
     public static void loadAppointmentsFromCSV(File csvFile) {
+        boolean headerline = true;
         try (Scanner scanner = new Scanner(csvFile)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
+                // ignore headerline
+                if(headerline){
+                    headerline = false;
+                    continue;
+                }
                 String[] ApptSlotfields = line.split(";");
                 String date = ApptSlotfields[0];
                 String time = ApptSlotfields[1];

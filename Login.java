@@ -100,7 +100,7 @@ public class Login {
     }
     private static void IDCheck(String ID){
         for(Patient p : patients){
-            if (p.getHospitalID() == ID){
+            if (p.getHospitalID().equals(ID)){
                 validID = true;
                 role = Role.Patient;
             } 
@@ -148,7 +148,7 @@ public class Login {
         String password = "NULL";
         initialise(); // loads in data from csv
         while(!loggedIn){
-            System.out.println("HOSPITAL MANAGEMENT SYSTEM LOGIN PAGE");
+            System.out.println("=== HOSPITAL MANAGEMENT SYSTEM LOGIN PAGE ===");
             System.out.println("Enter Hospital ID: ");
             ID = sc.nextLine();
             IDCheck(ID);
@@ -167,6 +167,7 @@ public class Login {
             loggedIn = true;
         }
         System.out.println("Successful Login!");
+        AppointmentManager.writeHeader(AppointmentManager.appointmentsCSVHeader);
         AppointmentManager.makeDailyAppointments(staffs);
         AppointmentManager.loadAppointmentsFromCSV(AppointmentManager.csvFile);
         int choice = 0;
@@ -175,7 +176,7 @@ public class Login {
             //Patient curPat = (Patient) curUser;
             choice = 0;
             while(choice != 9){
-                System.out.println("PATIENT MENU, ENTER CHOICE");
+                System.out.println("=== PATIENT MENU, ENTER CHOICE ===");
                 System.out.println("(1) View Medical Record");
                 System.out.println("(2) Update Personal Information");
                 System.out.println("(3) View Available Appointment Slots");
@@ -186,6 +187,7 @@ public class Login {
                 System.out.println("(8) View Past Appointment Outcome Records");
                 System.out.println("(9) Logout");
                 choice = sc.nextInt();
+
                 switch(choice){
                     case 1:
                     // View Medical Record
@@ -222,7 +224,7 @@ public class Login {
             // }
             choice = 0;
             while(choice != 8){
-                System.out.println("DOCTOR MENU, ENTER CHOICE");
+                System.out.println("=== DOCTOR MENU, ENTER CHOICE ===");
                 System.out.println("(1) View Patient Medical Record");
                 System.out.println("(2) Update Patient Medical Record");
                 System.out.println("(3) View Personal Schedule");
@@ -261,7 +263,7 @@ public class Login {
             //Pharmacist curPharm = (Pharmacist) curUser;
             choice = 0;
             while(choice != 5){
-                System.out.println("PHARMACIST MENU, ENTER CHOICE");
+                System.out.println("=== PHARMACIST MENU, ENTER CHOICE ===");
                 System.out.println("(1) View Appointment Outcome Record");
                 System.out.println("(2) Update Prescription Status");
                 System.out.println("(3) View Medication Inventory");
@@ -288,7 +290,7 @@ public class Login {
             //Administrator curAdmin = (Administrator) curUser;
             choice = 0;
             while(choice != 5){
-                System.out.println("ADMINISTRATOR MENU, ENTER CHOICE");
+                System.out.println("=== ADMINISTRATOR MENU, ENTER CHOICE ===");
                 System.out.println("(1) View and Manage Hospital Staff");
                 System.out.println("(2) View Appointments Details");
                 System.out.println("(3) View and Manage Medication History");
