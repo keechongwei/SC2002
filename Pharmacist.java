@@ -16,7 +16,7 @@ public class Pharmacist extends User {
         loadPendingPrescriptionsFromCSV("Pending_Prescriptions.csv");
     }
 
-    public Administrator(String HospitalID, String gender, String age) {
+    public Pharmacist(String HospitalID, String gender, String age) {
         super(HospitalID, "password");
         this.gender = gender;
         this.age = Integer.valueOf(age);
