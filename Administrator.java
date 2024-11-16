@@ -16,6 +16,7 @@ public class Administrator extends User {
     static List<List<String>> staffs = new ArrayList<>();
     //static File staffRecordsFile = new File("Staff_List.csv");
     static String staffRecordsCSV = "Staff_List.csv";
+    static String medicineListCSV = "Medicine_List.csv";
     static String replenishRecordsCSV = "Replenish_Request_List.csv";
 
     Scanner input_scanner = new Scanner(System.in);
@@ -47,7 +48,7 @@ public class Administrator extends User {
 
         //admin.approveReplenishmentRequest();
 
-        Administrator.viewAllAppointments();
+        //Administrator.viewAllAppointments();
     }
 
     private static void initialise_staff_details(){
@@ -451,7 +452,7 @@ public class Administrator extends User {
 
     // might need to add error checking for duplicates and other kinds of inputs
 	public void manageInventory() { 
-        Inventory inventory = new Inventory("Medicine_List.csv");
+        Inventory inventory = new Inventory(medicineListCSV);
     
         System.out.println("=== Course of Action: ===");
         System.out.println("1 - View Inventory");
@@ -575,6 +576,9 @@ public class Administrator extends User {
         List<String> lines = readCSVFile(replenishRecordsCSV);
 
         // Split each line into fields (excluding the header)
+        System.out.println("=== All Replishment Requests ===");
+        System.out.println("Select by index, press any 0 to exit");
+
         for (int i = 1; i < lines.size(); i++) { // Start from index 1 to skip header
             String[] fields = lines.get(i).split(";");
             System.out.println("Request ID: " + fields[0] + " Medicine Name: " + fields[1] + " Add Amount: " + fields[2]);
@@ -601,7 +605,7 @@ public class Administrator extends User {
                         //update stock value and csv fike
                         medication.addStock(Integer.parseInt(fields[2]));
                         inventory.writeCSVFile();
-                        System.out.println("Updated: " + medication.getMedicationName() + " with limit: " + medication.getLowStockValue());
+                        System.out.println("Updated: " + medication.getMedicationName() + " Current amount: " + medication.getStock() + " Current Alert Limit: " + medication.getLowStockValue());
                         medInInventory = true;
                         break;
                     }   

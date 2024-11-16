@@ -295,18 +295,26 @@ public class Login {
                 System.out.println("(4) Approve Replenishment Requests");
                 System.out.println("(5) Logout");
                 choice = sc.nextInt();
+
+                Administrator administrator = new Administrator("A001", "password");
+
+                // Made manage staff and inventroy non-static for security
                 switch(choice){
                     case 1:
                     // View and Manage Hospital Staff
+                    administrator.manageStaff();
                     break;
                     case 2:
                     // View Appointments Details
+                    AppointmentManager.viewAllAppointments();
                     break;
                     case 3:
                     // View and Manage Medication History
+                    administrator.manageInventory();
                     break;
                     case 4:
                     // Approve Replenishment Request
+                    administrator.approveReplenishmentRequest();
                     break;
                 }
             }
