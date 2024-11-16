@@ -622,19 +622,5 @@ public class Administrator extends User {
         }
 	}
 
-    public static void viewAllAppointments() {
-        AppointmentManager.loadAppointmentsFromCSV(AppointmentManager.csvFile);
-        List<AppointmentSlot> listofAppointmentSlots = AppointmentManager.getAllAppointments();
-
-
-        System.out.printf("%-5s %-12s %-8s %-10s %-10s%n", "Appointment ID.", "Date", "Time", "Doctor", "PatientID", "Status");
-        System.out.println("-".repeat(50));
-
-        //show all appt slots
-        for(AppointmentSlot apptSlot : listofAppointmentSlots) {
-            System.out.printf("%-5s %-12s %-8s %-10s %-10s%n", apptSlot.getAppointmentID(), 
-            apptSlot.getDate(), apptSlot.getTime(), apptSlot.getDoctorID(), apptSlot.getStatus());
-        }
-	}
 }
 
