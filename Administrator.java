@@ -478,10 +478,7 @@ public class Administrator extends User {
                 int amount = input_scanner.nextInt();
                 input_scanner.nextLine();
     
-                Medication add_med = inventory.getMedication(medication_choice);
-                add_med.addStock(amount);
-                System.out.println("Updated: " + add_med.getMedicationName() + " with stock: " + add_med.getStock());
-                inventory.writeCSVFile();
+                inventory.updateMedication(medication_choice, amount, true);
                 break;
 
             case 3: // might need to add error checking for duplicates and other kinds of inputs
@@ -498,6 +495,8 @@ public class Administrator extends User {
                 inventory.addNewMedication(new_med_choice, new_med_amount, alertValue);
 
                 Medication med = inventory.getMedication(new_med_choice);
+                if(med == null) {break;}
+
                 System.out.println("Added new stock: " + med.getMedicationName() + " with stock: " + med.getStock());
 
                 break;
@@ -508,6 +507,8 @@ public class Administrator extends User {
                 String deleted_choice = input_scanner.nextLine();
     
                 Medication deleted_med = inventory.getMedication(deleted_choice);
+                if(deleted_med == null) {break;}
+
                 inventory.removeMedication(deleted_choice);
                 inventory.viewInventory();
                 System.out.println("Deleted stock: " + deleted_med.getMedicationName());
@@ -522,21 +523,10 @@ public class Administrator extends User {
                 input_scanner.nextLine();
                 boolean add_or_remove = false;
                 int current_stock = 0;
-    
-                // inventory.getMedication(updated_choice).ifPresentOrElse(
-                //     med -> {
-                //         int current_stock = med.getStock();
-                //         if (updated_amount > current_stock) {
-                //             med.addStock(updated_amount - current_stock);
-                //         } else if (updated_amount < current_stock) {
-                //             med.removeStock(current_stock - updated_amount);
-                //         }
-                //         System.out.println("Updated: " + med.getMedicationName() + " with stock: " + med.getStock());
-                //     },
-                //     () -> System.out.println("Medication " + updated_choice + " not found.")
-                // );
-                // inventory.writeCSVFile();
+
                 Medication medication = inventory.getMedication(updated_choice);
+                if(medication == null) {break;}
+
                 current_stock = medication.getStock();
                 
                 if (updated_amount > current_stock) {
@@ -548,7 +538,7 @@ public class Administrator extends User {
                     add_or_remove = false;
                 }
 
-                if(!Inventory.updateMedication(updated_choice, updated_amount, add_or_remove)) {
+                if(!inventory.updateMedication(updated_choice, updated_amount, add_or_remove)) {
                     System.out.println("Failed to update medication stock .");
                 }
                 break;
@@ -562,6 +552,8 @@ public class Administrator extends User {
                 input_scanner.nextLine();
 
                 Medication updated_med = inventory.getMedication(med_level_choice);
+                if(updated_med == null) {break;}
+
                 updated_med.updateLowStockLevel(new_limit);
                 System.out.println("Updated: " + updated_med.getMedicationName() + " with limit: " + updated_med.getLowStockValue());
                 inventory.writeCSVFile();
@@ -604,10 +596,8 @@ public class Administrator extends User {
                     // If not new med, update stock amount
                     if (fields[1].equals(medication.getMedicationName())) {
 
-                        //update stock value and csv fike
-                        medication.addStock(Integer.parseInt(fields[2]));
-                        inventory.writeCSVFile();
-                        System.out.println("Updated: " + medication.getMedicationName() + " Current amount: " + medication.getStock() + " Current Alert Limit: " + medication.getLowStockValue());
+                        //update stock value and csv file
+                        inventory.updateMedication(fields[1], Integer.parseInt(fields[2]), true);
                         medInInventory = true;
                         break;
                     }   

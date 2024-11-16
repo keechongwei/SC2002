@@ -118,7 +118,6 @@ public class Inventory {
 		return checker;
 	}
 
-
     public void writeCSVFile() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFilePath))) {
             bw.write("MedicationName;Stock;LowStockValue\n"); // Write header
