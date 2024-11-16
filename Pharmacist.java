@@ -9,6 +9,7 @@ public class Pharmacist extends User {
     private String gender;
     private int age;
     private String password;
+    private String name;
 
     public Pharmacist(String HospitalID, String password) {
         super(HospitalID, password);
@@ -16,8 +17,9 @@ public class Pharmacist extends User {
         loadPendingPrescriptionsFromCSV("Pending_Prescriptions.csv");
     }
 
-    public Pharmacist(String HospitalID, String gender, String age) {
+    public Pharmacist(String HospitalID, String name, String gender, String age) {
         super(HospitalID, "password");
+        this.name = name;
         this.gender = gender;
         this.age = Integer.valueOf(age);
     }

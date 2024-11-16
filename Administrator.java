@@ -21,6 +21,7 @@ public class Administrator extends User {
     private String gender;
     private int age;
     private String password;
+    private String name;
 
     Scanner input_scanner = new Scanner(System.in);
 
@@ -31,8 +32,9 @@ public class Administrator extends User {
         super(HospitalID, password);
     }
 
-     public Administrator(String HospitalID, String gender, String age) {
+     public Administrator(String HospitalID, String name, String gender, String age) {
         super(HospitalID, "password");
+        this.name = name;
         this.gender = gender;
         this.age = Integer.valueOf(age);
     }
