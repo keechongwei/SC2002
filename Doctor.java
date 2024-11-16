@@ -158,7 +158,13 @@ public class Doctor extends User{
     public void updatePatientRecord() {
     System.out.print("Enter patient ID to update their record: ");
     String id = sc.nextLine();
-    Patient patientToUpdate = PatientManager.findPatient(id);
+    Patient patientToUpdate = null;
+    for (Patient patient : patientList) {
+    if (patient.getMedicalRecord().getPatientID().equalsIgnoreCase(id)) { // Case-insensitive match
+        patientToUpdate = patient; // Found the patient
+        break; // Exit the loop once the patient is found
+    }
+}
     if (patientToUpdate == null) {
         System.out.println("The patient ID you entered does not match your patient list: " + id);
         return;
@@ -186,8 +192,8 @@ public class Doctor extends User{
 
     // Update appointment status and patient records
     //matchedSlot.setStatus(AppointmentStatus.COMPLETED); // Update the slot's status
-    PatientManager.addDiagnosis(diagnosis,id);
-    PatientManager.addTreatment(treatmentPlan,id);
+    patientToUpdate.getMedicalRecord().getPastDiagnoses().add(diagnosis);
+    patientToUpdate.getMedicalRecord().getPastTreatments().add(treatmentPlan);
 
     System.out.println("Patient record updated successfully for ID: " + id);
 }
