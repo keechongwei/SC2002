@@ -40,13 +40,11 @@ public class AppointmentManager {
             for (Doctor doctor : doctors) {
                     String doctorID = doctor.getHospitalID();
                     AppointmentSlot slot = new AppointmentSlot(dateString, timeString, "AVAILABLE", doctorID," ");
-                    appointmentSlotArray.add(slot); 
-                    appendAppointmentToCSV(slot);
                 } 
-            }
             hour++;
+            }
         }
-    }
+    
     public static void addAppointment(AppointmentSlot slot) {
         appointmentSlotArray.add(slot);
         appendAppointmentToCSV(slot);
