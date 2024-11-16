@@ -92,55 +92,62 @@ public class Doctor extends User{
     // }
     public void setAvailabilityForAppointments() {
         List <AppointmentSlot> schedule = AppointmentManager.getAppointmentsByDoctor(super.getHospitalID());
+        System.out.println("Manage Availability for Appointments:");
+        System.out.println("(1) Set Slot as Available");
+        System.out.println("(2) Set Slot as Unavailable");
+        System.out.print("Enter your choice: ");
+        int pick = sc.nextInt();
+        sc.nextLine();
+        if (pick != 1 && pick != 2) {
+        System.out.println("Invalid choice. Exiting.");
+        return;}
         System.out.println("Enter Date in (YYYY-MM-DD) format, eg: 2024-11-15) :");
         String dateinput = sc.nextLine();
         LocalDate date = LocalDate.parse(dateinput, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+           if (pick == 1) {
         System.out.println("YOUR CURRENT UNAVAILABLE SLOTS: ");
         for (AppointmentSlot slot : schedule){
-            if (slot.getDate() == date && slot.getStatus() == AppointmentStatus.UNAVAILABLE){
+            if (slot.getDate().equals(date) && slot.getStatus().equals(AppointmentStatus.UNAVAILABLE)){
                 System.out.printf("Appointment ID: %s, Time: %s\n", slot.getAppointmentID(), slot.getTime().toString());
             }
         }
+
         System.out.println("Enter Appointment ID of Slot To Be Added (E.g APT1): ");
         String choice = sc.nextLine().trim();
         for (AppointmentSlot changedslot : schedule){
-            if (changedslot.getAppointmentID() == choice){
+            if (changedslot.getAppointmentID().equals(choice)){
                 changedslot.setStatus(AppointmentStatus.AVAILABLE);
                 for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray){
-                    if (slot.getAppointmentID() == changedslot.getAppointmentID()){
+                    if (slot.getAppointmentID().equals(changedslot.getAppointmentID())){
                         slot.setStatus(AppointmentStatus.AVAILABLE);
                         System.out.println("Slot Made Available!");
                     }
                 }
+                return;
         }
-        }
-    }
-
-    public void removeAvailabilityForAppointments() {
-        List <AppointmentSlot> schedule = AppointmentManager.getAppointmentsByDoctor(super.getHospitalID());
-        System.out.println("Enter Date in (YYYY-MM-DD) format, eg: 2024-11-15) :");
-        String dateinput = sc.nextLine();
-        LocalDate date = LocalDate.parse(dateinput, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        }System.out.println("No matching slot found for the given Appointment ID.");
+    } else if (pick==2){
         System.out.println("YOUR CURRENT AVAILABLE SLOTS: ");
         for (AppointmentSlot slot : schedule){
-            if (slot.getDate() == date && slot.getStatus() == AppointmentStatus.AVAILABLE){
+            if (slot.getDate().equals(date) && slot.getStatus().equals(AppointmentStatus.AVAILABLE)){
                 System.out.printf("Appointment ID: %s, Time: %s\n", slot.getAppointmentID(), slot.getTime().toString());
             }
         }
         System.out.println("Enter Appointment ID of Slot To Be Removed (E.g APT1): ");
         String choice = sc.nextLine().trim();
         for (AppointmentSlot changedslot : schedule){
-            if (changedslot.getAppointmentID() == choice){
+            if (changedslot.getAppointmentID().equals(choice)){
                 changedslot.setStatus(AppointmentStatus.UNAVAILABLE);
                 for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray){
-                    if (slot.getAppointmentID() == changedslot.getAppointmentID()){
+                    if (slot.getAppointmentID().equals(changedslot.getAppointmentID())){
                         slot.setStatus(AppointmentStatus.UNAVAILABLE);
+                        System.out.println("Slot Made Unavailable!");
                     }
                 }
         }
         }
-        System.out.println("Slot Made Unavailable!");
-    }
+    }}
 
     public void viewPersonalSchedule() {
         System.out.println("=== Doctor's Personal Schedule ===");
@@ -200,14 +207,19 @@ public class Doctor extends User{
 
    public void viewUpcomingAppointment(){
     System.out.println("Doctor's Upcoming Appointments");
+     boolean hasAppointments = false;
     for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
         if (slot.getDoctorID().equals(super.getHospitalID()) && slot.getStatus() == AppointmentStatus.CONFIRMED) {
+            hasAppointments = true; 
             System.out.println("----------------------------------------------");
             System.out.println("Date: " + slot.getDate().toString());
             System.out.println("Time: " + slot.getTime().toString());
             System.out.println("PatientID: " + slot.getPatientID());
             System.out.println("----------------------------------------------");
         }
+    }
+    if (!hasAppointments) {
+        System.out.println("No upcoming appointments found.");
     }
     }
 
