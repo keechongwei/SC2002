@@ -1,8 +1,8 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.List;
-import java.util.Scanner;
+// import java.util.List;
+// import java.util.Scanner;
 
 public class Medication {
     static String filePath = "Medicine_List.csv";
@@ -105,6 +105,67 @@ public class Medication {
     //         }
     //     }
     // }
+
+    public static boolean updateStock(String medicationName, int amount, boolean isAddition) {
+        List<Medication> medications = new ArrayList<>();
+        boolean success = false;
+        
+        // Read current medications
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            boolean firstLine = true;
+            while ((line = br.readLine()) != null) {
+                if (firstLine) {
+                    firstLine = false;
+                    continue;
+                }
+                String[] values = line.split(";");
+                if (values.length >= 3) {
+                    String name = values[0].trim();
+                    int stock = Integer.parseInt(values[1].trim());
+                    int lowStockValue = Integer.parseInt(values[2].trim());
+                    Medication med = new Medication(name, stock, lowStockValue);
+                    
+                    if (name.equalsIgnoreCase(medicationName)) {
+                        if (isAddition) {
+                            med.addStock(amount);
+                            success = true;
+                        } else {
+                            if (med.getStock() >= amount) {
+                                med.removeStock(amount);
+                                success = true;
+                            } else {
+                                System.out.println("Insufficient stock. Current stock: " + med.getStock() + ", Requested: " + amount);
+                                return false;
+                            }
+                        }
+                    }
+                    medications.add(med);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading medication file: " + e.getMessage());
+            return false;
+        }
+        
+        if (!success) {
+            System.out.println("Medication '" + medicationName + "' not found in inventory.");
+            return false;
+        }
+        
+        // Write back all medications with updated stock
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
+            writer.println("MedicationName;Stock;LowStockValue");
+            for (Medication med : medications) {
+                writer.println(med.getMedicationName() + ";" + med.getStock() + ";" + med.getLowStockValue());
+            }
+        } catch (IOException e) {
+            System.out.println("Error writing to medication file: " + e.getMessage());
+            return false;
+        }
+        
+        return success;
+    }
 
     public Medication(String _medicationName, int _stock, int _lowStockValue) {
         this._medicationName = _medicationName;

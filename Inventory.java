@@ -70,6 +70,8 @@ public class Inventory {
     }
 
     public void viewInventory() {
+        loadMedicationsFromCSV("Medicine_List.csv");
+        
         System.out.println("Inventory:");
         for (Medication medication : listOfMedications) {
             System.out.println(medication.getMedicationName() + ": " + medication.getStock() + " units in stock, Low stock alert: " + medication.isLowStockAlert());
