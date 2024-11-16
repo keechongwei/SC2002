@@ -8,11 +8,22 @@ public class Pharmacist extends User {
     private List<Prescription> pendingPrescriptions;
     private String gender;
     private int age;
+    private String password;
 
     public Pharmacist(String HospitalID, String password) {
         super(HospitalID, password);
         this.pendingPrescriptions = new ArrayList<>();
         loadPendingPrescriptionsFromCSV("Pending_Prescriptions.csv");
+    }
+
+    public Administrator(String HospitalID, String gender, String age) {
+        super(HospitalID, "password");
+        this.gender = gender;
+        this.age = Integer.valueOf(age);
+    }
+
+    public void setPassword(String password){
+        this.password = password;
     }
 
     // Load pending prescriptions from CSV file
