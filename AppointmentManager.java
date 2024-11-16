@@ -99,6 +99,19 @@ public class AppointmentManager {
     public static List<AppointmentSlot> getAllAppointments() {
         return appointmentSlotArray;
     }
+
+    public static void viewAllAppointments() {
+        System.out.printf("%-5s %-12s %-8s %-10s %-10s%n", "Appointment ID.", "Date", "Time", "Doctor", "PatientID", "Status");
+        System.out.println("-".repeat(50));
+
+        //show all appt slots
+        for(AppointmentSlot apptSlot : appointmentSlotArray) {
+            System.out.printf("%-5s %-12s %-8s %-10s %-10s%n", apptSlot.getAppointmentID(), 
+            apptSlot.getDate(), apptSlot.getTime(), apptSlot.getDoctorID(), apptSlot.getStatus());
+        }
+        
+    }
+
     public static void loadAppointmentsFromCSV(File csvFile) {
         try (Scanner scanner = new Scanner(csvFile)) {
             while (scanner.hasNextLine()) {
