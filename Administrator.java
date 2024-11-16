@@ -339,7 +339,7 @@ public class Administrator extends User {
                         int role_choice = input_scanner.nextInt();
                         input_scanner.nextLine();
                     
-                        switch (role_choice) {
+                        switch (role_choice) {                                                                  
                             case 1:
                                 role = "Doctor";
                                 break;

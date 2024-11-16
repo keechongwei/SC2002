@@ -9,11 +9,11 @@ import java.time.format.DateTimeFormatter;
 
 public class Patient extends User{
     //under medical record:
-    // protected String patientID;
-    // protected String patientName;
-    // protected int dateofBirth;
-    // protected String gender;
-    // protected String BloodType;
+    //protected String patientID;
+    //protected String patientName;
+    //protected int dateofBirth;
+    //protected String gender;
+    //protected String BloodType;
     private MedicalRecord medicalRecord;
     
     private static Scanner sc = new Scanner(System.in);
@@ -420,7 +420,18 @@ public class Patient extends User{
             
         }
     }
+    
+    public String getPatientID() {
+        return super.getHospitalID();
+    }
+    public void addDiagnosis(String diagnosis) {
+            this.medicalRecord.addDiagnosis(diagnosis);
 
+    }
+
+    public void addTreatment(String treatment) {
+            this.medicalRecord.addTreatment(treatment);
+    }
 }
 
 
