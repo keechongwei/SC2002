@@ -33,6 +33,10 @@ public class Patient extends User{
         super.setPassword(password);
     }
 
+    public MedicalRecord getMedicalRecord() {
+        return this.medicalRecord;
+    }
+
     //update contact info in medical record
     public void updatePersonalInfo() {
         int choice;
