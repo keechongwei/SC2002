@@ -268,7 +268,7 @@ public class Patient extends User{
         }
 
         //select new slot
-        System.out.print("\nSelect new appointment slot (enter number): ");
+        System.out.print("\nSelect new appointment slot (enter number e.g. 1): ");
         choice = sc.nextInt();
         sc.nextLine(); // Clear buffer
 
