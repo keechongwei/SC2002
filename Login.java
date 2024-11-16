@@ -30,7 +30,7 @@ public class Login {
             // File doesn't exist or is empty, create daily appointments
             System.out.println("appointments.csv is empty or missing. Generating daily appointments...");
             AppointmentManager.writeHeader(AppointmentManager.appointmentsCSVHeader);
-            AppointmentManager.makeDailyAppointments(staffs); // Replace getStaffList() with your method to get the staff data
+            AppointmentManager.makeDailyAppointments(doctors); // Replace getStaffList() with your method to get the staff data
         } else {
             // File exists and is not empty, load appointments from the CSV
             System.out.println("Loading appointments from appointments.csv...");
