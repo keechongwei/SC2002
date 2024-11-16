@@ -11,6 +11,9 @@ public class Login {
     static List<Patient> patients = new ArrayList<Patient>();
     /* convert staffs into lists of Administrators, Pharmacists and Doctors once classes are done
      */
+    static List<Pharmacist> pharmacists = new ArrayList<Pharmacist>();
+    static List<Administrator> administrators = new ArrayList<Administrator>();
+    static List<Doctor> doctors = new ArrayList<Doctor>();
     static List<List<String>> staffs = new ArrayList<>();
     static List<List<String>> medicines = new ArrayList<>();
     static File medicineFile = new File("Medicine_List.csv");
@@ -20,6 +23,20 @@ public class Login {
     static boolean loggedIn = false;
     static boolean validID = false;
     static boolean validPassword = false;
+
+    // initialises appointment array
+    public static void initializeAppointments() {
+        if (!((AppointmentManager.csvFile).exists()) || (AppointmentManager.csvFile).length() == 0) {
+            // File doesn't exist or is empty, create daily appointments
+            System.out.println("appointments.csv is empty or missing. Generating daily appointments...");
+            AppointmentManager.writeHeader(AppointmentManager.appointmentsCSVHeader);
+            AppointmentManager.makeDailyAppointments(staffs); // Replace getStaffList() with your method to get the staff data
+        } else {
+            // File exists and is not empty, load appointments from the CSV
+            System.out.println("Loading appointments from appointments.csv...");
+            AppointmentManager.loadAppointmentsFromCSV(AppointmentManager.csvFile);
+        }
+    }
     // function used to initialise patient, staff, medicine data
     private static void initialise(){
         boolean headerline = true;
@@ -60,7 +77,22 @@ public class Login {
                     getRecordFromLine(scanner.nextLine());
                 }
                 else{
-                    staffs.add(getRecordFromLine(scanner.nextLine()));
+                     // staffs.add(getRecordFromLine(scanner.nextLine()));
+                     // create list of staff
+                     String line = scanner.nextLine();
+                     String[] fields = line.split(";");
+                     if (fields[2].equals("Doctor")){
+                        Doctor d = new Doctor(fields[0],fields[1],fields[3],fields[4]);
+                        doctors.add(d);
+                     }
+                     else if (fields[2].equals("Pharmacist")){
+                        Pharmacist ph = new Pharmacist(fields[0],fields[1],fields[3],fields[4]);
+                        pharmacists.add(ph);
+                     }
+                     else if (fields[2].equals("Administrator")){
+                        Administrator adm = new Administrator(fields[0],fields[1],fields[3],fields[4]);
+                        administrators.add(adm);
+                     }
                 }
             }
             System.out.println("Staff Information Retrieved Successfully!");
@@ -105,19 +137,22 @@ public class Login {
                 role = Role.Patient;
             } 
         }
-        for(List<String> staff : staffs){
-            String temp = staff.get(2);
-            if (staff.get(0).equals(ID)){
+        for(Doctor d : doctors){
+            if (d.getHospitalID().equals(ID)){
                 validID = true;
-                if (temp.equals("Doctor")){
-                    role = role.Doctor;
-                }
-                else if (temp.equals("Pharmacist")){
-                    role = role.Pharmacist;
-                }
-                else if (temp.equals("Administrator")){
-                    role = role.Administrator;
-                }
+                role = Role.Doctor;
+            } 
+        }
+        for(Pharmacist ph : pharmacists){
+            if (ph.getHospitalID().equals(ID)){
+                validID = true;
+                role = Role.Pharmacist;
+            } 
+        }
+        for(Administrator adm : administrators){
+            if (adm.getHospitalID().equals(ID)){
+                validID = true;
+                role = Role.Administrator;
             } 
         }
     }
@@ -167,9 +202,7 @@ public class Login {
             loggedIn = true;
         }
         System.out.println("Successful Login!");
-        AppointmentManager.writeHeader(AppointmentManager.appointmentsCSVHeader);
-        AppointmentManager.makeDailyAppointments(staffs);
-        AppointmentManager.loadAppointmentsFromCSV(AppointmentManager.csvFile);
+        initializeAppointments();
         int choice = 0;
         switch(role){
             case Patient:

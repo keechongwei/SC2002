@@ -13,12 +13,25 @@ public class Pharmacist extends User {
     private final Inventory inventory;
     private String gender;
     private int age;
+    private String password;
+    private String name;
 
     public Pharmacist(String HospitalID, String password) {
         super(HospitalID, password);
         this.appointments = new ArrayList<>();
         this.inventory = new Inventory("Medicine_List.csv");
         loadAppointments();
+    }
+
+    public Pharmacist(String HospitalID, String name, String gender, String age) {
+        super(HospitalID, "password");
+        this.name = name;
+        this.gender = gender;
+        this.age = Integer.valueOf(age);
+    }
+
+    public void setPassword(String password){
+        this.password = password;
     }
 
     // Load pending prescriptions from CSV file
