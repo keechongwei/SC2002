@@ -32,15 +32,14 @@ public class Administrator extends User {
         Administrator admin = new Administrator("Hospital123", "Password123");
     
         // Initialize staff details
-        initialise_staff_details();
         //admin.printDoubleList(staffs);
 
         // Filter staff 
-        List<List<String>> filteredStaffs = admin.filterStaff(Filter_type.Name, "John");
+        //List<List<String>> filteredStaffs = admin.filterStaff(Filter_type.Name, "John");
     
         // Print the filtered staff list
-        System.out.println("Filtered Staff List:");
-        admin.printDoubleList(filteredStaffs);
+        ///System.out.println("Filtered Staff List:");
+        //admin.printDoubleList(filteredStaffs);
 
         //admin.manageStaff();
 
@@ -169,6 +168,8 @@ public class Administrator extends User {
     }
 
 	public void manageStaff() {
+
+        initialise_staff_details();
 
         // Search by ID
         System.out.println("=== Staff Manager ===");
@@ -629,7 +630,7 @@ public class Administrator extends User {
 
         System.out.printf("%-5s %-12s %-8s %-10s %-10s%n", "Appointment ID.", "Date", "Time", "Doctor", "PatientID", "Status");
         System.out.println("-".repeat(50));
-
+        
         //show all appt slots
         for(AppointmentSlot apptSlot : listofAppointmentSlots) {
             System.out.printf("%-5s %-12s %-8s %-10s %-10s%n", apptSlot.getAppointmentID(), 
