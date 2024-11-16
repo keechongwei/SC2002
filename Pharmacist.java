@@ -122,7 +122,8 @@ public class Pharmacist extends User {
         }
         
         // Update medication stock first
-        if (!Medication.updateStock(medicationName, dosageToDispense, false)) {
+        Inventory inventory = new Inventory("Medicine_List.csv");
+        if (!inventory.updateMedication(medicationName, dosageToDispense, false)) {
             System.out.println("Failed to update medication stock - insufficient quantity.");
             return false;
         }
@@ -249,7 +250,7 @@ public class Pharmacist extends User {
                         System.out.println("Prescription successfully dispensed.");
                         
                         // Check for low stock alert after dispensing
-                        Medication updatedMed = inventory.getMedication(medToDispense).orElse(null);
+                        Medication updatedMed = inventory.getMedication(medToDispense);
                         if (updatedMed != null && updatedMed.isLowStockAlert()) {
                             System.out.println("\nLOW STOCK ALERT");
                             System.out.println("Medication: " + updatedMed.getMedicationName());

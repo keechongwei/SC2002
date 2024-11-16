@@ -44,7 +44,7 @@ public class Administrator extends User {
 
         //admin.manageStaff();
 
-        //admin.manageInventory();
+        admin.manageInventory();
 
         //admin.approveReplenishmentRequest();
 
@@ -478,13 +478,9 @@ public class Administrator extends User {
                 int amount = input_scanner.nextInt();
                 input_scanner.nextLine();
     
-                inventory.getMedication(medication_choice).ifPresentOrElse(
-                    med -> {
-                        med.addStock(amount);
-                        System.out.println("Updated: " + med.getMedicationName() + " with stock: " + med.getStock());
-                    },
-                    () -> System.out.println("Medication " + medication_choice + " not found.")
-                );
+                Medication add_med = inventory.getMedication(medication_choice);
+                add_med.addStock(amount);
+                System.out.println("Updated: " + add_med.getMedicationName() + " with stock: " + add_med.getStock());
                 inventory.writeCSVFile();
                 break;
 
@@ -501,12 +497,8 @@ public class Administrator extends User {
 
                 inventory.addNewMedication(new_med_choice, new_med_amount, alertValue);
 
-                inventory.getMedication(new_med_choice).ifPresentOrElse(
-                    med -> {
-                        System.out.println("Added new stock: " + med.getMedicationName() + " with stock: " + med.getStock());
-                    },
-                    () -> System.out.println("Medication " + new_med_choice + " not found.")
-                );
+                Medication med = inventory.getMedication(new_med_choice);
+                System.out.println("Added new stock: " + med.getMedicationName() + " with stock: " + med.getStock());
 
                 break;
     
@@ -515,14 +507,10 @@ public class Administrator extends User {
                 System.out.println("Medication Name: ");
                 String deleted_choice = input_scanner.nextLine();
     
-                inventory.getMedication(deleted_choice).ifPresentOrElse(
-                    med -> {
-                        inventory.removeMedication(deleted_choice);
-                        inventory.viewInventory();
-                        System.out.println("Deleted stock: " + med.getMedicationName());
-                    },
-                    () -> System.out.println("Medication " + deleted_choice + " not found.")
-                );
+                Medication deleted_med = inventory.getMedication(deleted_choice);
+                inventory.removeMedication(deleted_choice);
+                inventory.viewInventory();
+                System.out.println("Deleted stock: " + deleted_med.getMedicationName());
                 break;
     
             case 5:
@@ -532,20 +520,37 @@ public class Administrator extends User {
                 System.out.println("Updated Amount: ");
                 int updated_amount = input_scanner.nextInt();
                 input_scanner.nextLine();
+                boolean add_or_remove = false;
+                int current_stock = 0;
     
-                inventory.getMedication(updated_choice).ifPresentOrElse(
-                    med -> {
-                        int current_stock = med.getStock();
-                        if (updated_amount > current_stock) {
-                            med.addStock(updated_amount - current_stock);
-                        } else if (updated_amount < current_stock) {
-                            med.removeStock(current_stock - updated_amount);
-                        }
-                        System.out.println("Updated: " + med.getMedicationName() + " with stock: " + med.getStock());
-                    },
-                    () -> System.out.println("Medication " + updated_choice + " not found.")
-                );
-                inventory.writeCSVFile();
+                // inventory.getMedication(updated_choice).ifPresentOrElse(
+                //     med -> {
+                //         int current_stock = med.getStock();
+                //         if (updated_amount > current_stock) {
+                //             med.addStock(updated_amount - current_stock);
+                //         } else if (updated_amount < current_stock) {
+                //             med.removeStock(current_stock - updated_amount);
+                //         }
+                //         System.out.println("Updated: " + med.getMedicationName() + " with stock: " + med.getStock());
+                //     },
+                //     () -> System.out.println("Medication " + updated_choice + " not found.")
+                // );
+                // inventory.writeCSVFile();
+                Medication medication = inventory.getMedication(updated_choice);
+                current_stock = medication.getStock();
+                
+                if (updated_amount > current_stock) {
+                    updated_amount -= updated_amount;
+                    add_or_remove = true;
+                } else if (updated_amount < current_stock) {
+                    current_stock -= updated_amount;
+                    updated_amount = current_stock;
+                    add_or_remove = false;
+                }
+
+                if(!Inventory.updateMedication(updated_choice, updated_amount, add_or_remove)) {
+                    System.out.println("Failed to update medication stock .");
+                }
                 break;
     
             case 6:
@@ -555,13 +560,10 @@ public class Administrator extends User {
                 System.out.println("New Alert Level: ");
                 int new_limit = input_scanner.nextInt();
                 input_scanner.nextLine();
-                inventory.getMedication(med_level_choice).ifPresentOrElse(
-                    med -> {
-                        med.updateLowStockLevel(new_limit);
-                        System.out.println("Updated: " + med.getMedicationName() + " with limit: " + med.getLowStockValue());
-                    },
-                    () -> System.out.println("Medication " + med_level_choice + " not found.")
-                ); 
+
+                Medication updated_med = inventory.getMedication(med_level_choice);
+                updated_med.updateLowStockLevel(new_limit);
+                System.out.println("Updated: " + updated_med.getMedicationName() + " with limit: " + updated_med.getLowStockValue());
                 inventory.writeCSVFile();
                 break;
     

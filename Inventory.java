@@ -20,10 +20,8 @@ public class Inventory {
 		// Search for a specific medication
 		System.out.println("\n=== Search for a Medication ===");
 		String searchMedication = "Paracetamol"; // Replace with an actual medication name in your CSV
-		inventory.getMedication(searchMedication).ifPresentOrElse(
-			medication -> System.out.println("Found: " + medication.getMedicationName() + " with stock: " + medication.getStock()),
-			() -> System.out.println("Medication " + searchMedication + " not found.")
-		);
+		Medication search_med = inventory.getMedication(searchMedication);
+		System.out.println("Found: " + search_med.getMedicationName() + " with stock: " + search_med.getStock());
 	
 		// Display the full inventory again to verify no changes
 		System.out.println("\n=== Full Inventory List ===");
@@ -59,10 +57,15 @@ public class Inventory {
         }
     }
 
-    public Optional<Medication> getMedication(String medicationName) {
-        return listOfMedications.stream()
-                .filter(medication -> medication.getMedicationName().equalsIgnoreCase(medicationName))
-                .findFirst();
+    public Medication getMedication(String medicationName) {
+		for(Medication med : listOfMedications) {
+			if (med.getMedicationName().equalsIgnoreCase(medicationName)) {
+				return med;
+			}
+		}
+		
+		System.out.println("Unable to retrieve medication, medication not found");
+		return null;
     }
 
     public List<Medication> getInventory() {
@@ -96,6 +99,23 @@ public class Inventory {
 		}
 		this.listOfMedications = temp;
 		writeCSVFile();
+	}
+
+	// add is true, remove is false
+	public boolean updateMedication(String medicationName, int amount, boolean add_or_remove) {
+
+		boolean checker = false;
+		Medication med = this.getMedication(medicationName);
+		if (add_or_remove == true) {
+			med.addStock(amount);
+		} else {
+			med.removeStock(amount);
+		}
+
+		System.out.println("Updated: " + med.getMedicationName() + " with stock: " + med.getStock());
+		checker = true;
+		writeCSVFile();
+		return checker;
 	}
 
 
