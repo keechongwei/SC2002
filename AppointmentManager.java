@@ -51,9 +51,13 @@ public class AppointmentManager {
         appendAppointmentToCSV(slot);
         nextAppointmentID++;
     }
+    
     // function to edit values of AppointmentSlots without creating rows
     public static void writeCSV(List<AppointmentSlot> appointments) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFile))) {
+            // Write the header line first
+            bw.write(appointmentsCSVHeader);
+            bw.newLine();
             for (AppointmentSlot appointment : appointments) {
                 bw.write(appointment.toCSV());
                 bw.newLine();
@@ -109,9 +113,15 @@ public class AppointmentManager {
         return appointmentSlotArray;
     }
     public static void loadAppointmentsFromCSV(File csvFile) {
+        boolean headerline = true;
         try (Scanner scanner = new Scanner(csvFile)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
+                // ignore headerline
+                if(headerline){
+                    headerline = false;
+                    continue;
+                }
                 String[] ApptSlotfields = line.split(";");
                 String date = ApptSlotfields[0];
                 String time = ApptSlotfields[1];
