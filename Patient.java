@@ -195,6 +195,7 @@ public class Patient extends User{
                 slot.setPatientID(this.medicalRecord.getPatientID());
                 System.out.println("Appointment scheduled, status: pending.");
                 System.out.printf("Appointment ID: %s, Date: %s, Time: %s, Doctor: %s, Status: %s%n", slot.getAppointmentID(), slot.getDate(), slot.getTime(), slot.getDoctorID(), slot.getStatus());
+                AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
             }
         }
      }

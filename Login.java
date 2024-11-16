@@ -206,7 +206,13 @@ public class Login {
         int choice = 0;
         switch(role){
             case Patient:
-            //Patient curPat = (Patient) curUser;
+            Patient curPat = null;
+            for (Patient pat : patients) {
+                if (pat.getMedicalRecord().getPatientID().equals(ID)) {
+                    curPat = pat; 
+                    break;
+                }
+            }
             choice = 0;
             while(choice != 9){
                 System.out.println("=== PATIENT MENU, ENTER CHOICE ===");
@@ -223,38 +229,45 @@ public class Login {
 
                 switch(choice){
                     case 1:
-                    // View Medical Record
+                    curPat.viewMedicalRecord();
                     break;
                     case 2:
-                    // Update Personal Information
+                    curPat.updatePersonalInfo();// Update Personal Information
                     break;
                     case 3:
-                    // View Available Appointment Slots
+                    curPat.viewAvailAppointmentSlot();// View Available Appointment Slots
                     break;
                     case 4:
-                    // Schedule An Appointment
+                    curPat.scheduleAppointments();// Schedule An Appointment
                     break;
                     case 5:
-                    // Reschedule An Appointment
+                    curPat.rescheduleAppointment();// Reschedule An Appointment
                     break;
                     case 6:
-                    // Cancel An Appointment
+                    curPat.cancelAppointment();// Cancel An Appointment
                     break;
                     case 7:
-                    // View Scheduled Appointments
+                    curPat.viewAppointmentStatus();// View Scheduled Appointments
                     break;
                     case 8:
-                    // View Past Appointments Outcome Record
+                    curPat.viewAppointmentOutcomeRecord();// View Past Appointments Outcome Record
+                    break;
+                    case 9:
+                    System.out.println("Logging out...");
+                    loggedIn = false;
                     break;
                 }
             }
             break;
             case Doctor:
-            // for (Doctor doctor : doctors){
-            //     if (doctor.getDoctorID().equals(ID)){
-            //         doctor.setPassword(password);
-            //     }
-            // }
+            Doctor d = null;
+            for (Doctor doctor : doctors) {
+                if (doctor.getDoctorID().equals(ID)) {
+                    d = doctor; 
+                    break;
+                }
+            }
+            d.addPatient(patients.get(0));
             choice = 0;
             while(choice != 8){
                 System.out.println("=== DOCTOR MENU, ENTER CHOICE ===");
@@ -269,25 +282,28 @@ public class Login {
                 choice = sc.nextInt();
                 switch(choice){
                     case 1:
-                    // View Patient Medical Record
+                    d.viewPatientRecords();
                     break;
                     case 2:
-                    // Update Patient Medical Record
+                    d.updatePatientRecord();
                     break;
                     case 3:
-                    // View Personal Schedule
+                    d.viewPersonalSchedule(); // View Personal Schedule
                     break;
                     case 4:
-                    // Set Availability For Appointments
+                    d.setAvailabilityForAppointments();// Set Availability For Appointments
                     break;
                     case 5:
-                    // Accept Or Decline Appointment Requests
+                    d.acceptOrDeclineAppointments();// Accept Or Decline Appointment Requests
                     break;
                     case 6:
-                    // View Upcoming Appointments
+                    d.viewUpcomingAppointment();
                     break;
                     case 7:
-                    // Record Appointment Outcome
+                    d.makeAppointmentOutcomeRecord();
+                    break;
+                    case 8:
+                    System.out.println("Logging out...");
                     break;
                 }
             }

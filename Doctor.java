@@ -311,7 +311,7 @@ public class Doctor extends User{
         // Check if the slot matches the patient ID, doctor ID, and is confirmed
             if (slot.getPatientID().equals(id) && 
                 slot.getDoctorID().equals(super.getHospitalID()) && 
-                slot.getStatus() == AppointmentStatus.CONFIRMED) {
+                slot.getStatus()==AppointmentStatus.CONFIRMED) {
 
         // Update the outcome record with provided details
                 slot.updateAppointmentOutcomeRecord(slot.getDate(), slot.getTime(), serviceType, pres, consultationNote);

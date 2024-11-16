@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class PatientManager {
-    public static List<Patient> allPatients = new ArrayList<>();
+    public static List<Patient> allPatients= new ArrayList<>();
     public static final File csvFile = new File("Patient_List copy.csv");
     private static final String CSV_DELIMITER = ";";
     private static final String LIST_DELIMITER = ",";  // For separating items within ArrayLists
