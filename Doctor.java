@@ -122,6 +122,7 @@ public class Doctor extends User{
                     if (slot.getAppointmentID().equals(changedslot.getAppointmentID())){
                         slot.setStatus(AppointmentStatus.AVAILABLE);
                         System.out.println("Slot Made Available!");
+                        AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
                     }
                 }
                 return;
@@ -143,6 +144,7 @@ public class Doctor extends User{
                     if (slot.getAppointmentID().equals(changedslot.getAppointmentID())){
                         slot.setStatus(AppointmentStatus.UNAVAILABLE);
                         System.out.println("Slot Made Unavailable!");
+                        AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
                     }
                 }
         }
@@ -223,7 +225,6 @@ public class Doctor extends User{
     }
     }
 
-   
    public void acceptOrDeclineAppointments(){
     System.out.println("PENDING APPOINTMENTS");
     for (AppointmentSlot slot : AppointmentManager.getAppointmentsByDoctor(super.getHospitalID())) {
@@ -240,10 +241,11 @@ public class Doctor extends User{
     int choice = 0;
     String choice2 = "";
     while (choice <3){
-        System.out.print("(1) ACCEPT APPOINTMENT");
-        System.out.print("(2) DECLINE APPOINTMENT");
-        System.out.print("(3) QUIT");
+        System.out.println("(1) ACCEPT APPOINTMENT");
+        System.out.println("(2) DECLINE APPOINTMENT");
+        System.out.println("(3) QUIT");
         choice = sc.nextInt();
+        sc.nextLine();
         switch(choice){
             case 1:
             System.out.println("PENDING APPOINTMENTS");
@@ -257,11 +259,13 @@ public class Doctor extends User{
                     System.out.println("----------------------------------------------");
                 }
             }
-            System.out.print("Enter Appointment ID to Accept: ");
-            choice2 = sc.nextLine();
+            System.out.println("Enter Appointment ID to Accept: ");
+            choice2 = sc.nextLine().trim();
             for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
-                if (slot.getAppointmentID() == choice2){ 
+                if (slot.getAppointmentID().equals(choice2) ){ 
                     slot.setStatus(AppointmentStatus.CONFIRMED);
+                    AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
+                    System.out.println("Appointment ID " + choice2 + " has been CONFIRMED.");
                 }
             }
             break;
@@ -277,11 +281,13 @@ public class Doctor extends User{
                     System.out.println("----------------------------------------------");
                 }
             }
-            System.out.print("Enter Appointment ID to Decline: ");
-            choice2 = sc.nextLine();
+            System.out.println("Enter Appointment ID to Decline: ");
+            choice2 = sc.nextLine().trim();
             for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
-                if (slot.getAppointmentID() == choice2){ 
+                if (slot.getAppointmentID().equals(choice2)){ 
                     slot.setStatus(AppointmentStatus.CANCELLED);
+                    AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
+                    System.out.println("Appointment ID " + choice2 + " has been DECLINED.");
                 }
             }
             break;
@@ -309,7 +315,8 @@ public class Doctor extends User{
 
         // Update the outcome record with provided details
                 slot.updateAppointmentOutcomeRecord(slot.getDate(), slot.getTime(), serviceType, pres, consultationNote);
-
+                slot.setStatus(AppointmentStatus.COMPLETED);
+                AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
         // Log success message
                 System.out.println("Outcome successfully recorded for patient ID: " + id);
                 return; // Exit the loop after successfully updating
@@ -318,4 +325,5 @@ public class Doctor extends User{
 
     //UPDATE PATIENT MEDICAL RECORDS,RECORD APPOINTMENT OUTCOME
     //AGGREGATION
+    //UNAVAILABLE
     }}
