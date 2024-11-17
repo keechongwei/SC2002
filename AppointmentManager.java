@@ -162,6 +162,19 @@ public class AppointmentManager {
         }
     }
 
+    // initialises appointment array
+    public static void initializeAppointments() {
+        if (!((AppointmentManager.csvFile).exists()) || (AppointmentManager.csvFile).length() == 0) {
+            // File doesn't exist or is empty, create daily appointments
+            System.out.println("appointments.csv is empty or missing. Generating daily appointments...");
+            AppointmentManager.writeHeader(AppointmentManager.appointmentsCSVHeader);
+            AppointmentManager.makeDailyAppointments(StaffManager.doctors); // Replace getStaffList() with your method to get the staff data
+        } else {
+            // File exists and is not empty, load appointments from the CSV
+            System.out.println("Loading appointments from appointments.csv...");
+            AppointmentManager.loadAppointmentsFromCSV(AppointmentManager.csvFile);
+        }
+    }
     public static void main(String[] args){
         // AppointmentSlot test = new AppointmentSlot("2002-11-07", "07:00", "CONFIRMED","A001","P001");
         // test.outcome = new AppointmentOutcomeRecord("2002-11-07","09:00","CONSULTATION", new Prescription("Panadol",PrescriptionStatus.valueOf("PENDING"),5), null);
