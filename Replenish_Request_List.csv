@@ -1,3 +1,2 @@
 RequestID;MedicationName;AddedAmount;Status
-1;Meow;100;Approved
-2;Paracetamol;200;Approved
+1;Ibuprofen;200;Pending

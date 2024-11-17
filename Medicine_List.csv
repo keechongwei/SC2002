@@ -1,4 +1,3 @@
 MedicationName;Stock;LowStockValue
-Ibuprofen;10;10
-Amoxicillin;10;15
-Paracetamol;400;50
+Amoxicillin;15;15
+Paracetamol;220;50
