@@ -41,31 +41,34 @@ public class MedicalRecord {
         this.patient = patient;
     }
 
+    private MedicalRecord getLatestFromCSV() {
+        PatientManager.loadRecordsCSV();
+        for(Patient p : PatientManager.allPatients) {
+            if(p.getHospitalID().equals(this.patientID)) {
+                return p.getMedicalRecord();
+            }
+        }
+        return this;
+    }
+
     //update to csv, then update local info with csv info
     private void updateCSV() {
         if(patient != null) {
             PatientManager.updatePatient(patient);
         
-            PatientManager.loadRecordsCSV();
-            for(Patient p : PatientManager.allPatients) {
-                if(p.getHospitalID().equals(this.patientID)) {
-                    this.name = p.getMedicalRecord().getName();
-                    this.dateOfBirth = p.getMedicalRecord().getDateOfBirth();
-                    this.gender = p.getMedicalRecord().getGender();
-                    this.bloodType = p.getMedicalRecord().getBloodType();
-                    this.emailAddress = p.getMedicalRecord().getEmailAddress();
-                    this.phoneNumber = p.getMedicalRecord().getPhoneNumber();
-                    
-                    // Update lists
-                    this.pastDiagnoses.clear();
-                    this.pastDiagnoses.addAll(p.getMedicalRecord().getPastDiagnoses());
-                    
-                    this.pastTreatments.clear();
-                    this.pastTreatments.addAll(p.getMedicalRecord().getPastTreatments());
-                    
-                    break;
-                }
-            }
+            //refresh 
+            MedicalRecord latest = getLatestFromCSV();
+            this.name = latest.name;
+            this.dateOfBirth = latest.dateOfBirth;
+            this.gender = latest.gender;
+            this.bloodType = latest.bloodType;
+            this.emailAddress = latest.emailAddress;
+            this.phoneNumber = latest.phoneNumber;
+            this.pastDiagnoses.clear();
+            this.pastDiagnoses.addAll(latest.pastDiagnoses);
+            this.pastTreatments.clear();
+            this.pastTreatments.addAll(latest.pastTreatments);
+
         }   
         
     }
@@ -140,6 +143,9 @@ public class MedicalRecord {
 
     public void addDiagnosis(String diagnosis) {
         PatientManager.addDiagnosis(this.patientID, diagnosis);
+        MedicalRecord latest = getLatestFromCSV();
+        this.pastDiagnoses.clear();
+        this.pastDiagnoses.addAll(latest.getPastDiagnoses());
     }
 
     public ArrayList<String> getPastTreatments() {
@@ -148,5 +154,8 @@ public class MedicalRecord {
 
     public void addTreatment(String treatment) {
         PatientManager.addTreatment(this.patientID, treatment);
+        MedicalRecord latest = getLatestFromCSV();
+        this.pastTreatments.clear();
+        this.pastTreatments.addAll(latest.getPastTreatments());
     }
 }
