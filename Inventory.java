@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.Scanner;
 
 public class Inventory {
-    private List<Medication> listOfMedications;
+    public static List<Medication> listOfMedications;
 	static String csvFilePath = "Medicine_List.csv"; // Replace with your actual CSV file path
 
 	public static void main(String[] args) {		
