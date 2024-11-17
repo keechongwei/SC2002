@@ -63,7 +63,7 @@ public class Login {
             } 
         }
     }
-    private static void passwordCheck(String password){
+    private static String passwordCheck(String password){
         Scanner sc = new Scanner(System.in);
         // for first login, password is password
         if (password.equals("password")){
@@ -79,9 +79,11 @@ public class Login {
                 check = sc.nextLine();  
             }
             validPassword = true;
+            return password;
         }
         else{
             System.out.println("Invalid Password.");
+            return "password"; 
         }
     }
     private static void login(boolean loggedIn, Scanner sc){
@@ -100,7 +102,7 @@ public class Login {
                 System.out.println("Enter Password: ");
                 password = sc.nextLine();
                 password = password.toLowerCase();
-                passwordCheck(password);
+                password = passwordCheck(password);
             }
             loggedIn = true;
             System.out.println("Successful Login!");
