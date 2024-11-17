@@ -48,7 +48,7 @@ public class Login {
             while (scanner.hasNextLine()) {
                 if(headerline){
                     headerline = false;
-                    getRecordFromLine(scanner.nextLine());
+                    continue;
                 }
                 else{
                         String line = scanner.nextLine();
@@ -77,7 +77,7 @@ public class Login {
             while (scanner.hasNextLine()) {
                 if(headerline){
                     headerline = false;
-                    getRecordFromLine(scanner.nextLine());
+                    continue;
                 }
                 else{
                      // staffs.add(getRecordFromLine(scanner.nextLine()));
@@ -110,14 +110,13 @@ public class Login {
             while (scanner.hasNextLine()) {
                 if(headerline){
                     headerline = false;
-                    getRecordFromLine(scanner.nextLine());
+                    continue;
                 }
                 else{
                     medicines.add(getRecordFromLine(scanner.nextLine()));
                 }
             }
             System.out.println("Medicine Information Retrieved Successfully!");
-            //System.out.println(medicines);
         } catch (FileNotFoundException e){
             System.out.println("Unable to Retrieve Medicine Information!");
             e.printStackTrace();
