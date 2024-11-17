@@ -176,14 +176,5 @@ public class AppointmentManager {
             AppointmentManager.loadAppointmentsFromCSV(AppointmentManager.csvFile);
         }
     }
-    public static void main(String[] args){
-        // AppointmentSlot test = new AppointmentSlot("2002-11-07", "07:00", "CONFIRMED","A001","P001");
-        // test.outcome = new AppointmentOutcomeRecord("2002-11-07","09:00","CONSULTATION", new Prescription("Panadol",PrescriptionStatus.valueOf("PENDING"),5), null);
-        //AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
-        // AppointmentManager.loadAppointmentsFromCSV(AppointmentManager.csvFile);
-        // for(AppointmentSlot appt : AppointmentManager.appointmentSlotArray){
-        //     System.out.println(appt.getDoctorID());
-        // }
-    }
     // Other functions for filtering by patient, status, etc.
 }
