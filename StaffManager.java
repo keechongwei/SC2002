@@ -19,13 +19,14 @@ public class StaffManager {
         try (Scanner scanner = new Scanner(csvFile)){
             while (scanner.hasNextLine()) {
                 if(headerline){
+                    String line = scanner.nextLine();
                     headerline = false;
                     continue;
                 }
                 else{
                     String line = scanner.nextLine();
                     String[] fields = line.split(";");
-                    if (fields[2].equals("Doctor")){
+                    if (fields[3].equals("Doctor")){
                         if(!(fields[1].equals("password"))){
                             Doctor d = new Doctor(fields[0],fields[2],fields[4],fields[5]);
                             d.setPassword(fields[1]);
@@ -36,7 +37,7 @@ public class StaffManager {
                             doctors.add(d);     
                         }
                     }
-                    else if (fields[2].equals("Pharmacist")){
+                    else if (fields[3].equals("Pharmacist")){
                         if(!(fields[1].equals("password"))){
                             Pharmacist ph = new Pharmacist(fields[0],fields[2],fields[4],fields[5]);
                             ph.setPassword(fields[1]);
@@ -47,7 +48,7 @@ public class StaffManager {
                             pharmacists.add(ph);
                         }
                     }
-                    else if (fields[2].equals("Administrator")){
+                    else if (fields[3].equals("Administrator")){
                         if(!(fields[1].equals("password"))){
                             Administrator adm = new Administrator(fields[0],fields[2],fields[4],fields[5]);
                             adm.setPassword(fields[1]);
