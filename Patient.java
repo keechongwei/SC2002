@@ -31,6 +31,53 @@ public class Patient extends User{
         this.medicalRecord.setPatient(this); 
     }
 
+    public void printMenu(){
+        int choice = 0;
+        while(choice != 9){
+            System.out.println("=== PATIENT MENU, ENTER CHOICE ===");
+            System.out.println("(1) View Medical Record");
+            System.out.println("(2) Update Personal Information");
+            System.out.println("(3) View Available Appointment Slots");
+            System.out.println("(4) Schedule An Appointment");
+            System.out.println("(5) Reschedule An Appointment");
+            System.out.println("(6) Cancel An Appointment");
+            System.out.println("(7) View Scheduled Appointments");
+            System.out.println("(8) View Past Appointment Outcome Records");
+            System.out.println("(9) Logout");
+            choice = sc.nextInt();
+
+            switch(choice){
+                case 1:
+                this.viewMedicalRecord();
+                break;
+                case 2:
+                this.updatePersonalInfo();// Update Personal Information
+                break;
+                case 3:
+                this.viewAvailAppointmentSlot();// View Available Appointment Slots
+                break;
+                case 4:
+                this.scheduleAppointments();// Schedule An Appointment
+                break;
+                case 5:
+                this.rescheduleAppointment();// Reschedule An Appointment
+                break;
+                case 6:
+                this.cancelAppointment();// Cancel An Appointment
+                break;
+                case 7:
+                this.viewAppointmentStatus();// View Scheduled Appointments
+                break;
+                case 8:
+                this.viewAppointmentOutcomeRecord();// View Past Appointments Outcome Record
+                break;
+                case 9:
+                System.out.println("Logging out...");
+                break;
+            }
+        }
+    }
+
     public void setPassword(String password){
         super.setPassword(password);
     }

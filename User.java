@@ -1,5 +1,5 @@
 
-public class User {
+public abstract class User {
 
 	private String HospitalID;
 	private String Password;
@@ -20,5 +20,7 @@ public class User {
 	public void setPassword(String password){
 		this.Password = password;
 	}
+
+	public abstract void printMenu();
 
 }

@@ -39,6 +39,41 @@ public class Administrator extends User {
         this.age = Integer.valueOf(age);
     }
 
+    public void printMenu(){
+        Scanner sc = new Scanner(System.in);
+        int choice = 0;
+        while(choice != 5){
+            System.out.println("=== ADMINISTRATOR MENU, ENTER CHOICE ===");
+            System.out.println("(1) View and Manage Hospital Staff");
+            System.out.println("(2) View Appointments Details");
+            System.out.println("(3) View and Manage Medication History");
+            System.out.println("(4) Approve Replenishment Requests");
+            System.out.println("(5) Logout");
+            choice = sc.nextInt();
+
+            Administrator administrator = new Administrator("A001", "password");
+
+            // Made manage staff and inventroy non-static for security
+            switch(choice){
+                case 1:
+                // View and Manage Hospital Staff
+                this.manageStaff();
+                break;
+                case 2:
+                // View Appointments Details
+                AppointmentManager.viewAllAppointments();
+                break;
+                case 3:
+                // View and Manage Medication History
+                this.manageInventory();
+                break;
+                case 4:
+                // Approve Replenishment Request
+                this.approveReplenishmentRequest();
+                break;
+            }
+        }
+    }
     public void setPassword(String password){
         super.setPassword(password);
     }
