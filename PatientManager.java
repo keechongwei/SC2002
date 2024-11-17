@@ -9,7 +9,11 @@ public class PatientManager {
 
     // Load records from CSV
     public static void loadRecordsCSV() {
-        //File file = new File(CSV_FILE_PATH);
+       
+        if(!allPatients.isEmpty()) {
+            allPatients.clear();
+        }
+        
         try (Scanner sc = new Scanner(csvFile)) {
             
             if (sc.hasNextLine()) {
@@ -33,7 +37,6 @@ public class PatientManager {
                 String emailAddress = patientFields[5];
                 String phoneNumber = (patientFields.length > 6) ? patientFields[6] : "";
 
-                // Convert string representations back to ArrayLists
                 ArrayList<String> pastDiagnoses = new ArrayList<>();
                 if (patientFields.length > 7 && !patientFields[7].isEmpty()) {
                     pastDiagnoses.addAll(Arrays.asList(patientFields[7].split(LIST_DELIMITER)));
@@ -83,13 +86,13 @@ public class PatientManager {
               .append(patient.getMedicalRecord().getEmailAddress()).append(CSV_DELIMITER)
               .append(patient.getMedicalRecord().getPhoneNumber()).append(CSV_DELIMITER);
     
-            // Handle past diagnoses - join with LIST_DELIMITER or empty string if null/empty
+            // Handle past diagnoses 
             ArrayList<String> diagnoses = patient.getMedicalRecord().getPastDiagnoses();
             sb.append(diagnoses != null && !diagnoses.isEmpty() 
                      ? String.join(LIST_DELIMITER, diagnoses) 
                      : "").append(CSV_DELIMITER);
     
-            // Handle past treatments - join with LIST_DELIMITER or empty string if null/empty
+            // Handle past treatments
             ArrayList<String> treatments = patient.getMedicalRecord().getPastTreatments();
             sb.append(treatments != null && !treatments.isEmpty() 
                      ? String.join(LIST_DELIMITER, treatments) 
@@ -158,7 +161,7 @@ public class PatientManager {
         return null;
     }
 
-    // Example usage in main method
+    // Test main
     public static void main(String[] args) {
         // Load existing records
         loadRecordsCSV();
