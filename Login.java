@@ -30,7 +30,7 @@ public class Login {
             // File doesn't exist or is empty, create daily appointments
             System.out.println("appointments.csv is empty or missing. Generating daily appointments...");
             AppointmentManager.writeHeader(AppointmentManager.appointmentsCSVHeader);
-            AppointmentManager.makeDailyAppointments(staffs); // Replace getStaffList() with your method to get the staff data
+            AppointmentManager.makeDailyAppointments(doctors); // Replace getStaffList() with your method to get the staff data
         } else {
             // File exists and is not empty, load appointments from the CSV
             System.out.println("Loading appointments from appointments.csv...");
@@ -77,20 +77,22 @@ public class Login {
                     getRecordFromLine(scanner.nextLine());
                 }
                 else{
-                     staffs.add(getRecordFromLine(scanner.nextLine()));
-                     // add once all classes completed
-                    //  String line = scanner.nextLine();
-                    //  String[] fields = line.split(";");
-                    //  if (fields[2].equals("Doctor")){
-                    //     Doctor d = new Doctor(fields[0],fields[1],fields[3],fields[4]);
-                    //     doctors.add(d);
-                    //  }
-                    //  else if (fields[2].equals("Pharmacist")){
-
-                    //  }
-                    //  else if (fields[2].equals("Administrator")){
-
-                    //  }
+                     // staffs.add(getRecordFromLine(scanner.nextLine()));
+                     // create list of staff
+                     String line = scanner.nextLine();
+                     String[] fields = line.split(";");
+                     if (fields[2].equals("Doctor")){
+                        Doctor d = new Doctor(fields[0],fields[1],fields[3],fields[4]);
+                        doctors.add(d);
+                     }
+                     else if (fields[2].equals("Pharmacist")){
+                        Pharmacist ph = new Pharmacist(fields[0],fields[1],fields[3],fields[4]);
+                        pharmacists.add(ph);
+                     }
+                     else if (fields[2].equals("Administrator")){
+                        Administrator adm = new Administrator(fields[0],fields[1],fields[3],fields[4]);
+                        administrators.add(adm);
+                     }
                 }
             }
             System.out.println("Staff Information Retrieved Successfully!");
@@ -135,19 +137,22 @@ public class Login {
                 role = Role.Patient;
             } 
         }
-        for(List<String> staff : staffs){
-            String temp = staff.get(2);
-            if (staff.get(0).equals(ID)){
+        for(Doctor d : doctors){
+            if (d.getHospitalID().equals(ID)){
                 validID = true;
-                if (temp.equals("Doctor")){
-                    role = role.Doctor;
-                }
-                else if (temp.equals("Pharmacist")){
-                    role = role.Pharmacist;
-                }
-                else if (temp.equals("Administrator")){
-                    role = role.Administrator;
-                }
+                role = Role.Doctor;
+            } 
+        }
+        for(Pharmacist ph : pharmacists){
+            if (ph.getHospitalID().equals(ID)){
+                validID = true;
+                role = Role.Pharmacist;
+            } 
+        }
+        for(Administrator adm : administrators){
+            if (adm.getHospitalID().equals(ID)){
+                validID = true;
+                role = Role.Administrator;
             } 
         }
     }
@@ -201,7 +206,13 @@ public class Login {
         int choice = 0;
         switch(role){
             case Patient:
-            //Patient curPat = (Patient) curUser;
+            Patient curPat = null;
+            for (Patient pat : patients) {
+                if (pat.getMedicalRecord().getPatientID().equals(ID)) {
+                    curPat = pat; 
+                    break;
+                }
+            }
             choice = 0;
             while(choice != 9){
                 System.out.println("=== PATIENT MENU, ENTER CHOICE ===");
@@ -218,38 +229,45 @@ public class Login {
 
                 switch(choice){
                     case 1:
-                    // View Medical Record
+                    curPat.viewMedicalRecord();
                     break;
                     case 2:
-                    // Update Personal Information
+                    curPat.updatePersonalInfo();// Update Personal Information
                     break;
                     case 3:
-                    // View Available Appointment Slots
+                    curPat.viewAvailAppointmentSlot();// View Available Appointment Slots
                     break;
                     case 4:
-                    // Schedule An Appointment
+                    curPat.scheduleAppointments();// Schedule An Appointment
                     break;
                     case 5:
-                    // Reschedule An Appointment
+                    curPat.rescheduleAppointment();// Reschedule An Appointment
                     break;
                     case 6:
-                    // Cancel An Appointment
+                    curPat.cancelAppointment();// Cancel An Appointment
                     break;
                     case 7:
-                    // View Scheduled Appointments
+                    curPat.viewAppointmentStatus();// View Scheduled Appointments
                     break;
                     case 8:
-                    // View Past Appointments Outcome Record
+                    curPat.viewAppointmentOutcomeRecord();// View Past Appointments Outcome Record
+                    break;
+                    case 9:
+                    System.out.println("Logging out...");
+                    loggedIn = false;
                     break;
                 }
             }
             break;
             case Doctor:
-            // for (Doctor doctor : doctors){
-            //     if (doctor.getDoctorID().equals(ID)){
-            //         doctor.setPassword(password);
-            //     }
-            // }
+            Doctor d = null;
+            for (Doctor doctor : doctors) {
+                if (doctor.getDoctorID().equals(ID)) {
+                    d = doctor; 
+                    break;
+                }
+            }
+            d.addPatient(patients.get(0));
             choice = 0;
             while(choice != 8){
                 System.out.println("=== DOCTOR MENU, ENTER CHOICE ===");
@@ -264,53 +282,63 @@ public class Login {
                 choice = sc.nextInt();
                 switch(choice){
                     case 1:
-                    // View Patient Medical Record
+                    d.viewPatientRecords();
                     break;
                     case 2:
-                    // Update Patient Medical Record
+                    d.updatePatientRecord();
                     break;
                     case 3:
-                    // View Personal Schedule
+                    d.viewPersonalSchedule(); // View Personal Schedule
                     break;
                     case 4:
-                    // Set Availability For Appointments
+                    d.setAvailabilityForAppointments();// Set Availability For Appointments
                     break;
                     case 5:
-                    // Accept Or Decline Appointment Requests
+                    d.acceptOrDeclineAppointments();// Accept Or Decline Appointment Requests
                     break;
                     case 6:
-                    // View Upcoming Appointments
+                    d.viewUpcomingAppointment();
                     break;
                     case 7:
-                    // Record Appointment Outcome
+                    d.makeAppointmentOutcomeRecord();
+                    break;
+                    case 8:
+                    System.out.println("Logging out...");
                     break;
                 }
             }
             break;
             case Pharmacist:
-            //Pharmacist curPharm = (Pharmacist) curUser;
+
+            Pharmacist pharmacist = new Pharmacist("P001", "password", "male", "29");
             choice = 0;
-            while(choice != 5){
+            while(choice != 6){
                 System.out.println("=== PHARMACIST MENU, ENTER CHOICE ===");
                 System.out.println("(1) View Appointment Outcome Record");
-                System.out.println("(2) Update Prescription Status");
-                System.out.println("(3) View Medication Inventory");
-                System.out.println("(4) Submit Replenishment Request");
-                System.out.println("(5) Logout");
+                System.out.println("(2) View Pending Prescriptions");
+                System.out.println("(3) Update Prescription Status");
+                System.out.println("(4) View Medication Inventory");
+                System.out.println("(5) Submit Replenishment Request");
+                System.out.println("(6) Logout");
                 choice = sc.nextInt();
-                switch(choice){
+
+                
+                switch(choice) {
                     case 1:
-                    // View Appointment Outcome  Record
-                    break;
+                        pharmacist.viewAllAppointmentOutcomes();
+                        break;
                     case 2:
-                    // Update Prescription Status
-                    break;
+                        pharmacist.viewPendingPrescriptions();
+                        break;
                     case 3:
-                    // View Medication Inventory
-                    break;
+                        pharmacist.updatePrescriptionStatus();
+                        break;
                     case 4:
-                    // Submit Replenishment Request
-                    break;
+                        pharmacist.viewMedicationInventory();
+                        break;
+                    case 5:
+                        pharmacist.submitReplenishmentRequest();
+                        break;
                 }
             }
             break;

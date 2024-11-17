@@ -24,8 +24,17 @@ public class Patient extends User{
         this.medicalRecord = new MedicalRecord(patientID, patientName, dateofBirth, gender, phoneNumber, emailAddress, bloodType);
     }
 
+    public Patient(String patientID, String patientName, String dateofBirth, String gender, String bloodType, String phoneNumber, String emailAddress, ArrayList<String> pastDiagnoses, ArrayList<String> pastTreatments) {
+        super(patientID, "password");
+        this.medicalRecord = new MedicalRecord(patientID, patientName, dateofBirth, gender, phoneNumber, emailAddress, bloodType, pastDiagnoses, pastTreatments);
+    }
+
     public void setPassword(String password){
         super.setPassword(password);
+    }
+
+    public MedicalRecord getMedicalRecord() {
+        return this.medicalRecord;
     }
 
     //update contact info in medical record
@@ -186,6 +195,7 @@ public class Patient extends User{
                 slot.setPatientID(this.medicalRecord.getPatientID());
                 System.out.println("Appointment scheduled, status: pending.");
                 System.out.printf("Appointment ID: %s, Date: %s, Time: %s, Doctor: %s, Status: %s%n", slot.getAppointmentID(), slot.getDate(), slot.getTime(), slot.getDoctorID(), slot.getStatus());
+                AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
             }
         }
      }
@@ -259,7 +269,7 @@ public class Patient extends User{
         }
 
         //select new slot
-        System.out.print("\nSelect new appointment slot (enter number): ");
+        System.out.print("\nSelect new appointment slot (enter number e.g. 1): ");
         choice = sc.nextInt();
         sc.nextLine(); // Clear buffer
 

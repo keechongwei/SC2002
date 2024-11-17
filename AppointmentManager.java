@@ -25,7 +25,7 @@ public class AppointmentManager {
             e.printStackTrace();
         }
     }
-    public static void makeDailyAppointments(List<List<String>> staffs){
+    public static void makeDailyAppointments(List<Doctor> doctors){
         // hour determines starting hour
         int hour = 9;
         for(int i = 0; i < numberofSlots; i++){
@@ -37,15 +37,14 @@ public class AppointmentManager {
             else{
                 timeString = String.valueOf(hour) + ":00";
             }
-            for (List<String> staff : staffs){
-                if (staff.get(2).equals("Doctor")) { // role 
-                    String doctorID = staff.get(0);
+            for (Doctor doctor : doctors) {
+                    String doctorID = doctor.getHospitalID();
                     AppointmentSlot slot = new AppointmentSlot(dateString, timeString, "AVAILABLE", doctorID," ");
                 } 
-            }
             hour++;
+            }
         }
-    }
+    
     public static void addAppointment(AppointmentSlot slot) {
         appointmentSlotArray.add(slot);
         appendAppointmentToCSV(slot);

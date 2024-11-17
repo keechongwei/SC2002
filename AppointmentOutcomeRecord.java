@@ -66,6 +66,10 @@ public class AppointmentOutcomeRecord {
         this.typeOfService = TypeOfService.valueOf(tos.toUpperCase());
     }
 
+    public void setTypeOfService(TypeOfService tos) {
+        this.typeOfService = tos;
+    }
+
     public Prescription getPrescribedMedication() {
         return this.prescribedMedication;
     }

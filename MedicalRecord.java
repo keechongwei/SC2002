@@ -24,6 +24,18 @@ public class MedicalRecord {
         this.pastTreatments = new ArrayList<>();
     }
 
+    public MedicalRecord(String patientID, String name, String dateOfBirth, String gender, String phoneNumber, String emailAddress, String bloodType, ArrayList<String> pastDiagnoses, ArrayList<String> pastTreatments) {
+        this.patientID = patientID;
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.emailAddress = emailAddress;
+        this.bloodType = bloodType;
+        this.pastDiagnoses = pastDiagnoses;
+        this.pastTreatments = pastTreatments;
+    }
+
     public String getPatientID() {
         return patientID;
     }

@@ -18,6 +18,10 @@ public class Administrator extends User {
     static String staffRecordsCSV = "Staff_List.csv";
     static String medicineListCSV = "Medicine_List.csv";
     static String replenishRecordsCSV = "Replenish_Request_List.csv";
+    private String gender;
+    private int age;
+    private String password;
+    private String name;
 
     Scanner input_scanner = new Scanner(System.in);
 
@@ -28,6 +32,16 @@ public class Administrator extends User {
         super(HospitalID, password);
     }
 
+     public Administrator(String HospitalID, String name, String gender, String age) {
+        super(HospitalID, "password");
+        this.name = name;
+        this.gender = gender;
+        this.age = Integer.valueOf(age);
+    }
+
+    public void setPassword(String password){
+        this.password = password;
+    }
     public static void main(String[] args) {
         // Create an Administrator instance
         Administrator admin = new Administrator("Hospital123", "Password123");
