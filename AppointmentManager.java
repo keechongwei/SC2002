@@ -163,7 +163,7 @@ public class AppointmentManager {
     }
 
     // initialises appointment array
-    public static void initializeAppointments() {
+    public static void initialiseAppointments() {
         if (!((AppointmentManager.csvFile).exists()) || (AppointmentManager.csvFile).length() == 0) {
             // File doesn't exist or is empty, create daily appointments
             System.out.println("appointments.csv is empty or missing. Generating daily appointments...");
