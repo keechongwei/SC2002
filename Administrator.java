@@ -90,6 +90,7 @@ public class Administrator extends Staff {
         ///System.out.println("Filtered Staff List:");
         //admin.printDoubleList(filteredStaffs);
 
+        AppointmentManager.initialiseAppointments();
         StaffManager.loadRecordsCSV();
         admin.manageStaff();
 
@@ -363,6 +364,10 @@ public class Administrator extends Staff {
         String hospitalID = input_scanner.nextLine();
 
         List<String> lines = readCSVFile(staffRecordsCSV);
+        if (hospitalID.substring(0,1).equalsIgnoreCase("D")) {
+            StaffManager.doctorHandling((Doctor)StaffManager.getStaffByID(hospitalID), false);
+        }
+
         boolean removed = lines.removeIf(line -> line.startsWith(hospitalID + ";"));
 
         if (removed) {

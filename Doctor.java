@@ -77,30 +77,6 @@ public class Doctor extends Staff{
         patientList.add(patient);
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getAge() {
-        return age;
-    }
-
-    public void setAge(String age) {
-        this.age = age;
-    }
-    
-    public String getDoctorID() {
-        return super.getHospitalID();
-    } 
-
-    public String getDoctorName() {
-        return this.name;
-    }
-
-    public void setName(String doctorName) {
-        this.name = doctorName;
-    } 
-
     public void viewPatientRecords(){
         if (patientList.isEmpty()) {
             System.out.println("No Patient Record Found");

@@ -191,6 +191,11 @@ public class StaffManager {
                             newHospitalID = getNextID(pharmacists);
                             Pharmacist pharm = new Pharmacist(newHospitalID, name, gender, age); 
                             pharmacists.add(pharm);
+
+                            // If remove doctor, remove appts
+                            if(roleLetter.equals("D")) {
+                                doctorHandling((Doctor)staff, false);
+                            }
                         } 
                         break;
 
@@ -200,6 +205,11 @@ public class StaffManager {
                             newHospitalID = getNextID(administrators);
                             Administrator admin = new Administrator(newHospitalID, name, gender, age); 
                             administrators.add(admin);
+
+                            // If remove doctor, remove appts
+                            if(roleLetter.equals("D")) {
+                                doctorHandling((Doctor)staff, false);
+                            }
                         } 
                         break;
 
@@ -269,10 +279,9 @@ public class StaffManager {
             return true;
         } else {
             //Remove doc appointments from CSV
-            System.out.println("");
-
+            AppointmentManager.removeAppointments(doctor);
             // If still have pending appointments for the doctor, stop removal, return false
-            return removed;
+            return true;
         }
 
     }
