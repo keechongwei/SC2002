@@ -67,11 +67,6 @@ public class Administrator extends Staff {
             }
         }
     }
-
-    public String toCSV() {
-        // Combine all attributes into a CSV string
-        return super.getHospitalID() + ";" + super.getPassword() + ";" + name + ";" + "Administrator" + ";" + gender + ";" + age;
-    }
     
     public static void main(String[] args) {
         // Create an Administrator instance
