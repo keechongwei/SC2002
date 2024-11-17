@@ -217,7 +217,7 @@ public class Patient extends User{
         }
 
         if(availSlots.isEmpty()) {
-            System.out.println("No available appointment slots.");
+            System.out.println("No available appointment slots.\n");
             return;
         }
         
@@ -358,6 +358,7 @@ public class Patient extends User{
                 );
             }
         }
+        System.out.println();
 
     }
 
@@ -438,6 +439,7 @@ public class Patient extends User{
                 slot.getDoctorID(),
                 slot.getStatus());
         }
+        System.out.println();
     }
 
     public void viewAppointmentOutcomeRecord() {
