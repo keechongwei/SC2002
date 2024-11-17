@@ -3,9 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
-// import java.time.LocalDate;
-// import java.time.LocalTime;
-// import java.time.format.DateTimeFormatter;
 
 public class Pharmacist extends User {
     private List<AppointmentSlot> appointments;
@@ -14,6 +11,7 @@ public class Pharmacist extends User {
     private int age;
     private String name;
 
+    // Primary constructor with basic authentication details
     public Pharmacist(String HospitalID, String password) {
         super(HospitalID, password);
         this.appointments = new ArrayList<>();
@@ -21,6 +19,7 @@ public class Pharmacist extends User {
         loadAppointments();
     }
 
+    // Constructor with all the details
     public Pharmacist(String HospitalID, String name, String gender, String age) {
         super(HospitalID, "password");
         this.name = name;
@@ -34,7 +33,7 @@ public class Pharmacist extends User {
     public void printMenu(){
         Scanner sc = new Scanner(System.in);
         int choice = 0;
-        while(choice != 6){
+        while(choice != 5){
             System.out.println("=== PHARMACIST MENU, ENTER CHOICE ===");
             System.out.println("(1) View Appointment Outcome Record");
             System.out.println("(2) Update Prescription Status");
@@ -57,10 +56,17 @@ public class Pharmacist extends User {
                 case 4:
                     this.submitReplenishmentRequest();
                     break;
+                case 5:
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
             }
         }
         System.out.println("Logging out...");
+        sc.close();
     }
+    
     public void setPassword(String password){
         super.setPassword(password);
     }
@@ -238,6 +244,7 @@ public class Pharmacist extends User {
         } else {
             System.out.println("Appointment not found.");
         }
+        scanner.close();
     }
 
     public void submitReplenishmentRequest() {
