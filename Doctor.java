@@ -20,8 +20,11 @@ public class Doctor extends User{
         this.age = age;
     }
 
+    public void addPatientsUnderCare(Patient p){
+        this.patientList.add(p);
+    }
+
     public void printMenu(){
-        this.addPatient(PatientManager.allPatients.get(0));
         int choice = 0;
         while(choice != 8){
             System.out.println("=== DOCTOR MENU, ENTER CHOICE ===");
@@ -113,15 +116,6 @@ public class Doctor extends User{
             }
     }
     
-
-    public Patient findPatientByID(String patientID){
-        for (Patient patient : patientList) {
-            if (patient.getHospitalID() == patientID){
-                return patient;
-            }
-        }
-        return null;
-    }
     
     public void setAvailabilityForAppointments() {
         List <AppointmentSlot> schedule = AppointmentManager.getAppointmentsByDoctor(super.getHospitalID());
@@ -187,6 +181,7 @@ public class Doctor extends User{
     public void viewPersonalSchedule() {
         System.out.println("=== Doctor's Personal Schedule ===");
         viewUpcomingAppointment();
+        System.out.println("=== AVAILABLE SLOTS ===");
         for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
             if (slot.getDoctorID().equals(super.getHospitalID()) && slot.getStatus() == AppointmentStatus.AVAILABLE){
                 System.out.println("----------------------------------------------");
@@ -297,6 +292,7 @@ public class Doctor extends User{
             for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
                 if (slot.getAppointmentID().equals(choice2) ){ 
                     slot.setStatus(AppointmentStatus.CONFIRMED);
+                    this.addPatientsUnderCare(PatientManager.findPatient(slot.getPatientID()));
                     AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
                     System.out.println("Appointment ID " + choice2 + " has been CONFIRMED.");
                 }
