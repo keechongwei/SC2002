@@ -17,6 +17,12 @@ public class AppointmentManager {
     public static int numberofSlots = 10;
     public static int nextAppointmentID = 1;
 
+    public static void updateAppointmentsCSV(){
+        AppointmentManager.writeHeader(AppointmentManager.appointmentsCSVHeader);
+        AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
+    }
+    
+    // write header to Appointments CSV file
     public static void writeHeader(String header){
         try (FileWriter writer = new FileWriter(csvFile, true)) {
             writer.write(header + "\n");
