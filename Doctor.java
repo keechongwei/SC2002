@@ -39,18 +39,23 @@ public class Doctor extends User{
                 this.viewPatientRecords();
                 break;
                 case 2:
+                sc.nextLine();
                 this.updatePatientRecord();
                 break;
                 case 3:
+                sc.nextLine();
                 this.viewPersonalSchedule(); // View Personal Schedule
                 break;
                 case 4:
+                sc.nextLine();
                 this.setAvailabilityForAppointments();// Set Availability For Appointments
                 break;
                 case 5:
+                sc.nextLine();
                 this.acceptOrDeclineAppointments();// Accept Or Decline Appointment Requests
                 break;
                 case 6:
+                sc.nextLine();
                 this.viewUpcomingAppointment();
                 break;
                 case 7:
@@ -87,9 +92,6 @@ public class Doctor extends User{
         this.age = age;
     }
     
-    public String getDoctorID() {
-        return super.getHospitalID();
-    } 
 
     public String getDoctorName() {
         return this.name;
@@ -328,13 +330,13 @@ public class Doctor extends User{
 
     public void makeAppointmentOutcomeRecord(){
         List<AppointmentSlot> confirmedAppointmentSlots;
-        confirmedAppointmentSlots = AppointmentManager.getAppointmentsByDoctor(this.getDoctorID());
+        confirmedAppointmentSlots = AppointmentManager.getAppointmentsByDoctor(this.getHospitalID());
         String id = "";
         boolean validpatientID = false;
         boolean validAppointmentID = false;
         boolean validService = false;
         boolean validMedication = false;
-        System.out.println("patientID to update his/her record:");
+        System.out.println("Patient ID to update his/her record[E.g P1001]:");
         id = sc.nextLine().trim();
         while (!validpatientID){
             for (Patient p : PatientManager.allPatients){
@@ -347,7 +349,7 @@ public class Doctor extends User{
                 break;
             }
             System.out.println("Invalid Patient ID");
-            System.out.println("patientID to update his/her record:");
+            System.out.println("Patient ID to update his/her record[E.g P1001]:");
             id = sc.nextLine().trim();
         }
         confirmedAppointmentSlots.retainAll(AppointmentManager.getAppointmentsByPatient(id));
@@ -444,6 +446,8 @@ public class Doctor extends User{
                 slot.updateAppointmentOutcomeRecord(slot.getDate(), slot.getTime(), serviceType, pres, consultationNote);
                 slot.setStatus(AppointmentStatus.COMPLETED);
                 AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
+                PatientManager.addDiagnosis(id, consultationNote);
+                PatientManager.addTreatment(id, medicineType);
         // Log success message
                 System.out.println("Outcome successfully recorded for Appointment ID: " + selectedAppointmentID);
                 return; // Exit the loop after successfully updating
