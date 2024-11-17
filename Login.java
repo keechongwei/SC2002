@@ -66,9 +66,13 @@ public class Login {
                 if (p.getPassword().equals("password")){
                     System.out.println("Change Your Password: ");
                     password = sc.nextLine();
+                    while(password.equalsIgnoreCase("password")){
+                        System.out.println("Change Your Password. Your New Password Cannot Be Password: ");
+                        password = sc.nextLine();
+                    }
                     System.out.println("Verify Your New Password: ");
                     String check = sc.nextLine();
-                    while (!check.equals(password)){
+                    while (!check.equals(password) || password.length() == 0 ){
                         System.out.println("Password Change Failed.");
                         System.out.println("Change Your Password: ");
                         password = sc.nextLine();
@@ -93,9 +97,13 @@ public class Login {
                 if (d.getPassword().equals("password")){
                     System.out.println("Change Your Password: ");
                     password = sc.nextLine();
+                    while(password.equalsIgnoreCase("password")){
+                        System.out.println("Change Your Password. Your New Password Cannot Be Password: ");
+                        password = sc.nextLine();
+                    }
                     System.out.println("Verify Your New Password: ");
                     String check = sc.nextLine();
-                    while (!check.equals(password)){
+                    while (!check.equals(password) || password.length() == 0 ){
                         System.out.println("Password Change Failed.");
                         System.out.println("Change Your Password: ");
                         password = sc.nextLine();
@@ -120,9 +128,13 @@ public class Login {
                 if (ph.getPassword().equals("password")){
                     System.out.println("Change Your Password: ");
                     password = sc.nextLine();
+                    while(password.equalsIgnoreCase("password")){
+                        System.out.println("Change Your Password. Your New Password Cannot Be Password: ");
+                        password = sc.nextLine();
+                    }
                     System.out.println("Verify Your New Password: ");
                     String check = sc.nextLine();
-                    while (!check.equals(password)){
+                    while (!check.equals(password) || password.length() == 0 ){
                         System.out.println("Password Change Failed.");
                         System.out.println("Change Your Password: ");
                         password = sc.nextLine();
@@ -147,9 +159,13 @@ public class Login {
                 if (adm.getPassword().equals("password")){
                     System.out.println("Change Your Password: ");
                     password = sc.nextLine();
+                    while(password.equalsIgnoreCase("password")){
+                        System.out.println("Change Your Password. Your New Password Cannot Be Password: ");
+                        password = sc.nextLine();
+                    }
                     System.out.println("Verify Your New Password: ");
                     String check = sc.nextLine();
-                    while (!check.equals(password)){
+                    while (!check.equals(password) || password.length() == 0 ){
                         System.out.println("Password Change Failed.");
                         System.out.println("Change Your Password: ");
                         password = sc.nextLine();
@@ -200,5 +216,4 @@ public class Login {
         StaffManager.updateStaffCSV();
         AppointmentCSVHandler.updateAppointmentsCSV();
     }   
-
 }
