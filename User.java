@@ -21,4 +21,8 @@ public class User {
 		this.Password = password;
 	}
 
+	public void printMenu(){
+		System.out.println("Unknown User Detected. Exiting Program.");
+	}
+
 }

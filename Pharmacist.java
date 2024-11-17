@@ -31,6 +31,36 @@ public class Pharmacist extends User {
 
     }
 
+    public void printMenu(){
+        Scanner sc = new Scanner(System.in);
+        int choice = 0;
+        while(choice != 6){
+            System.out.println("=== PHARMACIST MENU, ENTER CHOICE ===");
+            System.out.println("(1) View Appointment Outcome Record");
+            System.out.println("(2) Update Prescription Status");
+            System.out.println("(3) View Medication Inventory");
+            System.out.println("(4) Submit Replenishment Request");
+            System.out.println("(5) Logout");
+            choice = sc.nextInt();
+
+            
+            switch(choice) {
+                case 1:
+                    this.viewAllAppointmentOutcomes();
+                    break;
+                case 2:
+                    this.updatePrescriptionStatus();
+                    break;
+                case 3:
+                    this.viewMedicationInventory();
+                    break;
+                case 4:
+                    this.submitReplenishmentRequest();
+                    break;
+            }
+        }
+        System.out.println("Logging out...");
+    }
     public void setPassword(String password){
         super.setPassword(password);
     }
