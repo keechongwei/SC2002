@@ -44,7 +44,7 @@ public class Login {
         try{
             PatientManager.loadRecordsCSV();
             System.out.println("Patients Information Retrieved Successfully!");
-        } catch (FileNotFoundException e){
+        } catch (Exception e){
             System.out.println("Unable to Retrieve Patients Information!");
             e.printStackTrace();
         }
@@ -77,14 +77,14 @@ public class Login {
             }
             System.out.println("Staff Information Retrieved Successfully!");
             //System.out.println(staffs);
-        } catch (FileNotFoundException e){
+        } catch (Exception e){
             System.out.println("Unable to Retrieve Staff Information!");
             e.printStackTrace();
         }
         try{
             Inventory.loadMedicationsFromCSV(Inventory.csvFilePath);
             System.out.println("Medicine Information Retrieved Successfully!");
-        } catch (FileNotFoundException e){
+        } catch (Exception e){
             System.out.println("Unable to Retrieve Medicine Information!");
             e.printStackTrace();
         }
