@@ -475,7 +475,6 @@ public class Administrator extends User {
         
     }
     
-
     private void addStaff() {
         System.out.println("Enter new staff details:");
         System.out.println("Name: ");
