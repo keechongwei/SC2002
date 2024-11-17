@@ -1,24 +1,27 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Login {
     enum Role{Unknown,Patient,Doctor,Pharmacist,Administrator}
     /* remember to convert functions involving appointments to print name cause appointment slots only have ID
        cause rn its just doctor and patient ID */
     static List<Patient> patients = new ArrayList<Patient>();
-    /* convert staffs into lists of Administrators, Pharmacists and Doctors once classes are done
-     */
     static List<Pharmacist> pharmacists = new ArrayList<Pharmacist>();
     static List<Administrator> administrators = new ArrayList<Administrator>();
     static List<Doctor> doctors = new ArrayList<Doctor>();
+    static String staffCSVHeader = "Staff ID; Password ; Name ; Role ; Gender ; Age";
     static List<List<String>> staffs = new ArrayList<>();
     static List<List<String>> medicines = new ArrayList<>();
     static File medicineFile = new File("Medicine_List.csv");
     static File patientRecordsFile = new File("Patient_List.csv");
     static File staffRecordsFile = new File("Staff_List.csv");
+    static final File staffRecordsFile2 = new File("Staff_List2.csv"); //eventually will just be Staff_List.csv
     static Role role = Role.Unknown;
     static boolean loggedIn = false;
     static boolean validID = false;
@@ -177,6 +180,27 @@ public class Login {
             System.out.println("Invalid Password");
         }
     }
+    private static void updateStaffCSV(){
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(staffRecordsFile2))) {
+            // Write the header line first
+            bw.write(staffCSVHeader);
+            bw.newLine();
+            for (Doctor d : doctors) {
+                bw.write(d.toCSV());
+                bw.newLine();
+            }
+            for (Pharmacist ph : pharmacists) {
+                bw.write(ph.toCSV());
+                bw.newLine();
+            }
+            for (Administrator adm : administrators) {
+                bw.write(adm.toCSV());
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error writing CSV file: " + e.getMessage());
+        }
+    }
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
         String ID = "NULL";
@@ -262,9 +286,10 @@ public class Login {
             break;
             case Doctor:
             Doctor d = null;
-            for (Doctor doctor : doctors) {
+            for (Doctor doctor : doctors){
                 if (doctor.getDoctorID().equals(ID)) {
                     d = doctor; 
+                    d.setPassword(password);
                     break;
                 }
             }
@@ -310,15 +335,14 @@ public class Login {
             }
             break;
             case Pharmacist:
-
             Pharmacist pharmacist = new Pharmacist("P001", "password", "male", "29");
-            // for (Pharmacist ph : pharmacists){
-            //     if (ph.getHospitalID().equals(ID)) {
-            //         pharmacist = ph; 
-            //         ph.setPassword(password);
-            //         break;
-            //     }
-            // }
+            for (Pharmacist ph : pharmacists){
+                if (ph.getHospitalID().equals(ID)) {
+                    pharmacist = ph; 
+                    ph.setPassword(password);
+                    break;
+                }
+            }
             choice = 0;
             while(choice != 6){
                 System.out.println("=== PHARMACIST MENU, ENTER CHOICE ===");
@@ -351,20 +375,20 @@ public class Login {
             }
             break;
             case Administrator:
-            // Administrator curAdmin;
-            // for (Administrator adm : administrators){
-            //     if (adm.getHospitalID().equals(ID)) {
-            //         curAdmin = adm; 
-            //         adm.setPassword(password);
-            //         break;
-            //     }
-            // }
+            Administrator curAdmin;
+            for (Administrator adm : administrators){
+                if (adm.getHospitalID().equals(ID)) {
+                    curAdmin = adm; 
+                    adm.setPassword(password);
+                    break;
+                }
+            }
             choice = 0;
             while(choice != 5){
                 System.out.println("=== ADMINISTRATOR MENU, ENTER CHOICE ===");
                 System.out.println("(1) View and Manage Hospital Staff");
                 System.out.println("(2) View Appointments Details");
-                System.out.println("(3) View and Manage Medication Inventory");
+                System.out.println("(3) View and Manage Medication History");
                 System.out.println("(4) Approve Replenishment Requests");
                 System.out.println("(5) Logout");
                 choice = sc.nextInt();
@@ -393,6 +417,6 @@ public class Login {
             }
             break;
         }
-
+        updateStaffCSV();
     }   
 }
