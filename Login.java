@@ -230,11 +230,10 @@ public class Login {
             while(choice != 6){
                 System.out.println("=== PHARMACIST MENU, ENTER CHOICE ===");
                 System.out.println("(1) View Appointment Outcome Record");
-                System.out.println("(2) View Pending Prescriptions");
-                System.out.println("(3) Update Prescription Status");
-                System.out.println("(4) View Medication Inventory");
-                System.out.println("(5) Submit Replenishment Request");
-                System.out.println("(6) Logout");
+                System.out.println("(2) Update Prescription Status");
+                System.out.println("(3) View Medication Inventory");
+                System.out.println("(4) Submit Replenishment Request");
+                System.out.println("(5) Logout");
                 choice = sc.nextInt();
 
                 
@@ -243,15 +242,12 @@ public class Login {
                         pharmacist.viewAllAppointmentOutcomes();
                         break;
                     case 2:
-                        pharmacist.viewPendingPrescriptions();
-                        break;
-                    case 3:
                         pharmacist.updatePrescriptionStatus();
                         break;
-                    case 4:
+                    case 3:
                         pharmacist.viewMedicationInventory();
                         break;
-                    case 5:
+                    case 4:
                         pharmacist.submitReplenishmentRequest();
                         break;
                 }
