@@ -597,7 +597,7 @@ public class Administrator extends User {
         List<String> lines = readCSVFile(replenishRecordsCSV);
 
         // Split each line into fields (excluding the header)
-        System.out.println("=== All Replishment Requests ===");
+        System.out.println("=== Pending Replishment Requests ===");
         System.out.println("Select by index, press any 0 to exit");
 
         for (int i = 1; i < lines.size(); i++) { // Start from index 1 to skip header
@@ -634,7 +634,6 @@ public class Administrator extends User {
                         inventory.updateMedication(fields[1], Integer.parseInt(fields[2]), true);
                         medInInventory = true;
                         fields[3] = "Approved"; 
-                        break;
                     }   
                 }
                 
@@ -646,11 +645,10 @@ public class Administrator extends User {
 
                     inventory.addNewMedication(fields[1], Integer.parseInt(fields[2]), alertValue);
                     fields[3] = "Approved"; 
-
-                    break;
                 }
 
                 lines.set(i, String.join(";", fields[0], fields[1], fields[2], fields[3]));
+                break;
             }
         }
 
