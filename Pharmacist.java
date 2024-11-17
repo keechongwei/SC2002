@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 // import java.time.LocalDate;
 // import java.time.LocalTime;
 // import java.time.format.DateTimeFormatter;
@@ -133,28 +132,17 @@ public class Pharmacist extends User {
             return;
         }
 
-        System.out.println("\n=== All Appointment Outcomes ===");
+        // Sort appointments to show PENDING first
+        appointments.sort((a1, a2) -> {
+            Prescription p1 = a1.getAppointmentOutcomeRecord().getPrescribedMedication();
+            Prescription p2 = a2.getAppointmentOutcomeRecord().getPrescribedMedication();
+            if (p1 == null) return 1;
+            if (p2 == null) return -1;
+            return p2.getStatus().compareTo(p1.getStatus());
+        });
+
+        System.out.println("\n=== All Appointment Outcomes (Pending First) ===");
         for (AppointmentSlot appointment : appointments) {
-            displayAppointmentWithPrescriptionStatus(appointment);
-        }
-    }
-
-    public void viewPendingPrescriptions() {
-        loadAppointments();
-        List<AppointmentSlot> pendingAppointments = appointments.stream()
-            .filter(apt -> {
-                Prescription prescription = apt.getAppointmentOutcomeRecord().getPrescribedMedication();
-                return prescription != null && prescription.getStatus() == PrescriptionStatus.PENDING;
-            })
-            .collect(Collectors.toList());
-
-        if (pendingAppointments.isEmpty()) {
-            System.out.println("No pending prescriptions found.");
-            return;
-        }
-
-        System.out.println("\n=== Pending Prescriptions ===");
-        for (AppointmentSlot appointment : pendingAppointments) {
             displayAppointmentWithPrescriptionStatus(appointment);
         }
     }
@@ -178,7 +166,7 @@ public class Pharmacist extends User {
 
     public void updatePrescriptionStatus() {
         loadAppointments();
-        viewPendingPrescriptions();
+        viewAllAppointmentOutcomes();
         
         Scanner scanner = new Scanner(System.in);
         System.out.print("\nEnter Appointment ID to dispense prescription (or 'cancel' to exit): ");
@@ -203,19 +191,16 @@ public class Pharmacist extends User {
                 
                 if (stockUpdated) {
                     prescription.setStatus(PrescriptionStatus.DISPENSED);
+                    // Reorder appointments to move dispensed to bottom
+                    appointments.sort((a1, a2) -> {
+                        Prescription p1 = a1.getAppointmentOutcomeRecord().getPrescribedMedication();
+                        Prescription p2 = a2.getAppointmentOutcomeRecord().getPrescribedMedication();
+                        if (p1 == null) return 1;
+                        if (p2 == null) return -1;
+                        return p2.getStatus().compareTo(p1.getStatus());
+                    });
                     saveAppointments();
                     System.out.println("Prescription successfully dispensed.");
-                    
-                    // Check for low stock alert
-                    Medication med = inventory.getMedication(prescription.getMedicationName());
-                    if (med != null && med.isLowStockAlert()) {
-                        System.out.println("\nLOW STOCK ALERT");
-                        System.out.println("Medication: " + med.getMedicationName());
-                        System.out.println("Current Stock: " + med.getStock());
-                        System.out.println("Low Stock Threshold: " + med.getLowStockValue());
-                    }
-                } else {
-                    System.out.println("Failed to dispense - Insufficient stock.");
                 }
             } else {
                 System.out.println("This prescription has already been dispensed.");
@@ -226,23 +211,41 @@ public class Pharmacist extends User {
     }
 
     public void submitReplenishmentRequest() {
+        inventory.viewInventory();  // This will now show both inventory and pending requests
+        
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter medication name: ");
+        System.out.print("\nEnter medication name to replenish (or 'cancel' to exit): ");
         String medicationName = scanner.nextLine();
-        System.out.print("Enter quantity to request: ");
-        int quantity = scanner.nextInt();
-        scanner.nextLine();  // Consume newline
-
-        try (PrintWriter writer = new PrintWriter(new FileWriter("ReplenishRequestsList.csv", true))) {
-            writer.println(medicationName + "," + quantity + ",PENDING");
-            System.out.println("Replenishment request submitted successfully.");
-        } catch (IOException e) {
-            System.out.println("Error submitting replenishment request: " + e.getMessage());
+        
+        if (medicationName.equalsIgnoreCase("cancel")) return;
+        
+        Medication med = inventory.getMedication(medicationName);
+        if (med != null) {
+            if (!inventory.checkReplenishRequestExists(medicationName)) {
+                System.out.print("Enter quantity to request: ");
+                int quantity = scanner.nextInt();
+                scanner.nextLine();  // Consume newline
+                if (quantity > 0) {
+                    inventory.submitReplenishRequest(medicationName, quantity);
+                } else {
+                    System.out.println("Quantity must be greater than 0.");
+                }
+            } else {
+                System.out.println("A pending replenishment request already exists for " + medicationName);
+            }
+        } else {
+            System.out.println("Medication not found in inventory.");
         }
     }
 
     public void viewMedicationInventory() {
-        inventory.viewInventory();
+        inventory.viewInventory();  // This will now show both inventory and pending requests
+        
+        // Check for any low stock alerts and handle replenishment
+        List<Medication> lowStockMeds = inventory.updateAllAlertLevels();
+        if (!lowStockMeds.isEmpty()) {
+            System.out.println("\nLow stock alerts have been processed and replenishment requests submitted where needed.");
+        }
     }
 
     public String getGender() {
@@ -271,7 +274,7 @@ public class Pharmacist extends User {
 
     public String toCSV() {
         // Combine all attributes into a CSV string
-        return super.getHospitalID() + ";" + super.getPassword() + ";" + name + ";" + "Doctor" + ";" + gender + ";" + age;
+        return super.getHospitalID() + ";" + super.getPassword() + ";" + name + ";" + "Pharmacist" + ";" + gender + ";" + age;
     }
 
     // public static void main(String[] args) {

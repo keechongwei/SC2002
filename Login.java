@@ -1,164 +1,69 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class Login {
     enum Role{Unknown,Patient,Doctor,Pharmacist,Administrator}
     /* remember to convert functions involving appointments to print name cause appointment slots only have ID
        cause rn its just doctor and patient ID */
-    static List<Patient> patients = new ArrayList<Patient>();
-    static List<Pharmacist> pharmacists = new ArrayList<Pharmacist>();
-    static List<Administrator> administrators = new ArrayList<Administrator>();
-    static List<Doctor> doctors = new ArrayList<Doctor>();
-    static String staffCSVHeader = "Staff ID; Password ; Name ; Role ; Gender ; Age";
-    static List<List<String>> staffs = new ArrayList<>();
-    static List<List<String>> medicines = new ArrayList<>();
-    static File medicineFile = new File("Medicine_List.csv");
-    static File patientRecordsFile = new File("Patient_List.csv");
-    static File staffRecordsFile = new File("Staff_List.csv");
-    static final File staffRecordsFile2 = new File("Staff_List2.csv"); //eventually will just be Staff_List.csv
     static Role role = Role.Unknown;
     static boolean loggedIn = false;
     static boolean validID = false;
     static boolean validPassword = false;
+    static String ID = "NULL";
+    static String password = "NULL";
 
-    // initialises appointment array
-    public static void initializeAppointments() {
-        if (!((AppointmentManager.csvFile).exists()) || (AppointmentManager.csvFile).length() == 0) {
-            // File doesn't exist or is empty, create daily appointments
-            System.out.println("appointments.csv is empty or missing. Generating daily appointments...");
-            AppointmentManager.writeHeader(AppointmentManager.appointmentsCSVHeader);
-            AppointmentManager.makeDailyAppointments(doctors); // Replace getStaffList() with your method to get the staff data
-        } else {
-            // File exists and is not empty, load appointments from the CSV
-            System.out.println("Loading appointments from appointments.csv...");
-            AppointmentManager.loadAppointmentsFromCSV(AppointmentManager.csvFile);
-        }
-    }
     // function used to initialise patient, staff, medicine data
     private static void initialise(){
-        boolean headerline = true;
+        AppointmentManager.initialiseAppointments();
         try{
-            Scanner scanner = new Scanner(patientRecordsFile);
-            while (scanner.hasNextLine()) {
-                if(headerline){
-                    headerline = false;
-                    continue;
-                }
-                else{
-                        String line = scanner.nextLine();
-                        String[] patientFields = line.split(";");
-                        String patientID = patientFields[0];
-                        String name = patientFields[1];
-                        String dateofbirth = patientFields[2];
-                        String gender = patientFields[3];
-                        String bloodType = patientFields[4];
-                        String emailAddress = patientFields[5];
-                        String pastDiagnoses = patientFields.length > 6 ? patientFields[6] : "";
-                        String pastTreatments = patientFields.length > 7 ? patientFields[7] : "";
-                        String phoneNumber = "";
-                        Patient p = new Patient(patientID, name, dateofbirth, gender, bloodType, phoneNumber, emailAddress);
-                        patients.add(p);
-                }
-            }
+            PatientManager.loadRecordsCSV();
             System.out.println("Patients Information Retrieved Successfully!");
-        } catch (FileNotFoundException e){
+        } catch (Exception e){
             System.out.println("Unable to Retrieve Patients Information!");
             e.printStackTrace();
         }
-        headerline = true;
         try{
-            Scanner scanner = new Scanner(staffRecordsFile);
-            while (scanner.hasNextLine()) {
-                if(headerline){
-                    headerline = false;
-                    continue;
-                }
-                else{
-                     // staffs.add(getRecordFromLine(scanner.nextLine()));
-                     // create list of staff
-                     String line = scanner.nextLine();
-                     String[] fields = line.split(";");
-                     if (fields[2].equals("Doctor")){
-                        Doctor d = new Doctor(fields[0],fields[1],fields[3],fields[4]);
-                        doctors.add(d);
-                     }
-                     else if (fields[2].equals("Pharmacist")){
-                        Pharmacist ph = new Pharmacist(fields[0],fields[1],fields[3],fields[4]);
-                        pharmacists.add(ph);
-                     }
-                     else if (fields[2].equals("Administrator")){
-                        Administrator adm = new Administrator(fields[0],fields[1],fields[3],fields[4]);
-                        administrators.add(adm);
-                     }
-                }
-            }
+            StaffManager.loadRecordsCSV();
             System.out.println("Staff Information Retrieved Successfully!");
             //System.out.println(staffs);
-        } catch (FileNotFoundException e){
+        } catch (Exception e){
             System.out.println("Unable to Retrieve Staff Information!");
             e.printStackTrace();
         }
-        headerline = true;
         try{
-            Scanner scanner = new Scanner(medicineFile);
-            while (scanner.hasNextLine()) {
-                if(headerline){
-                    headerline = false;
-                    continue;
-                }
-                else{
-                    medicines.add(getRecordFromLine(scanner.nextLine()));
-                }
-            }
+            Inventory.loadMedicationsFromCSV(Inventory.csvFilePath);
             System.out.println("Medicine Information Retrieved Successfully!");
-        } catch (FileNotFoundException e){
+        } catch (Exception e){
             System.out.println("Unable to Retrieve Medicine Information!");
             e.printStackTrace();
         }
     }
-    // function used to read data from csv files
-    private static List<String> getRecordFromLine(String line) {
-        List<String> values = new ArrayList<String>();
-        Scanner rowScanner = new Scanner(line);
-        rowScanner.useDelimiter(";");
-            while (rowScanner.hasNext()) {
-                values.add(rowScanner.next());
-            }
-        return values;
-    }
     private static void IDCheck(String ID){
-        for(Patient p : patients){
+        for(Patient p : PatientManager.allPatients ){
             if (p.getHospitalID().equals(ID)){
                 validID = true;
                 role = Role.Patient;
             } 
         }
-        for(Doctor d : doctors){
+        for(Doctor d : StaffManager.doctors){
             if (d.getHospitalID().equals(ID)){
                 validID = true;
                 role = Role.Doctor;
             } 
         }
-        for(Pharmacist ph : pharmacists){
+        for(Pharmacist ph : StaffManager.pharmacists){
             if (ph.getHospitalID().equals(ID)){
                 validID = true;
                 role = Role.Pharmacist;
             } 
         }
-        for(Administrator adm : administrators){
+        for(Administrator adm : StaffManager.administrators){
             if (adm.getHospitalID().equals(ID)){
                 validID = true;
                 role = Role.Administrator;
             } 
         }
     }
-    private static void passwordCheck(String password){
+    private static String passwordCheck(String password){
         Scanner sc = new Scanner(System.in);
         // for first login, password is password
         if (password.equals("password")){
@@ -174,41 +79,14 @@ public class Login {
                 check = sc.nextLine();  
             }
             validPassword = true;
+            return password;
         }
         else{
-            System.out.println("Invalid Password");
+            System.out.println("Invalid Password.");
+            return "password"; 
         }
     }
-    private static void updateStaffCSV(){
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(staffRecordsFile2))) {
-            // Write the header line first
-            bw.write(staffCSVHeader);
-            bw.newLine();
-            for (Doctor d : doctors) {
-                bw.write(d.toCSV());
-                bw.newLine();
-            }
-            for (Pharmacist ph : pharmacists) {
-                bw.write(ph.toCSV());
-                bw.newLine();
-            }
-            for (Administrator adm : administrators) {
-                bw.write(adm.toCSV());
-                bw.newLine();
-            }
-        } catch (IOException e) {
-            System.out.println("Error writing CSV file: " + e.getMessage());
-        }
-    }
-    private static void updateAppointmentsCSV(){
-        AppointmentManager.writeHeader(AppointmentManager.appointmentsCSVHeader);
-        AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
-    }
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        String ID = "NULL";
-        String password = "NULL";
-        initialise(); // loads in data from csv
+    private static void login(boolean loggedIn, Scanner sc){
         while(!loggedIn){
             System.out.println("=== HOSPITAL MANAGEMENT SYSTEM LOGIN PAGE ===");
             System.out.println("Enter Hospital ID: ");
@@ -224,17 +102,21 @@ public class Login {
                 System.out.println("Enter Password: ");
                 password = sc.nextLine();
                 password = password.toLowerCase();
-                passwordCheck(password);
+                password = passwordCheck(password);
             }
             loggedIn = true;
+            System.out.println("Successful Login!");
         }
-        System.out.println("Successful Login!");
-        initializeAppointments();
+    }
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        initialise(); // loads in data from csv
+        login(loggedIn,sc);
         int choice = 0;
         switch(role){
             case Patient:
             Patient curPat = null;
-            for (Patient pat : patients) {
+            for (Patient pat : PatientManager.allPatients) {
                 if (pat.getMedicalRecord().getPatientID().equals(ID)) {
                     curPat = pat;
                     curPat.setPassword(password); 
@@ -289,14 +171,14 @@ public class Login {
             break;
             case Doctor:
             Doctor d = null;
-            for (Doctor doctor : doctors){
+            for (Doctor doctor : StaffManager.doctors){
                 if (doctor.getDoctorID().equals(ID)) {
                     d = doctor; 
                     d.setPassword(password);
                     break;
                 }
             }
-            d.addPatient(patients.get(0));
+            d.addPatient(PatientManager.allPatients.get(0));
             choice = 0;
             while(choice != 8){
                 System.out.println("=== DOCTOR MENU, ENTER CHOICE ===");
@@ -339,7 +221,7 @@ public class Login {
             break;
             case Pharmacist:
             Pharmacist pharmacist = new Pharmacist("P001", "password", "male", "29");
-            for (Pharmacist ph : pharmacists){
+            for (Pharmacist ph : StaffManager.pharmacists){
                 if (ph.getHospitalID().equals(ID)) {
                     pharmacist = ph; 
                     ph.setPassword(password);
@@ -350,11 +232,10 @@ public class Login {
             while(choice != 6){
                 System.out.println("=== PHARMACIST MENU, ENTER CHOICE ===");
                 System.out.println("(1) View Appointment Outcome Record");
-                System.out.println("(2) View Pending Prescriptions");
-                System.out.println("(3) Update Prescription Status");
-                System.out.println("(4) View Medication Inventory");
-                System.out.println("(5) Submit Replenishment Request");
-                System.out.println("(6) Logout");
+                System.out.println("(2) Update Prescription Status");
+                System.out.println("(3) View Medication Inventory");
+                System.out.println("(4) Submit Replenishment Request");
+                System.out.println("(5) Logout");
                 choice = sc.nextInt();
 
                 
@@ -363,23 +244,21 @@ public class Login {
                         pharmacist.viewAllAppointmentOutcomes();
                         break;
                     case 2:
-                        pharmacist.viewPendingPrescriptions();
-                        break;
-                    case 3:
                         pharmacist.updatePrescriptionStatus();
                         break;
-                    case 4:
+                    case 3:
                         pharmacist.viewMedicationInventory();
                         break;
-                    case 5:
+                    case 4:
                         pharmacist.submitReplenishmentRequest();
                         break;
                 }
             }
+            System.out.println("Logging out...");
             break;
             case Administrator:
             Administrator curAdmin;
-            for (Administrator adm : administrators){
+            for (Administrator adm : StaffManager.administrators){
                 if (adm.getHospitalID().equals(ID)) {
                     curAdmin = adm; 
                     adm.setPassword(password);
@@ -418,9 +297,13 @@ public class Login {
                     break;
                 }
             }
+            System.out.println("Logging out...");
             break;
+            case Unknown:
+            System.out.println("Unknown User Detected. Exiting Program.");
         }
-        updateStaffCSV();
-        updateAppointmentsCSV();
+        PatientManager.writeAllRecords();
+        StaffManager.updateStaffCSV();
+        AppointmentManager.updateAppointmentsCSV();
     }   
 }

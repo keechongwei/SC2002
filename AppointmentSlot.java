@@ -1,7 +1,5 @@
-import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 import java.time.format.DateTimeFormatter;
 
 public class AppointmentSlot {
