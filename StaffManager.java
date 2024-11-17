@@ -36,10 +36,12 @@ public class StaffManager {
                         if(!(fields[1].equals("password"))){
                             Doctor d = new Doctor(fields[0],fields[2],fields[4],fields[5]);
                             d.setPassword(fields[1]);
+                            d.addPatientsUnderCare();
                             doctors.add(d);
                         }
                         else{
                             Doctor d = new Doctor(fields[0],fields[2],fields[4],fields[5]);
+                            d.addPatientsUnderCare();
                             doctors.add(d);     
                         }
                     }

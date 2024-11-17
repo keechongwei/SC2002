@@ -17,8 +17,15 @@ public class Doctor extends Staff{
         this.age = age;
     }
 
+    public void addPatientsUnderCare(){
+        for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray){
+            if (slot.getDoctorID().equals(this.getHospitalID()) && slot.getStatus().equals(AppointmentStatus.CONFIRMED)){
+                this.patientList.add(PatientManager.findPatient(slot.getPatientID()));
+            }
+        }
+    }
+
     public void printMenu(){
-        this.addPatient(PatientManager.allPatients.get(0));
         int choice = 0;
         while(choice != 8){
             System.out.println("=== DOCTOR MENU, ENTER CHOICE ===");
@@ -36,18 +43,23 @@ public class Doctor extends Staff{
                 this.viewPatientRecords();
                 break;
                 case 2:
+                sc.nextLine();
                 this.updatePatientRecord();
                 break;
                 case 3:
+                sc.nextLine();
                 this.viewPersonalSchedule(); // View Personal Schedule
                 break;
                 case 4:
+                sc.nextLine();
                 this.setAvailabilityForAppointments();// Set Availability For Appointments
                 break;
                 case 5:
+                sc.nextLine();
                 this.acceptOrDeclineAppointments();// Accept Or Decline Appointment Requests
                 break;
                 case 6:
+                sc.nextLine();
                 this.viewUpcomingAppointment();
                 break;
                 case 7:
@@ -65,6 +77,30 @@ public class Doctor extends Staff{
         patientList.add(patient);
     }
 
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+    
+    public String getDoctorID() {
+        return super.getHospitalID();
+    } 
+
+    public String getDoctorName() {
+        return this.name;
+    }
+
+    public void setName(String doctorName) {
+        this.name = doctorName;
+    } 
+
     public void viewPatientRecords(){
         if (patientList.isEmpty()) {
             System.out.println("No Patient Record Found");
@@ -76,15 +112,7 @@ public class Doctor extends Staff{
                 }
             }
     }
-
-    public Patient findPatientByID(String patientID){
-        for (Patient patient : patientList) {
-            if (patient.getHospitalID() == patientID){
-                return patient;
-            }
-        }
-        return null;
-    }
+    
     
     public void setAvailabilityForAppointments() {
         List <AppointmentSlot> schedule = AppointmentManager.getAppointmentsByDoctor(super.getHospitalID());
@@ -150,6 +178,7 @@ public class Doctor extends Staff{
     public void viewPersonalSchedule() {
         System.out.println("=== Doctor's Personal Schedule ===");
         viewUpcomingAppointment();
+        System.out.println("=== AVAILABLE SLOTS ===");
         for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
             if (slot.getDoctorID().equals(super.getHospitalID()) && slot.getStatus() == AppointmentStatus.AVAILABLE){
                 System.out.println("----------------------------------------------");
@@ -260,6 +289,7 @@ public class Doctor extends Staff{
             for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
                 if (slot.getAppointmentID().equals(choice2) ){ 
                     slot.setStatus(AppointmentStatus.CONFIRMED);
+                    this.patientList.add(PatientManager.findPatient(slot.getPatientID()));
                     AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
                     System.out.println("Appointment ID " + choice2 + " has been CONFIRMED.");
                 }
@@ -299,7 +329,7 @@ public class Doctor extends Staff{
         boolean validAppointmentID = false;
         boolean validService = false;
         boolean validMedication = false;
-        System.out.println("patientID to update his/her record:");
+        System.out.println("Patient ID to update his/her record[E.g P1001]:");
         id = sc.nextLine().trim();
         while (!validpatientID){
             for (Patient p : PatientManager.allPatients){
@@ -312,7 +342,7 @@ public class Doctor extends Staff{
                 break;
             }
             System.out.println("Invalid Patient ID");
-            System.out.println("patientID to update his/her record:");
+            System.out.println("Patient ID to update his/her record[E.g P1001]:");
             id = sc.nextLine().trim();
         }
         confirmedAppointmentSlots.retainAll(AppointmentManager.getAppointmentsByPatient(id));
@@ -409,6 +439,8 @@ public class Doctor extends Staff{
                 slot.updateAppointmentOutcomeRecord(slot.getDate(), slot.getTime(), serviceType, pres, consultationNote);
                 slot.setStatus(AppointmentStatus.COMPLETED);
                 AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
+                PatientManager.addDiagnosis(id, consultationNote);
+                PatientManager.addTreatment(id, medicineType);
         // Log success message
                 System.out.println("Outcome successfully recorded for Appointment ID: " + selectedAppointmentID);
                 return; // Exit the loop after successfully updating
