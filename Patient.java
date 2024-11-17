@@ -1,10 +1,7 @@
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+
 
 
 public class Patient extends User{
@@ -248,7 +245,7 @@ public class Patient extends User{
                 slot.setPatientID(this.medicalRecord.getPatientID());
                 System.out.println("Appointment scheduled, status: pending.");
                 System.out.printf("Appointment ID: %s, Date: %s, Time: %s, Doctor: %s, Status: %s%n", slot.getAppointmentID(), slot.getDate(), slot.getTime(), slot.getDoctorID(), slot.getStatus());
-                AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
+                AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
             }
         }
         System.out.println();

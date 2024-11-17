@@ -12,7 +12,6 @@ public class Login {
     
     // function used to initialise patient, staff, medicine data
     private static void initialise(){
-        AppointmentManager.initialiseAppointments();
         try{
             PatientManager.loadRecordsCSV();
             System.out.println("Patients Information Retrieved Successfully!");
@@ -35,6 +34,7 @@ public class Login {
             System.out.println("Unable to Retrieve Medicine Information!");
             e.printStackTrace();
         }
+        AppointmentManager.initialiseAppointments();
     }
     private static void IDCheck(String ID){
         for(Patient p : PatientManager.allPatients ){
