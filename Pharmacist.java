@@ -28,6 +28,7 @@ public class Pharmacist extends User {
         this.name = name;
         this.gender = gender;
         this.age = Integer.valueOf(age);
+        this.appointments = new ArrayList<>();
         this.inventory = new Inventory("Medicine_List.csv");
 
     }
@@ -53,16 +54,24 @@ public class Pharmacist extends User {
                 }
 
                 String[] parts = line.split(";");
-                if (parts.length >= 7 && parts[5].equals("COMPLETED")) {
-                    String outcomeStr = parts[6];
+                // Remove any leading/trailing spaces from parts
+                for (int i = 0; i < parts.length; i++) {
+                    parts[i] = parts[i].trim();
+                }
+
+                if (parts.length >= 7 && parts[5].trim().equals("COMPLETED")) {
+                    String outcomeStr = parts[6].trim();
                     if (!outcomeStr.equals("null")) {
                         AppointmentOutcomeRecord outcome = AppointmentOutcomeRecord.fromCSV(outcomeStr);
-                        if (outcome.getPrescribedMedication() != null) {
+                        if (outcome != null && outcome.getPrescribedMedication() != null) {
                             AppointmentSlot appointment = new AppointmentSlot(
-                                parts[0], parts[1], 
-                                AppointmentStatus.valueOf(parts[5]),
-                                parts[3], parts[4], 
-                                outcome, parts[2]
+                                parts[0].trim(), 
+                                parts[1].trim(), 
+                                AppointmentStatus.valueOf(parts[5].trim()),
+                                parts[3].trim(), 
+                                parts[4].trim(), 
+                                outcome,
+                                parts[2].trim()
                             );
                             appointments.add(appointment);
                         }
@@ -71,14 +80,47 @@ public class Pharmacist extends User {
             }
         } catch (IOException e) {
             System.out.println("Error loading appointments: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error processing appointments: " + e.getMessage());
         }
     }
 
     private void saveAppointments() {
+        List<String> allLines = new ArrayList<>();
+        allLines.add("Date;Time;AppointmentID;DoctorID;PatientID;Status;OutcomeRecord");
+        
+        try (BufferedReader br = new BufferedReader(new FileReader("Appointments.csv"))) {
+            String line;
+            boolean firstLine = true;
+            while ((line = br.readLine()) != null) {
+                if (firstLine) {
+                    firstLine = false;
+                    continue;
+                }
+                
+                String[] parts = line.split(";");
+                if (parts.length >= 3) {
+                    String appointmentId = parts[2].trim();
+                    // Check if this appointment is in our modified list
+                    Optional<AppointmentSlot> modifiedAppointment = appointments.stream()
+                        .filter(a -> a.getAppointmentID().equals(appointmentId))
+                        .findFirst();
+                    
+                    if (modifiedAppointment.isPresent()) {
+                        allLines.add(modifiedAppointment.get().toCSV());
+                    } else {
+                        allLines.add(line);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading appointments: " + e.getMessage());
+            return;
+        }
+
         try (PrintWriter writer = new PrintWriter(new FileWriter("Appointments.csv"))) {
-            writer.println("Date;Time;AppointmentID;DoctorID;PatientID;Status;OutcomeRecord");
-            for (AppointmentSlot appointment : appointments) {
-                writer.println(appointment.toCSV());
+            for (String line : allLines) {
+                writer.println(line);
             }
         } catch (IOException e) {
             System.out.println("Error saving appointments: " + e.getMessage());
@@ -218,6 +260,14 @@ public class Pharmacist extends User {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     // public static void main(String[] args) {
