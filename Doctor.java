@@ -1,6 +1,5 @@
 import java.util.Scanner;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -423,8 +422,4 @@ public class Doctor extends Staff{
         }
     }
 }
-    public String toCSV() {
-        // Combine all attributes into a CSV string
-        return super.getHospitalID() + ";" + super.getPassword() + ";" + super.name + ";" + "Doctor" + ";" + super.gender + ";" + super.age;
-    }
 }

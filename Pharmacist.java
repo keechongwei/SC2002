@@ -306,11 +306,6 @@ public class Pharmacist extends Staff {
         List<Medication> lowStockMeds = inventory.updateAllAlertLevels();
     }
 
-    public String toCSV() {
-        // Combine all attributes into a CSV string
-        return super.getHospitalID() + ";" + super.getPassword() + ";" + name + ";" + "Pharmacist" + ";" + gender + ";" + age;
-    }
-
     // public static void main(String[] args) {
     //     Inventory inventory = new Inventory("Medicine_List.csv");
     //     Pharmacist pharmacist = new Pharmacist("Pharm123", "securepass");
