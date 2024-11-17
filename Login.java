@@ -301,6 +301,8 @@ public class Login {
             }
             System.out.println("Logging out...");
             break;
+            case Unknown:
+            System.out.println("Unknown User Detected. Exiting Program.");
         }
         PatientManager.writeAllRecords();
         StaffManager.updateStaffCSV();
