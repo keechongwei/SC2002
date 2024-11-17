@@ -17,6 +17,12 @@ public class AppointmentManager {
     public static int numberofSlots = 10;
     public static int nextAppointmentID = 1;
 
+    public static void updateAppointmentsCSV(){
+        AppointmentManager.writeHeader(AppointmentManager.appointmentsCSVHeader);
+        AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
+    }
+    
+    // write header to Appointments CSV file
     public static void writeHeader(String header){
         try (FileWriter writer = new FileWriter(csvFile, true)) {
             writer.write(header + "\n");
@@ -40,6 +46,7 @@ public class AppointmentManager {
             for (Doctor doctor : doctors) {
                     String doctorID = doctor.getHospitalID();
                     AppointmentSlot slot = new AppointmentSlot(dateString, timeString, "AVAILABLE", doctorID," ");
+                    AppointmentManager.addAppointment(slot); 
                 } 
             hour++;
             }
@@ -156,6 +163,19 @@ public class AppointmentManager {
         }
     }
 
+    // initialises appointment array
+    public static void initialiseAppointments() {
+        if (!((AppointmentManager.csvFile).exists()) || (AppointmentManager.csvFile).length() == 0) {
+            // File doesn't exist or is empty, create daily appointments
+            System.out.println("appointments.csv is empty or missing. Generating daily appointments...");
+            AppointmentManager.writeHeader(AppointmentManager.appointmentsCSVHeader);
+            AppointmentManager.makeDailyAppointments(StaffManager.doctors); // Replace getStaffList() with your method to get the staff data
+        } else {
+            // File exists and is not empty, load appointments from the CSV
+            System.out.println("Loading appointments from appointments.csv...");
+            AppointmentManager.loadAppointmentsFromCSV(AppointmentManager.csvFile);
+        }
+    }
     public static void main(String[] args){
         // AppointmentSlot test = new AppointmentSlot("2002-11-07", "07:00", "CONFIRMED","A001","P001");
         // test.outcome = new AppointmentOutcomeRecord("2002-11-07","09:00","CONSULTATION", new Prescription("Panadol",PrescriptionStatus.valueOf("PENDING"),5), null);

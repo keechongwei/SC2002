@@ -24,10 +24,7 @@ public class PatientManager {
                 String line = sc.nextLine();
                 String[] patientFields = line.split(CSV_DELIMITER);
 
-                if (patientFields.length < 7) {
-                    System.err.println("Skipping invalid record: " + line);
-                    continue;
-                }
+
 
                 String patientID = patientFields[0];
                 String name = patientFields[1];
@@ -35,17 +32,18 @@ public class PatientManager {
                 String gender = patientFields[3];
                 String bloodType = patientFields[4];
                 String emailAddress = patientFields[5];
+
                 String phoneNumber = (patientFields.length > 6) ? patientFields[6] : "";
 
                 ArrayList<String> pastDiagnoses = new ArrayList<>();
-                if (patientFields.length > 7 && !patientFields[7].isEmpty()) {
-                    pastDiagnoses.addAll(Arrays.asList(patientFields[7].split(LIST_DELIMITER)));
-                }
+                    if (patientFields.length > 7 && !patientFields[7].isEmpty()) {
+                        pastDiagnoses.addAll(Arrays.asList(patientFields[7].split(LIST_DELIMITER)));
+                    }
 
-                ArrayList<String> pastTreatments = new ArrayList<>();
-                if (patientFields.length > 8 && !patientFields[8].isEmpty()) {
-                    pastTreatments.addAll(Arrays.asList(patientFields[8].split(LIST_DELIMITER)));
-                }
+                    ArrayList<String> pastTreatments = new ArrayList<>();
+                    if (patientFields.length > 8 && !patientFields[8].isEmpty()) {
+                        pastTreatments.addAll(Arrays.asList(patientFields[8].split(LIST_DELIMITER)));
+                    }
 
                 Patient p = new Patient(patientID, name, dateofbirth, gender, bloodType, 
                                      phoneNumber, emailAddress, pastDiagnoses, pastTreatments);

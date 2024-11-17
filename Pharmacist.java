@@ -275,7 +275,7 @@ public class Pharmacist extends User {
 
     public String toCSV() {
         // Combine all attributes into a CSV string
-        return super.getHospitalID() + ";" + super.getPassword() + ";" + name + ";" + "Doctor" + ";" + gender + ";" + age;
+        return super.getHospitalID() + ";" + super.getPassword() + ";" + name + ";" + "Pharmacist" + ";" + gender + ";" + age;
     }
 
     // public static void main(String[] args) {

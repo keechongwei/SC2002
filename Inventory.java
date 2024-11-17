@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.Scanner;
 
 public class Inventory {
-    private List<Medication> listOfMedications;
+    public static List<Medication> listOfMedications;
 	static String csvFilePath = "Medicine_List.csv"; // Replace with your actual CSV file path
     static String replenishRequestFile = "Replenish_Request_List.csv"; // Replace with your actual CSV file path
     private int lastRequestId = 0;
@@ -36,7 +36,7 @@ public class Inventory {
         loadMedicationsFromCSV(csvFilePath);
     }
 
-    private void loadMedicationsFromCSV(String filePath) {
+    public static void loadMedicationsFromCSV(String filePath) {
         String line;
         String csvSplitBy = ";";
 
