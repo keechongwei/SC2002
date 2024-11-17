@@ -36,7 +36,7 @@ public class Inventory {
         loadMedicationsFromCSV(csvFilePath);
     }
 
-    public void loadMedicationsFromCSV(String filePath) {
+    public static void loadMedicationsFromCSV(String filePath) {
         String line;
         String csvSplitBy = ";";
 
