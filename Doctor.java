@@ -5,10 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Doctor extends User{
-    private String name;
-    private String age;
-    private String gender;
+public class Doctor extends Staff{
     private List<Patient> patientList = new ArrayList<>();
     
     private static Scanner sc = new Scanner(System.in);
@@ -20,8 +17,15 @@ public class Doctor extends User{
         this.age = age;
     }
 
+    public void addPatientsUnderCare(){
+        for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray){
+            if (slot.getDoctorID().equals(this.getHospitalID()) && slot.getStatus().equals(AppointmentStatus.CONFIRMED)){
+                this.patientList.add(PatientManager.findPatient(slot.getPatientID()));
+            }
+        }
+    }
+
     public void printMenu(){
-        this.addPatient(PatientManager.allPatients.get(0));
         int choice = 0;
         while(choice != 8){
             System.out.println("=== DOCTOR MENU, ENTER CHOICE ===");
@@ -39,21 +43,27 @@ public class Doctor extends User{
                 this.viewPatientRecords();
                 break;
                 case 2:
+                sc.nextLine();
                 this.updatePatientRecord();
                 break;
                 case 3:
+                sc.nextLine();
                 this.viewPersonalSchedule(); // View Personal Schedule
                 break;
                 case 4:
+                sc.nextLine();
                 this.setAvailabilityForAppointments();// Set Availability For Appointments
                 break;
                 case 5:
+                sc.nextLine();
                 this.acceptOrDeclineAppointments();// Accept Or Decline Appointment Requests
                 break;
                 case 6:
+                sc.nextLine();
                 this.viewUpcomingAppointment();
                 break;
                 case 7:
+                sc.nextLine();
                 this.makeAppointmentOutcomeRecord();
                 break;
                 case 8:
@@ -63,40 +73,9 @@ public class Doctor extends User{
         }
     }
     
-    public void setPassword(String password){
-        super.setPassword(password);
-    }
-    public String getGender() {
-        return gender;
-    }
-
     public void addPatient(Patient patient) {
         patientList.add(patient);
     }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getAge() {
-        return age;
-    }
-
-    public void setAge(String age) {
-        this.age = age;
-    }
-    
-    public String getDoctorID() {
-        return super.getHospitalID();
-    } 
-
-    public String getDoctorName() {
-        return this.name;
-    }
-
-    public void setName(String doctorName) {
-        this.name = doctorName;
-    } 
 
     public void viewPatientRecords(){
         if (patientList.isEmpty()) {
@@ -110,29 +89,7 @@ public class Doctor extends User{
             }
     }
     
-
-    public Patient findPatientByID(String patientID){
-        for (Patient patient : patientList) {
-            if (patient.getHospitalID() == patientID){
-                return patient;
-            }
-        }
-        return null;
-    }
     
-    // public void addPatientRecords(String patientID, AppointmentSlot a){
-    //     Patient p = findPatientByID(patientID);
-    //     if (p != null) {
-    //     patientRecords.add(p);
-    //     scheduleAvailability.add(a);}
-    // }
-
-    // public void removePatientRecords(String patientID, AppointmentSlot a){  //useless, in case need it
-    //     Patient p = findPatientByID(patientID);
-    //     if (p != null) {
-    //     patientRecords.remove(p);
-    //     scheduleAvailability.remove(a);}
-    // }
     public void setAvailabilityForAppointments() {
         List <AppointmentSlot> schedule = AppointmentManager.getAppointmentsByDoctor(super.getHospitalID());
         System.out.println("Manage Availability for Appointments:");
@@ -144,7 +101,7 @@ public class Doctor extends User{
         if (pick != 1 && pick != 2) {
         System.out.println("Invalid choice. Exiting.");
         return;}
-        System.out.println("Enter Date in (YYYY-MM-DD) format, eg: 2024-11-15) :");
+        System.out.println("Enter Date in (YYYY-MM-DD) format, eg: 2024-11-15 :");
         String dateinput = sc.nextLine();
         LocalDate date = LocalDate.parse(dateinput, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
@@ -196,6 +153,8 @@ public class Doctor extends User{
 
     public void viewPersonalSchedule() {
         System.out.println("=== Doctor's Personal Schedule ===");
+        viewUpcomingAppointment();
+        System.out.println("=== AVAILABLE SLOTS ===");
         for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
             if (slot.getDoctorID().equals(super.getHospitalID()) && slot.getStatus() == AppointmentStatus.AVAILABLE){
                 System.out.println("----------------------------------------------");
@@ -204,7 +163,6 @@ public class Doctor extends User{
                 System.out.println("----------------------------------------------");
             }
         }
-        
     }
 
     public void updatePatientRecord() {
@@ -307,6 +265,7 @@ public class Doctor extends User{
             for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
                 if (slot.getAppointmentID().equals(choice2) ){ 
                     slot.setStatus(AppointmentStatus.CONFIRMED);
+                    this.patientList.add(PatientManager.findPatient(slot.getPatientID()));
                     AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
                     System.out.println("Appointment ID " + choice2 + " has been CONFIRMED.");
                 }
@@ -339,12 +298,111 @@ public class Doctor extends User{
 }  
 
     public void makeAppointmentOutcomeRecord(){
-        System.out.print("patientID to update his/her record:");
-        String id = sc.nextLine();
-        System.out.print("The type of service of this diagnosis for the patient:");
-        String serviceType = sc.nextLine();
+        List<AppointmentSlot> confirmedAppointmentSlots;
+        confirmedAppointmentSlots = AppointmentManager.getAppointmentsByDoctor(this.getHospitalID());
+        String id = "";
+        boolean validpatientID = false;
+        boolean validAppointmentID = false;
+        boolean validService = false;
+        boolean validMedication = false;
+        System.out.println("Patient ID to update his/her record[E.g P1001]:");
+        id = sc.nextLine().trim();
+        while (!validpatientID){
+            for (Patient p : PatientManager.allPatients){
+                if (p.getHospitalID().equals(id)){
+                    validpatientID = true;
+                    break;
+                }
+            }
+            if(validpatientID){
+                break;
+            }
+            System.out.println("Invalid Patient ID");
+            System.out.println("Patient ID to update his/her record[E.g P1001]:");
+            id = sc.nextLine().trim();
+        }
+        confirmedAppointmentSlots.retainAll(AppointmentManager.getAppointmentsByPatient(id));
+        for (AppointmentSlot slot : confirmedAppointmentSlots){
+            if (slot.getStatus() != AppointmentStatus.CONFIRMED){
+                confirmedAppointmentSlots.remove(slot);
+            }
+        }
+        System.out.println("LIST OF APPOINTMENTS");
+        System.out.println("----------------------------------------------");    
+        for (AppointmentSlot slot : confirmedAppointmentSlots){
+            System.out.println("Appointment ID:" + slot.getAppointmentID());
+            System.out.println("Date:" + slot.getDate().toString());
+            System.out.println("Time:" + slot.getTime().toString());
+            System.out.println("----------------------------------------------");
+        }
+        System.out.println("ENTER APPOINTMENT ID OF APPOINTMENT TO MAKE APPOINTMENT OUTCOME RECORD FOR [E.g APT1]: ");
+        String selectedAppointmentID = sc.nextLine().trim().toUpperCase();
+        while (!validAppointmentID){
+            for (AppointmentSlot slot : confirmedAppointmentSlots){
+                if (slot.getAppointmentID().equals(selectedAppointmentID)){
+                    validAppointmentID = true;
+                    break;
+                }
+            }
+            if(validAppointmentID){
+                break;
+            }
+            System.out.println("Invalid Appointment ID");
+            System.out.println("LIST OF APPOINTMENTS");
+            System.out.println("----------------------------------------------");    
+            for (AppointmentSlot slot : confirmedAppointmentSlots){
+                System.out.println("Appointment ID:" + slot.getAppointmentID());
+                System.out.println("Date:" + slot.getDate().toString());
+                System.out.println("Time:" + slot.getTime().toString());
+                System.out.println("----------------------------------------------");
+            }
+            System.out.println("ENTER APPOINTMENT ID OF APPOINTMENT TO MAKE APPOINTMENT OUTCOME RECORD FOR [E.g APT1]: ");
+            selectedAppointmentID = sc.nextLine().trim().toUpperCase();
+        }
+        System.out.println("The type of service of this diagnosis for the patient:");
+        String serviceType = sc.nextLine().trim();
+        while (!validService){
+            for (TypeOfService tos : TypeOfService.values()){
+                if (serviceType.equalsIgnoreCase(tos.toString())){
+                    validService = true;
+                    break;
+                }
+            }
+            if(validService){
+                break;
+            }
+            System.out.println("Invalid Type Of Service");
+            System.out.println("Types Of Service:");
+            System.out.println("----------------------------------------------"); 
+            for (TypeOfService tos : TypeOfService.values()){
+                System.out.println(tos.toString());
+            }
+            System.out.println("----------------------------------------------"); 
+            System.out.println("The type of service of this diagnosis for the patient:");
+            serviceType = sc.nextLine().trim();
+        }
         System.out.print("The prescribed medication of this diagnosis for the patient:");
-        String medicineType = sc.nextLine();
+        String medicineType = sc.nextLine().trim();
+        while (!validMedication){
+            for (Medication med : Inventory.listOfMedications){
+                if (medicineType.equalsIgnoreCase(med.getMedicationName())){
+                    validMedication = true;
+                    break;
+                }
+            }
+            if(validMedication){
+                break;
+            }
+            System.out.println("Invalid Medication");
+            System.out.println("Types Of Medication:");
+            System.out.println("----------------------------------------------"); 
+            for (Medication med : Inventory.listOfMedications){
+                System.out.println(med.getMedicationName());
+            }
+            System.out.println("----------------------------------------------"); 
+            System.out.println("The prescribed medication of this diagnosis for the patient:");
+            medicineType = sc.nextLine().trim();
+        }
         System.out.print("The amount of prescribed medication of this diagnosis for the patient:");
         String dosageAmount = sc.nextLine();
         Prescription pres = new Prescription(medicineType,PrescriptionStatus.PENDING,Integer.parseInt(dosageAmount));
@@ -352,27 +410,21 @@ public class Doctor extends User{
         String consultationNote = sc.nextLine();
         for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
         // Check if the slot matches the patient ID, doctor ID, and is confirmed
-            if (slot.getPatientID().equals(id) && 
-                slot.getDoctorID().equals(super.getHospitalID()) && 
-                slot.getStatus()==AppointmentStatus.CONFIRMED) {
-
+            if (selectedAppointmentID.equals(slot.getAppointmentID())) {
         // Update the outcome record with provided details
                 slot.updateAppointmentOutcomeRecord(slot.getDate(), slot.getTime(), serviceType, pres, consultationNote);
                 slot.setStatus(AppointmentStatus.COMPLETED);
                 AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
+                PatientManager.addDiagnosis(id, consultationNote);
+                PatientManager.addTreatment(id, medicineType);
         // Log success message
-                System.out.println("Outcome successfully recorded for patient ID: " + id);
+                System.out.println("Outcome successfully recorded for Appointment ID: " + selectedAppointmentID);
                 return; // Exit the loop after successfully updating
+        }
     }
 }
-
-    //UPDATE PATIENT MEDICAL RECORDS,RECORD APPOINTMENT OUTCOME
-    //AGGREGATION
-    //UNAVAILABLE
-    }
-
     public String toCSV() {
         // Combine all attributes into a CSV string
-        return super.getHospitalID() + ";" + super.getPassword() + ";" + name + ";" + "Doctor" + ";" + gender + ";" + age;
+        return super.getHospitalID() + ";" + super.getPassword() + ";" + super.name + ";" + "Doctor" + ";" + super.gender + ";" + super.age;
     }
 }

@@ -37,27 +37,42 @@ public class Inventory {
     }
 
     public static void loadMedicationsFromCSV(String filePath) {
-        String line;
-        String csvSplitBy = ";";
+    String line;
+    String csvSplitBy = ";";
+    listOfMedications.clear(); // Clear existing list before loading
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            br.readLine(); // Skip the header line
-            while ((line = br.readLine()) != null) {
+    try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        br.readLine(); // Skip the header line
+        while ((line = br.readLine()) != null) {
+            if (!line.trim().isEmpty()) {
                 String[] data = line.split(csvSplitBy);
-
-                String medicationName = data[0];
-                int initialStock = Integer.parseInt(data[1]);
-                int lowStockValue = Integer.parseInt(data[2]);
-
-                Medication medication = new Medication(medicationName, initialStock, lowStockValue);
-                listOfMedications.add(medication);
+                if (data.length >= 3) {
+                    String medicationName = data[0].trim();
+                    int initialStock = Integer.parseInt(data[1].trim());
+                    int lowStockValue = Integer.parseInt(data[2].trim());
+                    
+                    // Check if medication already exists
+                    boolean exists = false;
+                    for (Medication med : listOfMedications) {
+                        if (med.getMedicationName().equalsIgnoreCase(medicationName)) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!exists) {
+                        Medication medication = new Medication(medicationName, initialStock, lowStockValue);
+                        listOfMedications.add(medication);
+                    }
+                }
             }
-        } catch (IOException e) {
-            System.out.println("Error reading CSV file: " + e.getMessage());
-        } catch (NumberFormatException e) {
-            System.out.println("Error parsing number from CSV: " + e.getMessage());
         }
+    } catch (IOException e) {
+        System.out.println("Error reading CSV file: " + e.getMessage());
+    } catch (NumberFormatException e) {
+        System.out.println("Error parsing number from CSV: " + e.getMessage());
     }
+}
 
     public Medication getMedication(String medicationName) {
 		for(Medication med : listOfMedications) {
@@ -75,7 +90,7 @@ public class Inventory {
     }
 
     public void viewInventory() {
-        
+        System.out.println("=== View Medication Inventory ===");
         for (Medication medication : listOfMedications) {
             System.out.println(medication.getMedicationName() + ": " + medication.getStock() + " units in stock, Low stock alert: " + medication.isLowStockAlert());
         }
@@ -126,9 +141,25 @@ public class Inventory {
 	}
 
     public void writeCSVFile() {
+        // First, create a temporary list to store unique medications
+        List<Medication> uniqueMedications = new ArrayList<>();
+        for (Medication med : listOfMedications) {
+            boolean exists = false;
+            for (Medication uniqueMed : uniqueMedications) {
+                if (uniqueMed.getMedicationName().equalsIgnoreCase(med.getMedicationName())) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                uniqueMedications.add(med);
+            }
+        }
+        
+        // Now write only the unique medications to the file
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFilePath))) {
             bw.write("MedicationName;Stock;LowStockValue\n"); // Write header
-            for (Medication medication : this.listOfMedications) {
+            for (Medication medication : uniqueMedications) {
                 bw.write(medication.toString());
                 bw.newLine();
             }
@@ -138,32 +169,27 @@ public class Inventory {
     }
 
 	public List<Medication> updateAllAlertLevels() {
-        List<Medication> temp = new ArrayList<>();
+        List<Medication> lowStockMeds = new ArrayList<>();
         for (Medication medication : listOfMedications) {
             medication.updateLowStockAlert();
             if (medication.isLowStockAlert() == true) {
-                temp.add(medication);
-                System.out.println("Inventory low for "+ medication.getMedicationName() + "...");
+                lowStockMeds.add(medication);
+                System.out.println("\nWARNING: Inventory low for " + medication.getMedicationName() + "!");
                 
-                // Check if a replenishment request already exists
-                if (!checkReplenishRequestExists(medication.getMedicationName())) {
-                    // Calculate suggested replenishment amount
-                    int currentStock = medication.getStock();
-                    int lowStockValue = medication.getLowStockValue();
-                    int suggestedAmount = (lowStockValue * 2) - currentStock;
-                    
-                    System.out.println("No replenishment request exists for " + medication.getMedicationName());
-                    System.out.println("Suggested replenishment amount: " + suggestedAmount + " units");
-                    
-                    // Automatically submit a replenishment request
-                    submitReplenishRequest(medication.getMedicationName(), suggestedAmount);
-                } else {
-                    System.out.println("A replenishment request is already pending for " + medication.getMedicationName());
-                }
+                // Calculate suggested replenishment amount
+                int currentStock = medication.getStock();
+                int lowStockValue = medication.getLowStockValue();
+                int suggestedAmount = (lowStockValue * 3) - currentStock;
+                
+                System.out.println("Current stock: " + currentStock);
+                System.out.println("Low stock threshold: " + lowStockValue);
+                System.out.println("Suggested replenishment amount: " + suggestedAmount + " units");
+                System.out.println("Please submit a replenishment request!");
+                System.out.println(); // Add blank line for readability
             }
         }
         writeCSVFile();
-        return temp;
+        return lowStockMeds;
     }
 
     private List<String[]> loadReplenishRequests() {
@@ -194,7 +220,7 @@ public class Inventory {
     public boolean checkReplenishRequestExists(String medicationName) {
         List<String[]> requests = loadReplenishRequests();
         return requests.stream()
-                      .anyMatch(request -> request[1].equals(medicationName) && 
+                      .anyMatch(request -> request[1].equalsIgnoreCase(medicationName) && 
                                         request[3].equals("Pending"));
     }
 
