@@ -90,7 +90,7 @@ public class Inventory {
     }
 
     public void viewInventory() {
-        
+        System.out.println("=== View Medication Inventory ===");
         for (Medication medication : listOfMedications) {
             System.out.println(medication.getMedicationName() + ": " + medication.getStock() + " units in stock, Low stock alert: " + medication.isLowStockAlert());
         }
@@ -174,12 +174,12 @@ public class Inventory {
             medication.updateLowStockAlert();
             if (medication.isLowStockAlert() == true) {
                 lowStockMeds.add(medication);
-                System.out.println("WARNING: Inventory low for " + medication.getMedicationName() + "...");
+                System.out.println("\nWARNING: Inventory low for " + medication.getMedicationName() + "!");
                 
                 // Calculate suggested replenishment amount
                 int currentStock = medication.getStock();
                 int lowStockValue = medication.getLowStockValue();
-                int suggestedAmount = (lowStockValue * 2) - currentStock;
+                int suggestedAmount = (lowStockValue * 3) - currentStock;
                 
                 System.out.println("Current stock: " + currentStock);
                 System.out.println("Low stock threshold: " + lowStockValue);
@@ -220,7 +220,7 @@ public class Inventory {
     public boolean checkReplenishRequestExists(String medicationName) {
         List<String[]> requests = loadReplenishRequests();
         return requests.stream()
-                      .anyMatch(request -> request[1].equals(medicationName) && 
+                      .anyMatch(request -> request[1].equalsIgnoreCase(medicationName) && 
                                         request[3].equals("Pending"));
     }
 

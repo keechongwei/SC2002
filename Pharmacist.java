@@ -254,7 +254,16 @@ public class Pharmacist extends User {
                         if (p2 == null) return -1;
                         return p2.getStatus().compareTo(p1.getStatus());
                     });
+
+                    for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
+                        if (slot.getAppointmentID().equals(appointment.getAppointmentID())) {
+                            slot.getAppointmentOutcomeRecord().getPrescribedMedication().setStatus(PrescriptionStatus.DISPENSED);
+                            break;
+                        }
+                    }
+
                     saveAppointments();
+                    AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
                     System.out.println("Prescription successfully dispensed.");
                 }
             } else {
