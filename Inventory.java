@@ -7,6 +7,8 @@ import java.util.Scanner;
 public class Inventory {
     private List<Medication> listOfMedications;
 	static String csvFilePath = "Medicine_List.csv"; // Replace with your actual CSV file path
+    static String replenishRequestFile = "Replenish_Request_List.csv"; // Replace with your actual CSV file path
+    private int lastRequestId = 0;
 
 	public static void main(String[] args) {		
 	
@@ -135,16 +137,89 @@ public class Inventory {
     }
 
 	public List<Medication> updateAllAlertLevels() {
-		List<Medication> temp = new ArrayList<>();
-		for (Medication medication : listOfMedications) {
-			medication.updateLowStockAlert();
-			if (medication.isLowStockAlert() == true) {
-				temp.add(medication);
-				System.out.println("Inventory low for "+ medication.getMedicationName() + "...");
-			}
-		}
-		writeCSVFile();
-		return temp;
-	}	
+        List<Medication> temp = new ArrayList<>();
+        for (Medication medication : listOfMedications) {
+            medication.updateLowStockAlert();
+            if (medication.isLowStockAlert() == true) {
+                temp.add(medication);
+                System.out.println("Inventory low for "+ medication.getMedicationName() + "...");
+                
+                // Check if a replenishment request already exists
+                if (!checkReplenishRequestExists(medication.getMedicationName())) {
+                    // Calculate suggested replenishment amount
+                    int currentStock = medication.getStock();
+                    int lowStockValue = medication.getLowStockValue();
+                    int suggestedAmount = (lowStockValue * 2) - currentStock;
+                    
+                    System.out.println("No replenishment request exists for " + medication.getMedicationName());
+                    System.out.println("Suggested replenishment amount: " + suggestedAmount + " units");
+                    
+                    // Automatically submit a replenishment request
+                    submitReplenishRequest(medication.getMedicationName(), suggestedAmount);
+                } else {
+                    System.out.println("A replenishment request is already pending for " + medication.getMedicationName());
+                }
+            }
+        }
+        writeCSVFile();
+        return temp;
+    }
 
+    private List<String[]> loadReplenishRequests() {
+        List<String[]> requests = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(replenishRequestFile))) {
+            String line;
+            boolean firstLine = true;
+            while ((line = br.readLine()) != null) {
+                if (firstLine) {
+                    firstLine = false;
+                    continue;
+                }
+                if (!line.trim().isEmpty()) {
+                    String[] parts = line.split(";");
+                    requests.add(parts);
+                    int requestId = Integer.parseInt(parts[0]);
+                    if (requestId > lastRequestId) {
+                        lastRequestId = requestId;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading replenishment requests: " + e.getMessage());
+        }
+        return requests;
+    }
+
+    public boolean checkReplenishRequestExists(String medicationName) {
+        List<String[]> requests = loadReplenishRequests();
+        return requests.stream()
+                      .anyMatch(request -> request[1].equals(medicationName) && 
+                                        request[3].equals("Pending"));
+    }
+
+    public void submitReplenishRequest(String medicationName, int amount) {
+        List<String[]> existingRequests = loadReplenishRequests();
+        int newRequestId = lastRequestId + 1;
+        
+        try (FileWriter fw = new FileWriter(replenishRequestFile);
+             BufferedWriter bw = new BufferedWriter(fw)) {
+            
+            bw.write("RequestID;MedicationName;AddedAmount;Status\n");
+            bw.write(newRequestId + ";" + medicationName + ";" + amount + ";Pending\n");
+            
+            for (String[] request : existingRequests) {
+                bw.write(String.join(";", request) + "\n");
+            }
+            
+            System.out.println("Replenishment request submitted successfully.");
+            lastRequestId = newRequestId;
+            
+        } catch (IOException e) {
+            System.out.println("Error submitting replenishment request: " + e.getMessage());
+        }
+    }
+
+    public void displayInventoryForReplenishment() {
+        viewInventory();
+    }
 }
