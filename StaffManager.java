@@ -26,16 +26,37 @@ public class StaffManager {
                     String line = scanner.nextLine();
                     String[] fields = line.split(";");
                     if (fields[2].equals("Doctor")){
-                        Doctor d = new Doctor(fields[0],fields[1],fields[3],fields[4]);
-                        doctors.add(d);
+                        if(!(fields[1].equals("password"))){
+                            Doctor d = new Doctor(fields[0],fields[2],fields[4],fields[5]);
+                            d.setPassword(fields[1]);
+                            doctors.add(d);
+                        }
+                        else{
+                            Doctor d = new Doctor(fields[0],fields[2],fields[4],fields[5]);
+                            doctors.add(d);     
+                        }
                     }
                     else if (fields[2].equals("Pharmacist")){
-                        Pharmacist ph = new Pharmacist(fields[0],fields[1],fields[3],fields[4]);
-                        pharmacists.add(ph);
+                        if(!(fields[1].equals("password"))){
+                            Pharmacist ph = new Pharmacist(fields[0],fields[2],fields[4],fields[5]);
+                            ph.setPassword(fields[1]);
+                            pharmacists.add(ph);
+                        }
+                        else{
+                            Pharmacist ph = new Pharmacist(fields[0],fields[2],fields[4],fields[5]);
+                            pharmacists.add(ph);
+                        }
                     }
                     else if (fields[2].equals("Administrator")){
-                        Administrator adm = new Administrator(fields[0],fields[1],fields[3],fields[4]);
-                        administrators.add(adm);
+                        if(!(fields[1].equals("password"))){
+                            Administrator adm = new Administrator(fields[0],fields[2],fields[4],fields[5]);
+                            adm.setPassword(fields[1]);
+                            administrators.add(adm);
+                        }
+                        else{
+                            Administrator adm = new Administrator(fields[0],fields[2],fields[4],fields[5]);
+                            administrators.add(adm);
+                        }
                     }
                 }
             }
