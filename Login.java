@@ -26,7 +26,7 @@ public class Login {
             e.printStackTrace();
         }
         try{
-            StaffManager.loadRecordsCSV();
+            StaffManager.initialiseStaff();
             System.out.println("Staff Information Retrieved Successfully!");
             //System.out.println(staffs);
         } catch (Exception e){
@@ -218,7 +218,7 @@ public class Login {
         login(loggedIn,sc);
         user.printMenu();
         PatientManager.writeAllRecords();
-        StaffManager.updateStaffCSV();
+        StaffCSVHandler.updateStaffCSV();
         AppointmentCSVHandler.updateAppointmentsCSV();
     }   
 }
