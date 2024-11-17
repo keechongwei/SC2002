@@ -110,7 +110,9 @@ public class Inventory {
 			med.addStock(amount);
 		} else {
 			// Check curr amt vs stock amount, separate fn
-			
+			if (med.getStock() < amount) {
+				return checker; // Return false to indicate cant remove stock
+			}
 			med.removeStock(amount);
 		}
 
