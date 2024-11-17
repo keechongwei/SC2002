@@ -1,5 +1,5 @@
 
-public abstract class User {
+public class User {
 
 	private String HospitalID;
 	private String Password;
