@@ -11,6 +11,7 @@ public class MedicalRecord {
     private String bloodType;
     private ArrayList<String> pastDiagnoses;
     private ArrayList<String> pastTreatments;
+    private Patient patient;
 
     public MedicalRecord(String patientID, String name, String dateOfBirth, String gender, String phoneNumber, String emailAddress, String bloodType) {
         this.patientID = patientID;
@@ -36,13 +37,47 @@ public class MedicalRecord {
         this.pastTreatments = pastTreatments;
     }
 
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+
+    //update to csv, then update local info with csv info
+    private void updateCSV() {
+        if(patient != null) {
+            PatientManager.updatePatient(patient);
+        
+            PatientManager.loadRecordsCSV();
+            for(Patient p : PatientManager.allPatients) {
+                if(p.getHospitalID().equals(this.patientID)) {
+                    this.name = p.getMedicalRecord().getName();
+                    this.dateOfBirth = p.getMedicalRecord().getDateOfBirth();
+                    this.gender = p.getMedicalRecord().getGender();
+                    this.bloodType = p.getMedicalRecord().getBloodType();
+                    this.emailAddress = p.getMedicalRecord().getEmailAddress();
+                    this.phoneNumber = p.getMedicalRecord().getPhoneNumber();
+                    
+                    // Update lists
+                    this.pastDiagnoses.clear();
+                    this.pastDiagnoses.addAll(p.getMedicalRecord().getPastDiagnoses());
+                    
+                    this.pastTreatments.clear();
+                    this.pastTreatments.addAll(p.getMedicalRecord().getPastTreatments());
+                    
+                    break;
+                }
+            }
+        }   
+        
+    }
+
     public String getPatientID() {
         return patientID;
     }
 
-    public void setPatientID(String patientID) {
-        this.patientID = patientID;
-    }
+    // public void setPatientID(String patientID) {
+    //     this.patientID = patientID;
+    //     updateCSV();
+    // }
 
     public String getName() {
         return name;
@@ -50,6 +85,7 @@ public class MedicalRecord {
 
     public void setName(String name) {
         this.name = name;
+        updateCSV();
     }
 
     public String getDateOfBirth() {
@@ -58,6 +94,7 @@ public class MedicalRecord {
 
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+        updateCSV();
     }
 
     public String getGender() {
@@ -66,6 +103,7 @@ public class MedicalRecord {
 
     public void setGender(String gender) {
         this.gender = gender;
+        updateCSV();
     }
 
     public String getPhoneNumber() {
@@ -74,6 +112,7 @@ public class MedicalRecord {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+        updateCSV();
     }
 
     public String getEmailAddress() {
@@ -82,6 +121,8 @@ public class MedicalRecord {
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
+        updateCSV();
+
     }
 
     public String getBloodType() {
@@ -90,6 +131,7 @@ public class MedicalRecord {
 
     public void setBloodType(String bloodType) {
         this.bloodType = bloodType;
+        updateCSV();
     }
 
     public ArrayList<String> getPastDiagnoses() {
@@ -97,7 +139,7 @@ public class MedicalRecord {
     }
 
     public void addDiagnosis(String diagnosis) {
-        pastDiagnoses.add(diagnosis);
+        PatientManager.addDiagnosis(this.patientID, diagnosis);
     }
 
     public ArrayList<String> getPastTreatments() {
@@ -105,6 +147,6 @@ public class MedicalRecord {
     }
 
     public void addTreatment(String treatment) {
-        pastTreatments.add(treatment);
+        PatientManager.addTreatment(this.patientID, treatment);
     }
 }
