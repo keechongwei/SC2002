@@ -1,3 +1,0 @@
-BillID;PatientID;AppointmentID;Date;ConsultationFee;Prescriptions;MedicationTotal;TotalAmount;IsPaid
-B6555;P1001;APT1;2024-11-17T09:00:00;50.00;Ibuprofen^10|;5.00;55.00;true
-B6585;P1001;APT2;2024-11-17T09:00:00;50.00;;0.00;50.00;false

@@ -40,10 +40,6 @@ public class BillingSystem {
             this.isPaid = false;
         }
 
-        public String getBillID() {
-            return this.billId;
-        }
-
         public String toCSV() {
             StringBuilder medicationsStr = new StringBuilder();
             for (Map.Entry<String, Integer> med : medications.entrySet()) {
@@ -61,11 +57,13 @@ public class BillingSystem {
 
     private List<Bill> bills;
 
+    //constructor for billing system
     public BillingSystem() {
         this.bills = new ArrayList<>();
         loadBills();
     }
 
+    //update bill to csv
     private void loadBills() {
         File file = new File(BILLING_FILE);
         if (!file.exists()) {
@@ -122,9 +120,8 @@ public class BillingSystem {
                 }
                 
                 String[] parts = line.split(";");
-                if (parts.length < 7) continue;  // Changed to 7 since we need at least 7 fields
+                if (parts.length < 7) continue; 
                 
-                // Trim all parts to remove any whitespace
                 for (int i = 0; i < parts.length; i++) {
                     parts[i] = parts[i].trim();
                 }
@@ -147,7 +144,7 @@ public class BillingSystem {
                 Bill bill = new Bill(patientId, appointmentId, appointmentDateTime);
                 
                 // Parse medications from the appointment format
-                String[] outcomeInfo = parts[6].split("\\|");  // Changed from parts[7] to parts[6]
+                String[] outcomeInfo = parts[6].split("\\|");
                 if (outcomeInfo.length >= 4) {
                     String medicationInfo = outcomeInfo[3];
                     String[] medInfo = medicationInfo.split("\\^");
@@ -297,13 +294,13 @@ public class BillingSystem {
                     continue;
                 }
                 
-                // Display bill details for confirmation
+                // display bill for confirmation
                 displayBill(billId);
                 
-                System.out.print("\nConfirm payment for Bill " + billId + "? (yes/no): ");
+                System.out.print("\nConfirm payment for Bill " + billId + "? (y/n): ");
                 String confirm = sc.nextLine().trim().toLowerCase();
                 
-                if (confirm.equals("yes")) {
+                if (confirm.equals("y")) {
                     markAsPaid(billId);
                     System.out.println("Payment processed successfully!");
                     break;
@@ -317,26 +314,48 @@ public class BillingSystem {
         }
     }
 
-    public static void main(String[] args) {
-
-        // Initialize billing system
+    public static void BillingMenu() {
+        Scanner sc = new Scanner(System.in);
         BillingSystem billingSystem = new BillingSystem();
-
-        // Process completed appointments
         billingSystem.processCompletedAppointments();
-
-
-        System.out.println("\n=== Bills for Patient P1001 ===");
-        billingSystem.viewPatientBills("P1001");
-
-        System.out.println("\nDebug Information:");
-        System.out.println("Total bills in system: " + billingSystem.bills.size());
-        for (Bill bill : billingSystem.bills) {
-            System.out.println("Found bill: " + bill.billId + " for patient: " + bill.patientId);
+        
+        int choice = 0;
+        while (choice != 3) {
+            System.out.println("\n=== BILLING MENU ===");
+            System.out.println("(1) View My Bills");
+            System.out.println("(2) Process Payment");
+            System.out.println("(3) Return to Patient Menu");
+            
+            try {
+                choice = sc.nextInt();
+                sc.nextLine();
+                
+                switch (choice) {
+                    case 1:
+                        System.out.println("\n=== Your Bills ===");
+                        billingSystem.viewPatientBills("P1001");
+                        System.out.println("\nPress Enter to continue...");
+                        sc.nextLine();
+                        break;
+                        
+                    case 2:
+                        billingSystem.processPayment();
+                        System.out.println("\nPress Enter to continue...");
+                        sc.nextLine();
+                        break;
+                        
+                    case 3:
+                        System.out.println("Returning to Patient Menu...");
+                        break;
+                        
+                    default:
+                        System.out.println("Invalid choice. Please try again.");
+                        break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                sc.nextLine(); 
+            }
         }
-
-        billingSystem.processPayment();
-
-        System.out.println("\nTest completed successfully!");
     }
 }

@@ -40,7 +40,8 @@ public class Patient extends User{
             System.out.println("(6) Cancel An Appointment");
             System.out.println("(7) View Scheduled Appointments");
             System.out.println("(8) View Past Appointment Outcome Records");
-            System.out.println("(9) Logout");
+            System.out.println("(9) View and Process Bills");
+            System.out.println("(10) Logout");
             choice = sc.nextInt();
 
             switch(choice){
@@ -69,6 +70,9 @@ public class Patient extends User{
                 this.viewAppointmentOutcomeRecord();// View Past Appointments Outcome Record
                 break;
                 case 9:
+                BillingSystem.BillingMenu();
+                break;
+                case 10:
                 System.out.println("Logging out...");
                 break;
             }
