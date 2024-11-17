@@ -67,6 +67,11 @@ public class Administrator extends Staff {
             }
         }
     }
+
+    public String toCSV() {
+        // Combine all attributes into a CSV string
+        return super.getHospitalID() + ";" + super.getPassword() + ";" + name + ";" + "Administrator" + ";" + gender + ";" + age;
+    }
     
     public static void main(String[] args) {
         // Create an Administrator instance
@@ -83,7 +88,7 @@ public class Administrator extends Staff {
         //admin.printDoubleList(filteredStaffs);
 
         AppointmentManager.initialiseAppointments();
-        StaffManager.loadRecordsCSV();
+        StaffManager.initialiseStaff();
         admin.manageStaff();
 
         //admin.manageInventory();
@@ -593,7 +598,7 @@ public class Administrator extends Staff {
 
                 updated_med.updateLowStockLevel(new_limit);
                 System.out.println("Updated: " + updated_med.getMedicationName() + " with limit: " + updated_med.getLowStockValue());
-                inventory.writeCSVFile();
+                InventoryCSVHandler.writeCSVFile();
                 break;
     
             default:

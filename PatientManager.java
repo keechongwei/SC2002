@@ -60,4 +60,13 @@ public class PatientManager {
         return null;
     }
 
+    public static void initialisePatients() {
+        if (!((PatientManagerCSVHandler.csvFile).exists()) || (PatientManagerCSVHandler.csvFile).length() == 0) {
+            // File doesn't exist or is empty, create daily appointments
+            System.out.println("Patient_List.csv is empty or missing.");
+        } else {
+            System.out.println("Loading Patients from Patient_List.csv...");
+            PatientManagerCSVHandler.loadRecordsCSV();
+        }
+    }
 }

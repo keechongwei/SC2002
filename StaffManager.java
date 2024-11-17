@@ -13,7 +13,7 @@ public class StaffManager {
     public static void initialiseStaff() {
         if (!((StaffCSVHandler.csvFile).exists()) || (StaffCSVHandler.csvFile).length() == 0) {
             // File doesn't exist or is empty, create daily appointments
-            System.out.println("Staff_List.csv is empty or missing. Generating daily appointments...");
+            System.out.println("Staff_List.csv is empty or missing.");
         } else {
             System.out.println("Loading Staff from Staff_List.csv...");
             StaffCSVHandler.loadRecordsCSV();

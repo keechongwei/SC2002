@@ -19,7 +19,7 @@ public class Login {
             e.printStackTrace(); 
         }
         try{
-            PatientManager.loadRecordsCSV();
+            PatientManager.initialisePatients();
             System.out.println("Patients Information Retrieved Successfully!");
         } catch (Exception e){
             System.out.println("Unable to Retrieve Patients Information!");
@@ -34,7 +34,7 @@ public class Login {
             e.printStackTrace();
         }
         try{
-            Inventory.loadMedicationsFromCSV(Inventory.csvFilePath);
+            InventoryCSVHandler.loadMedicationsFromCSV(InventoryCSVHandler.csvFilePath);
             System.out.println("Medicine Information Retrieved Successfully!");
         } catch (Exception e){
             System.out.println("Unable to Retrieve Medicine Information!");
@@ -217,7 +217,7 @@ public class Login {
         initialise(); // loads in data from csv
         login(loggedIn,sc);
         user.printMenu();
-        PatientManager.writeAllRecords();
+        PatientManagerCSVHandler.writeAllRecords();
         StaffCSVHandler.updateStaffCSV();
         AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
     }   
