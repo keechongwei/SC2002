@@ -16,8 +16,6 @@ public class Login {
     static List<Administrator> administrators = new ArrayList<Administrator>();
     static List<Doctor> doctors = new ArrayList<Doctor>();
     static String staffCSVHeader = "Staff ID; Password ; Name ; Role ; Gender ; Age";
-    static List<List<String>> staffs = new ArrayList<>();
-    static List<List<String>> medicines = new ArrayList<>();
     static File medicineFile = new File("Medicine_List.csv");
     static File patientRecordsFile = new File("Patient_List.csv");
     static File staffRecordsFile = new File("Staff_List.csv");
@@ -104,18 +102,8 @@ public class Login {
             System.out.println("Unable to Retrieve Staff Information!");
             e.printStackTrace();
         }
-        headerline = true;
         try{
-            Scanner scanner = new Scanner(medicineFile);
-            while (scanner.hasNextLine()) {
-                if(headerline){
-                    headerline = false;
-                    continue;
-                }
-                else{
-                    medicines.add(getRecordFromLine(scanner.nextLine()));
-                }
-            }
+            Inventory.loadMedicationsFromCSV(Inventory.csvFilePath);
             System.out.println("Medicine Information Retrieved Successfully!");
         } catch (FileNotFoundException e){
             System.out.println("Unable to Retrieve Medicine Information!");
