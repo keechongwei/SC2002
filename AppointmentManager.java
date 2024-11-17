@@ -36,6 +36,15 @@ public class AppointmentManager {
         nextAppointmentID++;
     }
 
+    public static void removeAppointments(Doctor d){
+        for (AppointmentSlot slot : appointmentSlotArray){
+            if(slot.getDoctorID().equals(d.getHospitalID())){
+                appointmentSlotArray.remove(slot);
+            }
+        }
+        AppointmentCSVHandler.writeCSV(appointmentSlotArray);
+    }
+    
     // for patients to see pending appointments, get all slots depending on DoctorID
     public static List<AppointmentSlot> getAppointmentsByPatient(String patientID) {
         List<AppointmentSlot> result = new ArrayList<>();
