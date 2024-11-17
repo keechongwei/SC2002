@@ -12,7 +12,6 @@ public class Login {
     // function used to initialise patient, staff, medicine data
     private static void initialise(){
         AppointmentManager.initialiseAppointments();
-        boolean headerline = true;
         try{
             PatientManager.loadRecordsCSV();
             System.out.println("Patients Information Retrieved Successfully!");
@@ -20,7 +19,6 @@ public class Login {
             System.out.println("Unable to Retrieve Patients Information!");
             e.printStackTrace();
         }
-        headerline = true;
         try{
             StaffManager.loadRecordsCSV();
             System.out.println("Staff Information Retrieved Successfully!");
