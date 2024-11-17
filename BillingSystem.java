@@ -8,12 +8,17 @@ import java.time.format.DateTimeFormatter;
 public class BillingSystem {
     private static final String BILLING_FILE = "Bills.csv";
     private static final String APPOINTMENTS_FILE = "appointments.csv";
-    private static final double CONSULTATION_FEE = 50.00;
 
     private static final Map<String, Double> MEDICATION_PRICES = new HashMap<>() {{
         put("Paracetamol", 0.1);
         put("Ibuprofen", 0.5);
         put("Amoxicillin", 0.2);
+    }};
+
+    private static final Map<TypeOfService, Double> SERVICE_FEES = new HashMap<>() {{
+        put(TypeOfService.CONSULTATION, 50.00);
+        put(TypeOfService.XRAY, 200.00);
+        put(TypeOfService.BLOOD_TEST, 150.00);  
     }};
     
     private static class Bill {
@@ -21,19 +26,22 @@ public class BillingSystem {
         String patientId;
         String appointmentId;
         LocalDateTime date;
+        TypeOfService serviceType;
+        double serviceFee;
         double consultationFee;
         Map<String, Integer> medications;
         double medicationTotal;
         double totalAmount;
         boolean isPaid;
 
-        public Bill(String patientId, String appointmentId, LocalDateTime date) {
+        public Bill(String patientId, String appointmentId, LocalDateTime date, TypeOfService serviceType) {
             String timestamp = String.valueOf(System.currentTimeMillis());
             this.billId = "B" + timestamp.substring(timestamp.length() - 4);
             this.patientId = patientId;
             this.appointmentId = appointmentId;
             this.date = date;
-            this.consultationFee = CONSULTATION_FEE;
+            this.serviceType = serviceType;
+            this.serviceFee = SERVICE_FEES.getOrDefault(serviceType, 0.0);
             this.medications = new HashMap<>();
             this.medicationTotal = 0.0;
             this.totalAmount = 0.0;
@@ -81,30 +89,32 @@ public class BillingSystem {
                 }
                 
                 String[] parts = line.split(";");
-                if (parts.length < 9) continue;
+                if (parts.length < 10) continue;
 
-                Bill bill = new Bill(parts[1], parts[2], LocalDateTime.parse(parts[3]));
+                TypeOfService serviceType = TypeOfService.valueOf(parts[4]);
+                Bill bill = new Bill(parts[1], parts[2], LocalDateTime.parse(parts[3]), serviceType);
                 bill.billId = parts[0];
-                bill.consultationFee = Double.parseDouble(parts[4]);
+                bill.serviceFee = Double.parseDouble(parts[5]);
                 
-                if (!parts[5].isEmpty()) {
-                    String[] medStrings = parts[5].split("\\|");
+                if (!parts[6].isEmpty()) {
+                    String[] medStrings = parts[6].split("\\|");
                     for (String medStr : medStrings) {
                         if (!medStr.isEmpty()) {
                             String[] medParts = medStr.split("\\^");
                             if (medParts.length >= 2) {
                                 bill.medications.put(medParts[0], Integer.parseInt(medParts[1]));
+                            }
                         }
                     }
                 }
                 
-                bill.medicationTotal = Double.parseDouble(parts[6]);
-                bill.totalAmount = Double.parseDouble(parts[7]);
-                bill.isPaid = Boolean.parseBoolean(parts[8]);
+                bill.medicationTotal = Double.parseDouble(parts[7]);
+                bill.totalAmount = Double.parseDouble(parts[8]);
+                bill.isPaid = Boolean.parseBoolean(parts[9]);
                 
                 bills.add(bill);
             }
-        } }catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Error loading bills: " + e.getMessage());
         }
     }
@@ -140,12 +150,21 @@ public class BillingSystem {
                     LocalDate.parse(parts[0]),
                     LocalTime.parse(parts[1])
                 );
-                
-                Bill bill = new Bill(patientId, appointmentId, appointmentDateTime);
-                
-                // Parse medications from the appointment format
+
                 String[] outcomeInfo = parts[6].split("\\|");
-                if (outcomeInfo.length >= 4) {
+                TypeOfService serviceType = TypeOfService.CONSULTATION; // Default
+                if (outcomeInfo.length >= 3) {
+                    try {
+                        serviceType = TypeOfService.valueOf(outcomeInfo[2].trim());
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Invalid service type found: " + outcomeInfo[2]);
+                    }
+                }
+                
+                Bill bill = new Bill(patientId, appointmentId, appointmentDateTime, serviceType);
+                
+                 // Parse medications
+                 if (outcomeInfo.length >= 4) {
                     String medicationInfo = outcomeInfo[3];
                     String[] medInfo = medicationInfo.split("\\^");
                     if (medInfo.length >= 3 && "DISPENSED".equals(medInfo[1])) {
@@ -153,7 +172,6 @@ public class BillingSystem {
                         try {
                             int dosage = Integer.parseInt(medInfo[2]);
                             bill.medications.put(medicationName, dosage);
-                            System.out.println("Added medication: " + medicationName + " with dosage: " + dosage);
                         } catch (NumberFormatException e) {
                             System.out.println("Error parsing dosage for " + medicationName + ": " + medInfo[2]);
                         }
@@ -163,13 +181,13 @@ public class BillingSystem {
                 calculateTotals(bill);
                 bills.add(bill);
                 System.out.println("Created new bill: " + bill.billId + " for appointment: " + appointmentId);
-                System.out.println("Medication total: $" + bill.medicationTotal);
+                System.out.println("Service type: " + serviceType + " - Fee: $" + bill.serviceFee);
             }
             saveBills();
             
         } catch (IOException e) {
             System.out.println("Error processing appointments: " + e.getMessage());
-            e.printStackTrace();  
+            e.printStackTrace();
         }
     }
 
@@ -193,7 +211,7 @@ public class BillingSystem {
 
     private void saveBills() {
         try (PrintWriter writer = new PrintWriter(new FileWriter(BILLING_FILE))) {
-            writer.println("BillID;PatientID;AppointmentID;Date;ConsultationFee;Prescriptions;MedicationTotal;TotalAmount;IsPaid");
+            writer.println("BillID;PatientID;AppointmentID;Date;ServiceType;ServiceFee;Prescriptions;MedicationTotal;TotalAmount;IsPaid");
             for (Bill bill : bills) {
                 writer.println(bill.toCSV());
             }
@@ -225,7 +243,8 @@ public class BillingSystem {
         System.out.println("Patient ID: " + bill.patientId);
         System.out.println("Appointment ID: " + bill.appointmentId);
         System.out.println("Date: " + bill.date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-        System.out.println("\nConsultation Fee: $" + String.format("%.2f", bill.consultationFee));
+        System.out.println("Service Type: " + bill.serviceType);
+        System.out.println("Service Fee: $" + String.format("%.2f", bill.serviceFee));
         
         if (!bill.medications.isEmpty()) {
             System.out.println("\nPrescribed Medications:");
