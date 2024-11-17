@@ -7,7 +7,7 @@ import java.util.Scanner;
 // import java.time.LocalTime;
 // import java.time.format.DateTimeFormatter;
 
-public class Pharmacist extends User {
+public class Pharmacist extends Staff {
     private List<AppointmentSlot> appointments;
     private final Inventory inventory;
     private String gender;

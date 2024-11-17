@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Doctor extends User{
+public class Doctor extends Staff{
     private String name;
     private String age;
     private String gender;
