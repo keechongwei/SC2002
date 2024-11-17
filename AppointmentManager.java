@@ -46,6 +46,7 @@ public class AppointmentManager {
             for (Doctor doctor : doctors) {
                     String doctorID = doctor.getHospitalID();
                     AppointmentSlot slot = new AppointmentSlot(dateString, timeString, "AVAILABLE", doctorID," ");
+                    AppointmentManager.addAppointment(slot); 
                 } 
             hour++;
             }
