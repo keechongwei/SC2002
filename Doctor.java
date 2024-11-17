@@ -326,4 +326,10 @@ public class Doctor extends User{
     //UPDATE PATIENT MEDICAL RECORDS,RECORD APPOINTMENT OUTCOME
     //AGGREGATION
     //UNAVAILABLE
-    }}
+    }
+    
+    public String toCSV() {
+        // Combine all attributes into a CSV string
+        return super.getHospitalID() + ";" + super.getPassword() + ";" + name + ";" + "Doctor" + ";" + gender + ";" + age;
+    }
+}
