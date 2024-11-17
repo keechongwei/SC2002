@@ -30,21 +30,27 @@ public class AppointmentManager {
             }
         }
     
+        public static void removeAppointments(Doctor d) {
+            appointmentSlotArray.removeIf(slot -> 
+                slot.getDoctorID().equals(d.getHospitalID()) && slot.getStatus() == AppointmentStatus.AVAILABLE
+            );
+        
+            for (AppointmentSlot slot : appointmentSlotArray) {
+                if (slot.getDoctorID().equals(d.getHospitalID()) && slot.getStatus() == AppointmentStatus.PENDING) {
+                    slot.setStatus(AppointmentStatus.CANCELLED);
+                }
+            }
+        
+            AppointmentCSVHandler.writeCSV(appointmentSlotArray);
+        }
+        
+    
     public static void addAppointment(AppointmentSlot slot) {
         appointmentSlotArray.add(slot);
         AppointmentCSVHandler.appendAppointmentToCSV(slot);
         nextAppointmentID++;
     }
 
-    public static void removeAppointments(Doctor d){
-        for (AppointmentSlot slot : appointmentSlotArray){
-            if(slot.getDoctorID().equals(d.getHospitalID())){
-                appointmentSlotArray.remove(slot);
-            }
-        }
-        AppointmentCSVHandler.writeCSV(appointmentSlotArray);
-    }
-    
     // for patients to see pending appointments, get all slots depending on DoctorID
     public static List<AppointmentSlot> getAppointmentsByPatient(String patientID) {
         List<AppointmentSlot> result = new ArrayList<>();
