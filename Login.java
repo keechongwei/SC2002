@@ -201,6 +201,10 @@ public class Login {
             System.out.println("Error writing CSV file: " + e.getMessage());
         }
     }
+    private static void updateAppointmentsCSV(){
+        AppointmentManager.writeHeader(AppointmentManager.appointmentsCSVHeader);
+        AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
+    }
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
         String ID = "NULL";
@@ -418,5 +422,6 @@ public class Login {
             break;
         }
         updateStaffCSV();
+        updateAppointmentsCSV();
     }   
 }
