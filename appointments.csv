@@ -1,9 +1,9 @@
 Date;Time;Appointment ID; DoctorID; PatientID;Appointment Status; OutcomeDate | Outcome Time |  Type Of Service | Medication Name ^ Medication Status ^ Medication Dosage | Consultation Notes
 2024-11-17;09:00;APT1;D001; ;UNAVAILABLE;null
 2024-11-17;09:00;APT2;D002; ;AVAILABLE;null
-2024-11-17;10:00;APT3;D001;P1001;PENDING;null
+2024-11-17;10:00;APT3;D001;;AVAILABLE;null
 2024-11-17;10:00;APT4;D002; ;AVAILABLE;null
-2024-11-17;11:00;APT5;D001; ;AVAILABLE;null
+2024-11-17;11:00;APT5;D001;;AVAILABLE;null
 2024-11-17;11:00;APT6;D002; ;AVAILABLE;null
 2024-11-17;12:00;APT7;D001;;AVAILABLE;null
 2024-11-17;12:00;APT8;D002; ;AVAILABLE;null

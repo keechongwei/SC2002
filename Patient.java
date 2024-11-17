@@ -170,8 +170,9 @@ public class Patient extends User{
             System.out.println("No past diagnoses recorded\n");
         } else {
             for (int i = 0; i < diagnoses.size(); i++) {
-                System.out.printf("%-15s %-15s%n", "Past Diagnoses", "Past Treatments");
-                System.out.printf("%2d. %-15s %s%n", (i + 1), diagnoses.get(i), treatments.get(i));
+                System.out.printf("%-15s: %s%n", "Past Diagnoses", diagnoses.get(i));
+                System.out.printf("%-15s: %s%n", "Past Treatments", treatments.get(i));
+                System.out.println(".".repeat(30));
             }
             System.out.println();
         }
@@ -205,7 +206,7 @@ public class Patient extends User{
         System.out.println("\n=== Schedule New Appointment ===");
 
         //select doctor buy ID
-        System.out.println("Enter Doctor ID to schedule appointment (e.g D001): ");
+        System.out.println("\nEnter Doctor ID to schedule appointment (e.g D001): ");
         String selectedDoctorID = sc.nextLine().trim().toUpperCase();
 
         //get avail slots for selected doctor
@@ -234,7 +235,7 @@ public class Patient extends User{
         sc.nextLine();
 
         if(choice<1 || choice>availSlots.size()) {
-            System.out.println("Invalid selection.");
+            System.out.println("Invalid selection.\n");
             return;
         }
 
@@ -250,6 +251,7 @@ public class Patient extends User{
                 AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
             }
         }
+        System.out.println();
      }
 
     public void rescheduleAppointment() { 
@@ -266,7 +268,7 @@ public class Patient extends User{
         }
 
         if(curSlots.isEmpty()) {
-            System.out.println("No scheduled appointment slots.");
+            System.out.println("No scheduled appointment slots.\n");
             return;
         }
 
@@ -413,6 +415,7 @@ public class Patient extends User{
                 System.out.printf("%s. Appointment ID: %s, Date: %s, Time: %s, Doctor: %s, Status: %s%n", "Cancelled appointment: ", slot.getAppointmentID(), slot.getDate(), slot.getTime(), slot.getDoctorID(), "CANCELLED");
             }
         }
+        System.out.println();
     }
 
     public void viewAppointmentStatus() {
