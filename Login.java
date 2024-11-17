@@ -8,6 +8,8 @@ public class Login {
     static boolean loggedIn = false;
     static boolean validID = false;
     static boolean validPassword = false;
+    static String ID = "NULL";
+    static String password = "NULL";
 
     // function used to initialise patient, staff, medicine data
     private static void initialise(){
@@ -79,14 +81,10 @@ public class Login {
             validPassword = true;
         }
         else{
-            System.out.println("Invalid Password");
+            System.out.println("Invalid Password.");
         }
     }
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        String ID = "NULL";
-        String password = "NULL";
-        initialise(); // loads in data from csv
+    private static void login(boolean loggedIn, Scanner sc){
         while(!loggedIn){
             System.out.println("=== HOSPITAL MANAGEMENT SYSTEM LOGIN PAGE ===");
             System.out.println("Enter Hospital ID: ");
@@ -105,8 +103,13 @@ public class Login {
                 passwordCheck(password);
             }
             loggedIn = true;
+            System.out.println("Successful Login!");
         }
-        System.out.println("Successful Login!");
+    }
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        initialise(); // loads in data from csv
+        login(loggedIn,sc);
         int choice = 0;
         switch(role){
             case Patient:
@@ -253,6 +256,7 @@ public class Login {
                         break;
                 }
             }
+            System.out.println("Logging out...");
             break;
             case Administrator:
             Administrator curAdmin;
@@ -295,8 +299,10 @@ public class Login {
                     break;
                 }
             }
+            System.out.println("Logging out...");
             break;
         }
+        PatientManager.writeAllRecords();
         StaffManager.updateStaffCSV();
         AppointmentManager.updateAppointmentsCSV();
     }   
