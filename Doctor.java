@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Doctor extends Staff{
-    private String name;
-    private String age;
-    private String gender;
     private List<Patient> patientList = new ArrayList<>();
     
     private static Scanner sc = new Scanner(System.in);
@@ -64,40 +61,9 @@ public class Doctor extends Staff{
         }
     }
     
-    public void setPassword(String password){
-        super.setPassword(password);
-    }
-    public String getGender() {
-        return gender;
-    }
-
     public void addPatient(Patient patient) {
         patientList.add(patient);
     }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getAge() {
-        return age;
-    }
-
-    public void setAge(String age) {
-        this.age = age;
-    }
-    
-    public String getDoctorID() {
-        return super.getHospitalID();
-    } 
-
-    public String getDoctorName() {
-        return this.name;
-    }
-
-    public void setName(String doctorName) {
-        this.name = doctorName;
-    } 
 
     public void viewPatientRecords(){
         if (patientList.isEmpty()) {
@@ -110,7 +76,6 @@ public class Doctor extends Staff{
                 }
             }
     }
-    
 
     public Patient findPatientByID(String patientID){
         for (Patient patient : patientList) {
@@ -328,7 +293,7 @@ public class Doctor extends Staff{
 
     public void makeAppointmentOutcomeRecord(){
         List<AppointmentSlot> confirmedAppointmentSlots;
-        confirmedAppointmentSlots = AppointmentManager.getAppointmentsByDoctor(this.getDoctorID());
+        confirmedAppointmentSlots = AppointmentManager.getAppointmentsByDoctor(this.getHospitalID());
         String id = "";
         boolean validpatientID = false;
         boolean validAppointmentID = false;
@@ -452,6 +417,6 @@ public class Doctor extends Staff{
 }
     public String toCSV() {
         // Combine all attributes into a CSV string
-        return super.getHospitalID() + ";" + super.getPassword() + ";" + name + ";" + "Doctor" + ";" + gender + ";" + age;
+        return super.getHospitalID() + ";" + super.getPassword() + ";" + super.name + ";" + "Doctor" + ";" + super.gender + ";" + super.age;
     }
 }

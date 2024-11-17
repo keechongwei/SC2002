@@ -15,12 +15,9 @@ import java.io.IOException;
 public class Administrator extends Staff {
     enum Filter_type{Name,Role,Gender,Age}
     static List<List<String>> staffs = new ArrayList<>();
-    static String staffRecordsCSV = "Staff_List.csv";
+    static String staffRecordsCSV = "Staff_List_Copy.csv";
     static String medicineListCSV = "Medicine_List.csv";
     static String replenishRecordsCSV = "Replenish_Request_List.csv";
-    private String gender;
-    private int age;
-    private String name;
 
     Scanner input_scanner = new Scanner(System.in);
 
@@ -35,7 +32,7 @@ public class Administrator extends Staff {
         super(HospitalID, "password");
         this.name = name;
         this.gender = gender;
-        this.age = Integer.valueOf(age);
+        this.age = age;
     }
 
     public void printMenu(){
@@ -73,9 +70,6 @@ public class Administrator extends Staff {
             }
         }
     }
-    public void setPassword(String password){
-        super.setPassword(password);
-    }
 
     public String toCSV() {
         // Combine all attributes into a CSV string
@@ -96,7 +90,7 @@ public class Administrator extends Staff {
         ///System.out.println("Filtered Staff List:");
         //admin.printDoubleList(filteredStaffs);
 
-        
+        StaffManager.loadRecordsCSV();
         admin.manageStaff();
 
         //admin.manageInventory();
@@ -192,11 +186,12 @@ public class Administrator extends Staff {
         }
         
         switch (filterType){
-            case Name: index = 1; break;
-            case Role: index = 2; break;
-            case Gender: index = 3; break;
+            case Name: index = 2; break;
+            case Role: index = 3; break;
+            case Gender: index = 4; break;
             default: index = -1; break;
         };
+
 
         if (index == -1) {
             System.out.println("Invalid filter type for String value.");
@@ -324,139 +319,6 @@ public class Administrator extends Staff {
 
 		//throw new UnsupportedOperationException();
 	}
-
-    // private void updateStaff() {
-    //     System.out.println("Enter HospitalID: ");
-    //     String hospitalID = input_scanner.nextLine();
-    
-    //     List<String> lines = readCSVFile(staffRecordsCSV);
-
-    //     // Flag to check if found
-    //     boolean found = false;
-    
-    //     for (int i = 0; i < lines.size(); i++) {
-    //         if (lines.get(i).startsWith(hospitalID + ";")) {
-    //             String[] fields = lines.get(i).split(";");
-
-    //             // Update found flag to true;
-    //             found = true;
-    //             int roleHandlingFlag = 0;
-    
-    //             // Split the existing line to get the current details
-    //             String[] details = lines.get(i).split(";");
-    //             String name = details[1];
-    //             String role = details[2];
-    //             String gender = details[3];
-    //             String age = details[4];
-    
-    //             System.out.println("Pick category to update: ");
-    //             System.out.println("1 - Name");
-    //             System.out.println("2 - Role");
-    //             System.out.println("3 - Gender");
-    //             System.out.println("4 - Age");
-    
-    //             int input = input_scanner.nextInt();
-    //             input_scanner.nextLine(); // Skip \n
-    
-    //             switch (input) {
-    //                 case 1:
-    //                     System.out.println("Name: ");
-    //                     name = input_scanner.nextLine();
-    //                     break;
-    
-    //                 case 2:
-    //                     System.out.println("Pick the Role: ");
-    //                     System.out.println("1 - Doctor");
-    //                     System.out.println("2 - Pharmacist");
-    //                     System.out.println("3 - Administrator");
-    //                     int role_choice = input_scanner.nextInt();
-    //                     input_scanner.nextLine();
-                    
-    //                     switch (role_choice) {
-    //                         case 1:
-    //                             role = "Doctor";
-
-    //                             // Assuming fields[2] is previous role, if there is a change in role, from another to Doctor, update doctor handling 
-    //                             if(!role.equalsIgnoreCase(fields[2])) {
-    //                                 roleHandlingFlag = 1;
-    //                             }
-                                
-    //                             break;
-    //                         case 2:
-    //                             role = "Pharmacist";
-    //                             // Assuming fields[2] is previous role, if there is a change in role, from another to Doctor, update doctor handling 
-    //                             if(!role.equalsIgnoreCase(fields[2])) {
-    //                                 roleHandlingFlag = 2;
-    //                             }
-    //                             break;
-    //                         case 3:
-    //                             role = "Administrator";
-    //                             if(!role.equalsIgnoreCase(fields[2])) {
-    //                                 roleHandlingFlag = 3;
-    //                             }
-    //                             break;
-    //                         default:
-    //                             System.out.println("Invalid role choice. Keeping the current role.");
-    //                             break;
-    //                     }
-    //                     break;
-    
-    //                 case 3:
-    //                     System.out.println("Pick the Gender: ");
-    //                     System.out.println("1 - Male");
-    //                     System.out.println("2 - Female");
-    //                     int gender_choice = input_scanner.nextInt();
-    //                     input_scanner.nextLine();
-
-    //                     switch (gender_choice) {
-    //                         case 1:
-    //                             gender = "Male";
-    //                             break;
-    //                         case 2:
-    //                             gender = "Female";
-    //                             break;
-    //                         default:
-    //                             System.out.println("Invalid gender choice. Keeping the current gender.");
-    //                             break;
-    //                     }
-    //                     break;
-    
-    //                 case 4:
-    //                     System.out.println("Age: ");
-    //                     age = input_scanner.nextLine();
-    //                     break;
-    
-    //                 default:
-    //                     System.out.println("Invalid input noob.");
-    //                     break;
-    //             }
-
-    //             // if switch to diff role, handle change in ID or/and DoctorHandling 
-    //             if (roleHandlingFlag == 1) {
-    //                 hospitalID = getNextID(staffs, role);
-    //                 boolean check = doctorHandling(hospitalID, name, gender, age, true);
-                    
-    //                 if (check != true) {
-    //                     System.out.println("Unable to add Doctor");
-    //                     return;
-    //                 } 
-    //             } else { // Edit here to handle different incremenitng
-    //                 hospitalID = getNextID(staffs, role);
-    //             }
-
-    //             // Replace the old line with the updated details
-    //             lines.set(i, String.join(";", hospitalID, name, role, gender, age));
-    //             break;
-    //         }
-
-    //     } 
-    //     if (found) {
-    //         writeCSVFile(lines, staffRecordsCSV);
-    //     } else {
-    //         System.out.println("Invalid HospitalID");
-    //     }
-        
-    // }
     
     private void addStaff() {
         System.out.println("Enter new staff details:");
@@ -468,6 +330,9 @@ public class Administrator extends Staff {
         String gender = input_scanner.nextLine();
         System.out.println("Age: ");
         String age = input_scanner.nextLine();
+        System.out.println("Password: ");
+        String password = input_scanner.nextLine();
+
 
         List<List<String>> filteredStaffs = new ArrayList<>();
         filteredStaffs = filterStaff(Filter_type.Role, role);
@@ -475,14 +340,15 @@ public class Administrator extends Staff {
         String hospitalID = getNextID(filteredStaffs, role);
 
         List<String> lines = readCSVFile(staffRecordsCSV);
-        lines.add(String.join(";", hospitalID, name, role, gender, age));
+        lines.add(String.join(";", hospitalID, password, name, role, gender, age));
 
         writeCSVFile(lines, staffRecordsCSV);
 
         // If adding new Doctor, create new doctor's appt slots
         System.out.println(role);
         if(role.equals("Doctor")) {
-            boolean check = StaffManager.doctorHandling(hospitalID, name, gender, age, true);
+            Doctor doctor = new Doctor(hospitalID, name, gender, age);
+            boolean check = StaffManager.doctorHandling(doctor, true);
             if (check != true) {
                 System.out.println("Unable to add Doctor");
                 return;
@@ -804,3 +670,137 @@ public class Administrator extends Staff {
 
 }
 
+
+
+    // private void updateStaff() {
+    //     System.out.println("Enter HospitalID: ");
+    //     String hospitalID = input_scanner.nextLine();
+    
+    //     List<String> lines = readCSVFile(staffRecordsCSV);
+
+    //     // Flag to check if found
+    //     boolean found = false;
+    
+    //     for (int i = 0; i < lines.size(); i++) {
+    //         if (lines.get(i).startsWith(hospitalID + ";")) {
+    //             String[] fields = lines.get(i).split(";");
+
+    //             // Update found flag to true;
+    //             found = true;
+    //             int roleHandlingFlag = 0;
+    
+    //             // Split the existing line to get the current details
+    //             String[] details = lines.get(i).split(";");
+    //             String name = details[1];
+    //             String role = details[2];
+    //             String gender = details[3];
+    //             String age = details[4];
+    
+    //             System.out.println("Pick category to update: ");
+    //             System.out.println("1 - Name");
+    //             System.out.println("2 - Role");
+    //             System.out.println("3 - Gender");
+    //             System.out.println("4 - Age");
+    
+    //             int input = input_scanner.nextInt();
+    //             input_scanner.nextLine(); // Skip \n
+    
+    //             switch (input) {
+    //                 case 1:
+    //                     System.out.println("Name: ");
+    //                     name = input_scanner.nextLine();
+    //                     break;
+    
+    //                 case 2:
+    //                     System.out.println("Pick the Role: ");
+    //                     System.out.println("1 - Doctor");
+    //                     System.out.println("2 - Pharmacist");
+    //                     System.out.println("3 - Administrator");
+    //                     int role_choice = input_scanner.nextInt();
+    //                     input_scanner.nextLine();
+                    
+    //                     switch (role_choice) {
+    //                         case 1:
+    //                             role = "Doctor";
+
+    //                             // Assuming fields[2] is previous role, if there is a change in role, from another to Doctor, update doctor handling 
+    //                             if(!role.equalsIgnoreCase(fields[2])) {
+    //                                 roleHandlingFlag = 1;
+    //                             }
+                                
+    //                             break;
+    //                         case 2:
+    //                             role = "Pharmacist";
+    //                             // Assuming fields[2] is previous role, if there is a change in role, from another to Doctor, update doctor handling 
+    //                             if(!role.equalsIgnoreCase(fields[2])) {
+    //                                 roleHandlingFlag = 2;
+    //                             }
+    //                             break;
+    //                         case 3:
+    //                             role = "Administrator";
+    //                             if(!role.equalsIgnoreCase(fields[2])) {
+    //                                 roleHandlingFlag = 3;
+    //                             }
+    //                             break;
+    //                         default:
+    //                             System.out.println("Invalid role choice. Keeping the current role.");
+    //                             break;
+    //                     }
+    //                     break;
+    
+    //                 case 3:
+    //                     System.out.println("Pick the Gender: ");
+    //                     System.out.println("1 - Male");
+    //                     System.out.println("2 - Female");
+    //                     int gender_choice = input_scanner.nextInt();
+    //                     input_scanner.nextLine();
+
+    //                     switch (gender_choice) {
+    //                         case 1:
+    //                             gender = "Male";
+    //                             break;
+    //                         case 2:
+    //                             gender = "Female";
+    //                             break;
+    //                         default:
+    //                             System.out.println("Invalid gender choice. Keeping the current gender.");
+    //                             break;
+    //                     }
+    //                     break;
+    
+    //                 case 4:
+    //                     System.out.println("Age: ");
+    //                     age = input_scanner.nextLine();
+    //                     break;
+    
+    //                 default:
+    //                     System.out.println("Invalid input noob.");
+    //                     break;
+    //             }
+
+    //             // if switch to diff role, handle change in ID or/and DoctorHandling 
+    //             if (roleHandlingFlag == 1) {
+    //                 hospitalID = getNextID(staffs, role);
+    //                 boolean check = doctorHandling(hospitalID, name, gender, age, true);
+                    
+    //                 if (check != true) {
+    //                     System.out.println("Unable to add Doctor");
+    //                     return;
+    //                 } 
+    //             } else { // Edit here to handle different incremenitng
+    //                 hospitalID = getNextID(staffs, role);
+    //             }
+
+    //             // Replace the old line with the updated details
+    //             lines.set(i, String.join(";", hospitalID, name, role, gender, age));
+    //             break;
+    //         }
+
+    //     } 
+    //     if (found) {
+    //         writeCSVFile(lines, staffRecordsCSV);
+    //     } else {
+    //         System.out.println("Invalid HospitalID");
+    //     }
+        
+    // }

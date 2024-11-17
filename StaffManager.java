@@ -108,10 +108,13 @@ public class StaffManager {
         boolean found = false;
 
         if (roleLetter.equals("P")) {
+            System.out.println("pharmacists");
             temp = pharmacists;
         } else if (roleLetter.equals("D")) {
+            System.out.println("d");
             temp = doctors;
         } else if (roleLetter.equals("A")) {
+            System.out.println("A");
             temp = administrators;
         } else {
             System.out.println("Invalid Hospital ID");
@@ -119,8 +122,10 @@ public class StaffManager {
         }
 
         for (Staff tempStaff : temp) {
+            System.out.println(tempStaff.getHospitalID());
             if (tempStaff.getHospitalID().equalsIgnoreCase(hospitalID)) {
                 staff = tempStaff;
+                System.out.println("found in list");
                 break;
             }
         }
@@ -155,6 +160,7 @@ public class StaffManager {
                 input_scanner.nextLine();
 
                 String role = "";
+                String newHospitalID = "";
                 boolean changedtoDoc = false;
 
                 String name = staff.getName();
@@ -163,39 +169,51 @@ public class StaffManager {
                 
                 switch (role_choice) {
                     case 1: 
-                        role = "Doctor"; 
-                        changedtoDoc = true; 
+                        role = "Doctor";
                         
                         // Check if there is a switch of role, if yes make new obj;
                         if (!(role.substring(0,1).equals(roleLetter))) {
-                            hospitalID = getNextID(doctors);
-                            Doctor doc = new Doctor(hospitalID, name, gender, age); 
+
+                            newHospitalID = getNextID(doctors);
+                            Doctor doc = new Doctor(newHospitalID, name, gender, age); 
+                            doctors.add(doc);
+
+                            // Handle addition of new doc appt slots
+                            doctorHandling(doc, true);
                         } 
                         break;
 
                     case 2: 
                         role = "Pharmacist";
                         if (!(role.substring(0,1).equals(roleLetter))) {
-                            hospitalID = getNextID(pharmacists);
-                            Pharmacist pharm = new Pharmacist(hospitalID, name, gender, age); 
+                            newHospitalID = getNextID(pharmacists);
+                            Pharmacist pharm = new Pharmacist(newHospitalID, name, gender, age); 
+                            pharmacists.add(pharm);
                         } 
                         break;
 
                     case 3: 
                         role = "Administrator"; 
                         if (!(role.substring(0,1).equals(roleLetter))) {
-                            hospitalID = getNextID(administrators);
-                            Administrator admin = new Administrator(hospitalID, name, gender, age); 
+                            newHospitalID = getNextID(administrators);
+                            Administrator admin = new Administrator(newHospitalID, name, gender, age); 
+                            administrators.add(admin);
                         } 
                         break;
 
                     default: System.out.println("Invalid role choice. Keeping the current role.");  break;
                 }
 
-                // if switch to diff role, handle change in ID or/and DoctorHandling 
-                if (changedtoDoc) {
-                    boolean check = doctorHandling(hospitalID, name, gender, age, true);
+                if (roleLetter.equals("P")) {
+                    pharmacists.remove(staff);
+                } else if (roleLetter.equals("D")) {
+                    doctors.remove(staff);
+                } else if (roleLetter.equals("A")) {
+                    System.out.println("A");
+                    administrators.remove(staff);
                 }
+
+                // if switch to diff role, handle change in ID or/and DoctorHandling 
                 break;
 
             case 3:
@@ -239,13 +257,12 @@ public class StaffManager {
         updateStaffCSV();        
     }
 
-    public static boolean doctorHandling(String hospitalID, String name, String gender, String age, boolean addOrRemove) {
-        // true means adding new doctor
+    // true means adding new doctor
+    public static boolean doctorHandling(Doctor doctor, boolean addOrRemove) {
         boolean removed = false;
         if (addOrRemove == true) {
-            Doctor newDoc = new Doctor(hospitalID, name, gender, age);
             List<Doctor> temp = new ArrayList<>();
-            temp.add(newDoc);
+            temp.add(doctor);
             AppointmentManager.makeDailyAppointments(temp); 
             return true;
         } else {
@@ -271,4 +288,30 @@ public class StaffManager {
 
         return nextID;
     }
+
+    public static Staff getStaffByID(String hospitalID) {
+        String role_letter = hospitalID.substring(0,1);
+
+        if(role_letter.equalsIgnoreCase("D")) {
+            for(Doctor doctor :doctors) {
+                if (doctor.getHospitalID().equalsIgnoreCase(hospitalID)) {return doctor;}
+            }
+        } else if (role_letter.equalsIgnoreCase("P")) {
+            for(Pharmacist pharmacist :pharmacists) {
+                if (pharmacist.getHospitalID().equalsIgnoreCase(hospitalID)) {return pharmacist;}
+            }
+        } else if (role_letter.equalsIgnoreCase("A")) {
+            for(Administrator administrator :administrators) {
+                if (administrator.getHospitalID().equalsIgnoreCase(hospitalID)) {return administrator;}
+            }
+        } else {
+            System.out.println("\"Invalid Hospital ID: No such role prefix exists.");
+            return null;
+        }   
+
+        // If not found
+        System.out.println("No staff member found with Hospital ID: " + hospitalID);
+        return null;
+    }
 }
+
