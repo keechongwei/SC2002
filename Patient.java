@@ -22,11 +22,13 @@ public class Patient extends User{
     public Patient(String patientID, String patientName, String dateofBirth, String gender, String bloodType, String phoneNumber, String emailAddress) {
         super(patientID, "password");
         this.medicalRecord = new MedicalRecord(patientID, patientName, dateofBirth, gender, phoneNumber, emailAddress, bloodType);
+        this.medicalRecord.setPatient(this); 
     }
 
     public Patient(String patientID, String patientName, String dateofBirth, String gender, String bloodType, String phoneNumber, String emailAddress, ArrayList<String> pastDiagnoses, ArrayList<String> pastTreatments) {
         super(patientID, "password");
         this.medicalRecord = new MedicalRecord(patientID, patientName, dateofBirth, gender, phoneNumber, emailAddress, bloodType, pastDiagnoses, pastTreatments);
+        this.medicalRecord.setPatient(this); 
     }
 
     public void setPassword(String password){
@@ -46,6 +48,7 @@ public class Patient extends User{
             System.out.println("1. Update phone number");
             System.out.println("2. Update email address");
             System.out.println("3. Exit");
+            System.out.println("=".repeat(35));
             System.out.println("\nEnter your choice (1-3): ");
 
             choice = sc.nextInt();
@@ -67,11 +70,11 @@ public class Patient extends User{
                     break;
 
                 case 3:
-                    System.out.println("Exiting personal information update...");
+                    System.out.println("Exiting personal information update...\n");
                     break;
 
                 default:
-                    System.out.println("Invalid choice. Please enter a choice from 1-3");
+                    System.out.println("Invalid choice. Please enter a choice from 1-3\n");
                     break;
 
             }
@@ -108,8 +111,8 @@ public class Patient extends User{
         //contact info
         System.out.println("\nCONTACT INFORMATION:");
         System.out.println("-".repeat(30));
-        System.out.printf("%-15s: %s%n", "Phone", this.medicalRecord.getPhoneNumber());
-        System.out.printf("%-15s: %s%n", "Email", this.medicalRecord.getEmailAddress());
+        System.out.printf("%-15s: %s%n", "Phone Number", this.medicalRecord.getPhoneNumber());
+        System.out.printf("%-15s: %s%n", "Email Address", this.medicalRecord.getEmailAddress());
 
         //past diagnosis
         System.out.println("\nPAST DIAGNOSES AND TREATMENT:");
@@ -117,16 +120,17 @@ public class Patient extends User{
         List<String> diagnoses = this.medicalRecord.getPastDiagnoses();
         List<String> treatments = this.medicalRecord.getPastTreatments();
         if (diagnoses.isEmpty()) {
-            System.out.println("No past diagnoses recorded");
+            System.out.println("No past diagnoses recorded\n");
         } else {
             for (int i = 0; i < diagnoses.size(); i++) {
-                System.out.printf("%2d. %s%n", (i + 1), diagnoses.get(i));
-                System.out.printf("%2d. %s%n", (i + 1), treatments.get(i));
+                System.out.printf("%-15s %-15s%n", "Past Diagnoses", "Past Treatments");
+                System.out.printf("%2d. %-15s %s%n", (i + 1), diagnoses.get(i), treatments.get(i));
             }
+            System.out.println();
         }
     }
 
-    public void viewAvailAppointmentSlot() {//make it repeatedly ask user to select aft not able to select avail slots
+    public void viewAvailAppointmentSlot() {
         //title
         System.out.println("\n=== Available Appointment Slots ===");
 
@@ -138,17 +142,18 @@ public class Patient extends User{
             return;
         }
 
-        System.out.printf("%-5s %-12s %-8s %-10s %-10s%n", "Appointment ID.", "Date", "Time", "Doctor", "Status");
+        System.out.printf("%-15s %-12s %-8s %-10s %-10s%n", "Appointment ID.", "Date", "Time", "Doctor", "Status");
         System.out.println("-".repeat(50));
 
         //show avail appt slots
         for(AppointmentSlot slot : availSlots) {
-            System.out.printf("%-5s %-12s %-8s %-10s %-10s%n", slot.getAppointmentID(), 
+            System.out.printf("%-15s %-12s %-8s %-10s %-10s%n", slot.getAppointmentID(), 
             slot.getDate(), slot.getTime(), slot.getDoctorID(), slot.getStatus());
         }
+        System.out.println();
     }
 
-    public void scheduleAppointments() {//when displaying, show appt id. After schedule. Show the appt info
+    public void scheduleAppointments() {
         //title
         System.out.println("\n=== Schedule New Appointment ===");
 
@@ -200,7 +205,7 @@ public class Patient extends User{
         }
      }
 
-    public void rescheduleAppointment() { // need to clear patientID
+    public void rescheduleAppointment() { 
 
         //title
         System.out.println("\n=== Reschedule Appointment ===");
@@ -237,7 +242,7 @@ public class Patient extends User{
         sc.nextLine();
 
         if(choice<1 || choice>curSlots.size()) {
-            System.out.println("Invalid selection.");
+            System.out.println("Invalid selection.\n");
             return;
         }
 
@@ -252,7 +257,7 @@ public class Patient extends User{
         }
 
         if (availSlots.isEmpty()) {
-            System.out.println("No available slots for rescheduling.");
+            System.out.println("No available slots for rescheduling.\n");
             return;
         }
 
@@ -274,7 +279,7 @@ public class Patient extends User{
         sc.nextLine(); // Clear buffer
 
         if (choice < 1 || choice > availSlots.size()) {
-            System.out.println("Invalid selection.");
+            System.out.println("Invalid selection.\n");
             return;
         }
 
@@ -309,7 +314,7 @@ public class Patient extends User{
 
     }
 
-    public void cancelAppointment() {// might have to improve choice section to go back and reprompt response
+    public void cancelAppointment() {
 
         //title
         System.out.println("\n=== Cancel Appointment ===");
@@ -402,7 +407,7 @@ public class Patient extends User{
         }
 
         if(curSlots.isEmpty()) {
-            System.out.println("No appointment outcome records.");
+            System.out.println("No appointment outcome records.\n");
             return;
         }
 
