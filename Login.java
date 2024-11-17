@@ -219,6 +219,6 @@ public class Login {
         user.printMenu();
         PatientManager.writeAllRecords();
         StaffCSVHandler.updateStaffCSV();
-        AppointmentCSVHandler.updateAppointmentsCSV();
+        AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
     }   
 }

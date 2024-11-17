@@ -30,7 +30,7 @@ public class AppointmentManager {
             }
         }
     
-        public static void removeAppointments(Doctor d) {
+    public static void removeAppointments(Doctor d) {
             appointmentSlotArray.removeIf(slot -> 
                 slot.getDoctorID().equals(d.getHospitalID()) && slot.getStatus() == AppointmentStatus.AVAILABLE
             );

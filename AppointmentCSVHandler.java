@@ -60,12 +60,6 @@ public class AppointmentCSVHandler {
             e.printStackTrace();
         }
     }
-
-    public static void updateAppointmentsCSV(){
-        AppointmentCSVHandler.writeHeader(appointmentsCSVHeader);
-        AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
-    }
-
         // function to edit values of AppointmentSlots without creating rows
     public static void writeCSV(List<AppointmentSlot> appointments) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFile))) {
