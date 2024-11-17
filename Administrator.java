@@ -45,7 +45,7 @@ public class Administrator extends User {
 
     public String toCSV() {
         // Combine all attributes into a CSV string
-        return super.getHospitalID() + ";" + super.getPassword() + ";" + name + ";" + "Doctor" + ";" + gender + ";" + age;
+        return super.getHospitalID() + ";" + super.getPassword() + ";" + name + ";" + "Administrator" + ";" + gender + ";" + age;
     }
     
     public static void main(String[] args) {
