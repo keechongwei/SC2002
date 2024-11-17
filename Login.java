@@ -391,7 +391,7 @@ public class Login {
                 System.out.println("=== ADMINISTRATOR MENU, ENTER CHOICE ===");
                 System.out.println("(1) View and Manage Hospital Staff");
                 System.out.println("(2) View Appointments Details");
-                System.out.println("(3) View and Manage Medication History");
+                System.out.println("(3) View and Manage Medication Inventory");
                 System.out.println("(4) Approve Replenishment Requests");
                 System.out.println("(5) Logout");
                 choice = sc.nextInt();

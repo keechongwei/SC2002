@@ -62,11 +62,12 @@ public class Administrator extends User {
         ///System.out.println("Filtered Staff List:");
         //admin.printDoubleList(filteredStaffs);
 
-        //admin.manageStaff();
+        
+        admin.manageStaff();
 
         //admin.manageInventory();
 
-        admin.approveReplenishmentRequest();
+        //admin.approveReplenishmentRequest();
 
         //Administrator.viewAllAppointments();
     }
@@ -311,9 +312,17 @@ public class Administrator extends User {
         String hospitalID = input_scanner.nextLine();
     
         List<String> lines = readCSVFile(staffRecordsCSV);
+
+        // Flag to check if found
+        boolean found = false;
     
         for (int i = 0; i < lines.size(); i++) {
             if (lines.get(i).startsWith(hospitalID + ";")) {
+                String[] fields = lines.get(i).split(";");
+
+                // Update found flag to true;
+                found = true;
+                int roleHandlingFlag = 0;
     
                 // Split the existing line to get the current details
                 String[] details = lines.get(i).split(";");
@@ -348,12 +357,25 @@ public class Administrator extends User {
                         switch (role_choice) {
                             case 1:
                                 role = "Doctor";
+
+                                // Assuming fields[2] is previous role, if there is a change in role, from another to Doctor, update doctor handling 
+                                if(!role.equalsIgnoreCase(fields[2])) {
+                                    roleHandlingFlag = 1;
+                                }
+                                
                                 break;
                             case 2:
                                 role = "Pharmacist";
+                                // Assuming fields[2] is previous role, if there is a change in role, from another to Doctor, update doctor handling 
+                                if(!role.equalsIgnoreCase(fields[2])) {
+                                    roleHandlingFlag = 2;
+                                }
                                 break;
                             case 3:
                                 role = "Administrator";
+                                if(!role.equalsIgnoreCase(fields[2])) {
+                                    roleHandlingFlag = 3;
+                                }
                                 break;
                             default:
                                 System.out.println("Invalid role choice. Keeping the current role.");
@@ -390,14 +412,32 @@ public class Administrator extends User {
                         System.out.println("Invalid input noob.");
                         break;
                 }
-    
+
+                // if switch to diff role, handle change in ID or/and DoctorHandling 
+                if (roleHandlingFlag == 1) {
+                    hospitalID = getNextID(staffs, role);
+                    boolean check = doctorHandling(hospitalID, name, gender, age, true);
+                    
+                    if (check != true) {
+                        System.out.println("Unable to add Doctor");
+                        return;
+                    } 
+                } else { // Edit here to handle different incremenitng
+                    hospitalID = getNextID(staffs, role);
+                }
+
                 // Replace the old line with the updated details
                 lines.set(i, String.join(";", hospitalID, name, role, gender, age));
                 break;
             }
-        } 
-        writeCSVFile(lines, staffRecordsCSV);
 
+        } 
+        if (found) {
+            writeCSVFile(lines, staffRecordsCSV);
+        } else {
+            System.out.println("Invalid HospitalID");
+        }
+        
     }
     
 
@@ -415,38 +455,77 @@ public class Administrator extends User {
         List<List<String>> filteredStaffs = new ArrayList<>();
         filteredStaffs = filterStaff(Filter_type.Role, role);
 
-        String hospitalID = getNextID(filteredStaffs);
+        String hospitalID = getNextID(filteredStaffs, role);
 
         List<String> lines = readCSVFile(staffRecordsCSV);
         lines.add(String.join(";", hospitalID, name, role, gender, age));
 
         writeCSVFile(lines, staffRecordsCSV);
-        System.out.println("New staff added successfully.");
 
         // If adding new Doctor, create new doctor's appt slots
-        if(role == "Doctor") {
-            Doctor newDoc = new Doctor(hospitalID, name, gender, age);
-            List<Doctor> temp = new ArrayList<>(Arrays.asList(newDoc));
-            AppointmentManager.makeDailyAppointments(temp); 
+        System.out.println(role);
+        if(role.equals("Doctor")) {
+            boolean check = doctorHandling(hospitalID, name, gender, age, true);
+            if (check != true) {
+                System.out.println("Unable to add Doctor");
+                return;
+            } 
         }
+
+        System.out.println("New staff added successfully.");
     }
 
-    private String getNextID(List<List<String>> doubleList) {
+    private boolean doctorHandling(String hospitalID, String name, String gender, String age, boolean addOrRemove) {
+        // true means adding new doctor
+        boolean removed = false;
+        if (addOrRemove == true) {
+            Doctor newDoc = new Doctor(hospitalID, name, gender, age);
+            List<Doctor> temp = new ArrayList<>();
+            temp.add(newDoc);
+            AppointmentManager.makeDailyAppointments(temp); 
+            return true;
+        } else {
+            //Remove doc appointments from CSV
+            System.out.println("");
+
+            // If still have pending appointments for the doctor, stop removal, return false
+            return removed;
+        }
+
+    }
+
+    private String getNextID(List<List<String>> doubleList, String role) {
         int largest_ID  = 0;
+        String role_letter = "";
+
+        if (role.equalsIgnoreCase("Doctor")) {
+            role_letter = "D";
+
+        } else if (role.equalsIgnoreCase("Pharmacist")) {
+            role_letter = "P";
+
+        } else if (role.equalsIgnoreCase("Administrator")) {
+            role_letter = "A";
+            
+        } else {
+            System.out.println("Unknown Role");
+            role_letter = "?";
+        }
+
 
         for (List<String> singlList : doubleList) {
-            String temp = singlList.get(0);
+            if (singlList.get(0).substring(0,1).equals(role_letter)) {
+                String temp = singlList.get(0);
 
-            //Remove the first letter from the ID, to get the largeset index
-            int ID_without_letter = Integer.parseInt(temp.substring(1));
-            
-            if (ID_without_letter >= largest_ID) {
-                largest_ID = ID_without_letter;
+                //Remove the first letter from the ID, to get the largeset index
+                int ID_without_letter = Integer.parseInt(temp.substring(1));
+                
+                if (ID_without_letter >= largest_ID) {
+                    largest_ID = ID_without_letter;
+                }
             }
         }
 
-        // Assumes that all in doubleList have the same role, i.e. same first letter in ID
-        String role_letter = doubleList.get(0).get(0).substring(0,1);
         String formattedNumber = String.format("%03d", largest_ID+1);
         String nextID = role_letter + String.valueOf(formattedNumber);
 
@@ -537,7 +616,6 @@ public class Administrator extends User {
                 if(deleted_med == null) {break;}
 
                 inventory.removeMedication(deleted_choice);
-                inventory.viewInventory();
                 System.out.println("Deleted stock: " + deleted_med.getMedicationName());
                 break;
     

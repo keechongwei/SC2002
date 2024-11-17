@@ -34,7 +34,7 @@ public class Inventory {
         loadMedicationsFromCSV(csvFilePath);
     }
 
-    public static void loadMedicationsFromCSV(String filePath) {
+    public void loadMedicationsFromCSV(String filePath) {
         String line;
         String csvSplitBy = ";";
 
@@ -73,9 +73,7 @@ public class Inventory {
     }
 
     public void viewInventory() {
-        loadMedicationsFromCSV("Medicine_List.csv");
         
-        System.out.println("Inventory:");
         for (Medication medication : listOfMedications) {
             System.out.println(medication.getMedicationName() + ": " + medication.getStock() + " units in stock, Low stock alert: " + medication.isLowStockAlert());
         }
@@ -90,7 +88,6 @@ public class Inventory {
 	public void removeMedication(String medName) {
 		List<Medication> temp = new ArrayList<>();
 		for(Medication medication: listOfMedications) {
-			System.out.println(medication.getMedicationName());
 			if (medication.getMedicationName().equals(medName)) {
 				continue;
 			} else {
@@ -106,6 +103,10 @@ public class Inventory {
 
 		boolean checker = false;
 		Medication med = this.getMedication(medicationName);
+		if (med == null) {
+			return false;
+		}
+
 		if (add_or_remove == true) {
 			med.addStock(amount);
 		} else {
