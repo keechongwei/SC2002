@@ -13,7 +13,6 @@ public class Pharmacist extends User {
     private final Inventory inventory;
     private String gender;
     private int age;
-    private String password;
     private String name;
 
     public Pharmacist(String HospitalID, String password) {
@@ -34,7 +33,7 @@ public class Pharmacist extends User {
     }
 
     public void setPassword(String password){
-        this.password = password;
+        super.setPassword(password);
     }
 
     // Load pending prescriptions from CSV file
@@ -268,6 +267,11 @@ public class Pharmacist extends User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String toCSV() {
+        // Combine all attributes into a CSV string
+        return super.getHospitalID() + ";" + super.getPassword() + ";" + name + ";" + "Doctor" + ";" + gender + ";" + age;
     }
 
     // public static void main(String[] args) {

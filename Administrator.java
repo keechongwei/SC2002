@@ -20,7 +20,6 @@ public class Administrator extends User {
     static String replenishRecordsCSV = "Replenish_Request_List.csv";
     private String gender;
     private int age;
-    private String password;
     private String name;
 
     Scanner input_scanner = new Scanner(System.in);
@@ -40,8 +39,14 @@ public class Administrator extends User {
     }
 
     public void setPassword(String password){
-        this.password = password;
+        super.setPassword(password);
     }
+
+    public String toCSV() {
+        // Combine all attributes into a CSV string
+        return super.getHospitalID() + ";" + super.getPassword() + ";" + name + ";" + "Doctor" + ";" + gender + ";" + age;
+    }
+    
     public static void main(String[] args) {
         // Create an Administrator instance
         Administrator admin = new Administrator("Hospital123", "Password123");

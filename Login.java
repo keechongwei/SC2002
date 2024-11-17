@@ -209,7 +209,8 @@ public class Login {
             Patient curPat = null;
             for (Patient pat : patients) {
                 if (pat.getMedicalRecord().getPatientID().equals(ID)) {
-                    curPat = pat; 
+                    curPat = pat;
+                    curPat.setPassword(password); 
                     break;
                 }
             }
@@ -311,6 +312,13 @@ public class Login {
             case Pharmacist:
 
             Pharmacist pharmacist = new Pharmacist("P001", "password", "male", "29");
+            // for (Pharmacist ph : pharmacists){
+            //     if (ph.getHospitalID().equals(ID)) {
+            //         pharmacist = ph; 
+            //         ph.setPassword(password);
+            //         break;
+            //     }
+            // }
             choice = 0;
             while(choice != 6){
                 System.out.println("=== PHARMACIST MENU, ENTER CHOICE ===");
@@ -343,7 +351,14 @@ public class Login {
             }
             break;
             case Administrator:
-            //Administrator curAdmin = (Administrator) curUser;
+            // Administrator curAdmin;
+            // for (Administrator adm : administrators){
+            //     if (adm.getHospitalID().equals(ID)) {
+            //         curAdmin = adm; 
+            //         adm.setPassword(password);
+            //         break;
+            //     }
+            // }
             choice = 0;
             while(choice != 5){
                 System.out.println("=== ADMINISTRATOR MENU, ENTER CHOICE ===");
