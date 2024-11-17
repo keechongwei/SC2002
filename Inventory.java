@@ -109,6 +109,8 @@ public class Inventory {
 		if (add_or_remove == true) {
 			med.addStock(amount);
 		} else {
+			// Check curr amt vs stock amount, separate fn
+			
 			med.removeStock(amount);
 		}
 
@@ -130,11 +132,17 @@ public class Inventory {
         }
     }
 
-	public void updateAllAlertLevels() {
+	public List<Medication> updateAllAlertLevels() {
+		List<Medication> temp = new ArrayList<>();
 		for (Medication medication : listOfMedications) {
 			medication.updateLowStockAlert();
-		} 
+			if (medication.isLowStockAlert() == true) {
+				temp.add(medication);
+				System.out.println("Inventory low for "+ medication.getMedicationName + "...");
+			}
+		}
 		writeCSVFile();
+		return temp;
 	}	
 
 }
