@@ -42,28 +42,7 @@ public class Login {
     private static void initialise(){
         boolean headerline = true;
         try{
-            Scanner scanner = new Scanner(patientRecordsFile);
-            while (scanner.hasNextLine()) {
-                if(headerline){
-                    headerline = false;
-                    continue;
-                }
-                else{
-                        String line = scanner.nextLine();
-                        String[] patientFields = line.split(";");
-                        String patientID = patientFields[0];
-                        String name = patientFields[1];
-                        String dateofbirth = patientFields[2];
-                        String gender = patientFields[3];
-                        String bloodType = patientFields[4];
-                        String emailAddress = patientFields[5];
-                        String pastDiagnoses = patientFields.length > 6 ? patientFields[6] : "";
-                        String pastTreatments = patientFields.length > 7 ? patientFields[7] : "";
-                        String phoneNumber = "";
-                        Patient p = new Patient(patientID, name, dateofbirth, gender, bloodType, phoneNumber, emailAddress);
-                        patients.add(p);
-                }
-            }
+            PatientManager.loadRecordsCSV();
             System.out.println("Patients Information Retrieved Successfully!");
         } catch (FileNotFoundException e){
             System.out.println("Unable to Retrieve Patients Information!");
