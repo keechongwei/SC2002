@@ -4,12 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
-public class Pharmacist extends User {
+public class Pharmacist extends Staff {
     private List<AppointmentSlot> appointments;
     private final Inventory inventory;
-    private String gender;
-    private int age;
-    private String name;
 
     // Primary constructor with basic authentication details
     public Pharmacist(String HospitalID, String password) {
@@ -24,7 +21,7 @@ public class Pharmacist extends User {
         super(HospitalID, "password");
         this.name = name;
         this.gender = gender;
-        this.age = Integer.valueOf(age);
+        this.age = age;
         this.appointments = new ArrayList<>();
         this.inventory = new Inventory("Medicine_List.csv");
 
@@ -79,10 +76,6 @@ public class Pharmacist extends User {
         }
         System.out.println("Logging out...");
         // Don't close the scanner here as it might be needed by the calling method
-    }
-    
-    public void setPassword(String password){
-        super.setPassword(password);
     }
 
     // Load pending prescriptions from CSV file
@@ -311,30 +304,6 @@ public class Pharmacist extends User {
         
         // Check for any low stock alerts and handle replenishment
         List<Medication> lowStockMeds = inventory.updateAllAlertLevels();
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String toCSV() {
