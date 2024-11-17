@@ -63,29 +63,114 @@ public class Login {
             } 
         }
     }
-    private static String passwordCheck(String password){
+    private static void passwordCheck(String ID,String password){
         Scanner sc = new Scanner(System.in);
-        // for first login, password is password
-        if (password.equals("password")){
-            System.out.println("Change Your Password: ");
-            password = sc.nextLine();
-            System.out.println("Verify Your New Password: ");
-            String check = sc.nextLine();
-            while (!check.equals(password)){
-                System.out.println("Password Change Failed.");
-                System.out.println("Change Your Password: ");
-                password = sc.nextLine();
-                System.out.println("Verify Your New Password: ");
-                check = sc.nextLine();  
+        for(Patient p : PatientManager.allPatients ){
+            if (p.getHospitalID().equals(ID)){        
+                if (p.getPassword().equals("password")){
+                    System.out.println("Change Your Password: ");
+                    password = sc.nextLine();
+                    System.out.println("Verify Your New Password: ");
+                    String check = sc.nextLine();
+                    while (!check.equals(password)){
+                        System.out.println("Password Change Failed.");
+                        System.out.println("Change Your Password: ");
+                        password = sc.nextLine();
+                        System.out.println("Verify Your New Password: ");
+                        check = sc.nextLine();  
+                    }
+                    validPassword = true;
+                    p.setPassword(password);
+                }
+                else if (p.getPassword().equals(password)){
+                        validPassword = true;
+                    }
+                else{
+                    System.out.println("Invalid Password.");
+                    validPassword = false;
+                }
             }
-            validPassword = true;
-            return password;
         }
-        else{
-            System.out.println("Invalid Password.");
-            return "password"; 
+        for(Doctor d : StaffManager.doctors){
+            if (d.getHospitalID().equals(ID)){        
+                if (d.getPassword().equals("password")){
+                    System.out.println("Change Your Password: ");
+                    password = sc.nextLine();
+                    System.out.println("Verify Your New Password: ");
+                    String check = sc.nextLine();
+                    while (!check.equals(password)){
+                        System.out.println("Password Change Failed.");
+                        System.out.println("Change Your Password: ");
+                        password = sc.nextLine();
+                        System.out.println("Verify Your New Password: ");
+                        check = sc.nextLine();  
+                    }
+                    validPassword = true;
+                    d.setPassword(password);
+                }
+                else if (d.getPassword().equals(password)){
+                        validPassword = true;
+                    }
+                else{
+                    System.out.println("Invalid Password.");
+                    validPassword = false;
+                }
+            }
+        }
+        for(Pharmacist ph : StaffManager.pharmacists){
+            if (ph.getHospitalID().equals(ID)){        
+                if (ph.getPassword().equals("password")){
+                    System.out.println("Change Your Password: ");
+                    password = sc.nextLine();
+                    System.out.println("Verify Your New Password: ");
+                    String check = sc.nextLine();
+                    while (!check.equals(password)){
+                        System.out.println("Password Change Failed.");
+                        System.out.println("Change Your Password: ");
+                        password = sc.nextLine();
+                        System.out.println("Verify Your New Password: ");
+                        check = sc.nextLine();  
+                    }
+                    validPassword = true;
+                    ph.setPassword(password);
+                }
+                else if (ph.getPassword().equals(password)){
+                        validPassword = true;
+                    }
+                else{
+                    System.out.println("Invalid Password.");
+                    validPassword = false;
+                }
+            }
+        }
+        for(Administrator adm : StaffManager.administrators){
+            if (adm.getHospitalID().equals(ID)){        
+                if (adm.getPassword().equals("password")){
+                    System.out.println("Change Your Password: ");
+                    password = sc.nextLine();
+                    System.out.println("Verify Your New Password: ");
+                    String check = sc.nextLine();
+                    while (!check.equals(password)){
+                        System.out.println("Password Change Failed.");
+                        System.out.println("Change Your Password: ");
+                        password = sc.nextLine();
+                        System.out.println("Verify Your New Password: ");
+                        check = sc.nextLine();  
+                    }
+                    validPassword = true;
+                    adm.setPassword(password);
+                }
+                else if (adm.getPassword().equals(password)){
+                        validPassword = true;
+                    }
+                else{
+                    System.out.println("Invalid Password.");
+                    validPassword = false;
+                }
+            }
         }
     }
+
     private static void login(boolean loggedIn, Scanner sc){
         while(!loggedIn){
             System.out.println("=== HOSPITAL MANAGEMENT SYSTEM LOGIN PAGE ===");
@@ -101,8 +186,7 @@ public class Login {
             while (!validPassword){
                 System.out.println("Enter Password: ");
                 password = sc.nextLine();
-                password = password.toLowerCase();
-                password = passwordCheck(password);
+                passwordCheck(ID,password);
             }
             loggedIn = true;
             System.out.println("Successful Login!");
