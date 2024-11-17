@@ -30,20 +30,12 @@ public class StaffManager {
                         if(!(fields[1].equals("password"))){
                             Doctor d = new Doctor(fields[0],fields[2],fields[4],fields[5]);
                             d.setPassword(fields[1]);
-                            for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray){
-                                if (slot.getDoctorID().equals(fields[0]) && slot.getStatus().equals(AppointmentStatus.CONFIRMED)){
-                                    d.addPatientsUnderCare(PatientManager.findPatient(slot.getPatientID()));
-                                }
-                            }
+                            d.addPatientsUnderCare();
                             doctors.add(d);
                         }
                         else{
                             Doctor d = new Doctor(fields[0],fields[2],fields[4],fields[5]);
-                            for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray){
-                                if (slot.getDoctorID().equals(fields[0]) && slot.getStatus().equals(AppointmentStatus.CONFIRMED)){
-                                    d.addPatientsUnderCare(PatientManager.findPatient(slot.getPatientID()));
-                                }
-                            }
+                            d.addPatientsUnderCare();
                             doctors.add(d);     
                         }
                     }

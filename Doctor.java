@@ -20,8 +20,12 @@ public class Doctor extends User{
         this.age = age;
     }
 
-    public void addPatientsUnderCare(Patient p){
-        this.patientList.add(p);
+    public void addPatientsUnderCare(){
+        for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray){
+            if (slot.getDoctorID().equals(this.getHospitalID()) && slot.getStatus().equals(AppointmentStatus.CONFIRMED)){
+                this.patientList.add(PatientManager.findPatient(slot.getPatientID()));
+            }
+        }
     }
 
     public void printMenu(){
@@ -292,7 +296,7 @@ public class Doctor extends User{
             for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
                 if (slot.getAppointmentID().equals(choice2) ){ 
                     slot.setStatus(AppointmentStatus.CONFIRMED);
-                    this.addPatientsUnderCare(PatientManager.findPatient(slot.getPatientID()));
+                    this.patientList.add(PatientManager.findPatient(slot.getPatientID()));
                     AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
                     System.out.println("Appointment ID " + choice2 + " has been CONFIRMED.");
                 }
