@@ -232,6 +232,13 @@ public class Pharmacist extends User {
             Prescription prescription = appointment.getAppointmentOutcomeRecord().getPrescribedMedication();
             
             if (prescription.getStatus() == PrescriptionStatus.PENDING) {
+                Medication med = inventory.getMedication(prescription.getMedicationName());
+                if (med != null && med.getStock() < prescription.getDosage()) {
+                    System.out.println("ERROR: Insufficient stock. Required dosage: " + 
+                        prescription.getDosage() + ", Available stock: " + med.getStock());
+                return;
+            }
+                
                 boolean stockUpdated = inventory.updateMedication(
                     prescription.getMedicationName(), 
                     prescription.getDosage(), 
@@ -295,9 +302,6 @@ public class Pharmacist extends User {
         
         // Check for any low stock alerts and handle replenishment
         List<Medication> lowStockMeds = inventory.updateAllAlertLevels();
-        if (!lowStockMeds.isEmpty()) {
-            System.out.println("\nLow stock alerts have been processed and replenishment requests submitted where needed.");
-        }
     }
 
     public String getGender() {
