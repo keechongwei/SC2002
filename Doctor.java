@@ -165,7 +165,7 @@ public class Doctor extends User{
                     if (slot.getAppointmentID().equals(changedslot.getAppointmentID())){
                         slot.setStatus(AppointmentStatus.AVAILABLE);
                         System.out.println("Slot Made Available!");
-                        AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
+                        AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
                     }
                 }
                 return;
@@ -187,7 +187,7 @@ public class Doctor extends User{
                     if (slot.getAppointmentID().equals(changedslot.getAppointmentID())){
                         slot.setStatus(AppointmentStatus.UNAVAILABLE);
                         System.out.println("Slot Made Unavailable!");
-                        AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
+                        AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
                     }
                 }
         }
@@ -307,7 +307,7 @@ public class Doctor extends User{
             for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
                 if (slot.getAppointmentID().equals(choice2) ){ 
                     slot.setStatus(AppointmentStatus.CONFIRMED);
-                    AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
+                    AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
                     System.out.println("Appointment ID " + choice2 + " has been CONFIRMED.");
                 }
             }
@@ -329,7 +329,7 @@ public class Doctor extends User{
             for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
                 if (slot.getAppointmentID().equals(choice2)){ 
                     slot.setStatus(AppointmentStatus.CANCELLED);
-                    AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
+                    AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
                     System.out.println("Appointment ID " + choice2 + " has been DECLINED.");
                 }
             }
@@ -359,7 +359,7 @@ public class Doctor extends User{
         // Update the outcome record with provided details
                 slot.updateAppointmentOutcomeRecord(slot.getDate(), slot.getTime(), serviceType, pres, consultationNote);
                 slot.setStatus(AppointmentStatus.COMPLETED);
-                AppointmentManager.writeCSV(AppointmentManager.appointmentSlotArray);
+                AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
         // Log success message
                 System.out.println("Outcome successfully recorded for patient ID: " + id);
                 return; // Exit the loop after successfully updating
