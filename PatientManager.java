@@ -3,7 +3,7 @@ import java.util.*;
 
 public class PatientManager {
     public static List<Patient> allPatients= new ArrayList<>();
-    public static final File csvFile = new File("Patient_List copy.csv");
+    public static final File csvFile = new File("./SC2002-main/Patient_List copy.csv");
     private static final String CSV_DELIMITER = ";";
     private static final String LIST_DELIMITER = ",";  // For separating items within ArrayLists
 
@@ -159,26 +159,4 @@ public class PatientManager {
         return null;
     }
 
-    // Test main
-    public static void main(String[] args) {
-        // Load existing records
-        loadRecordsCSV();
-
-        // Example of adding a diagnosis
-        addDiagnosis("P1001", "Hypertension");
-
-        // Example of adding a treatment
-        addTreatment("P1001", "Prescribed ACE inhibitors");
-
-        // Example of creating a new patient
-        ArrayList<String> diagnoses = new ArrayList<>();
-        ArrayList<String> treatments = new ArrayList<>();
-        diagnoses.add("Initial checkup");
-        treatments.add("Vitamin D supplements");
-
-        Patient newPatient = new Patient("P1004", "John Doe", "1990-05-15", "Male", 
-                                       "O+", "john.doe@email.com", "123-456-7890", 
-                                       diagnoses, treatments);
-        addPatient(newPatient);
-    }
 }
