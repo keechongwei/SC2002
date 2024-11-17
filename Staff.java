@@ -8,22 +8,22 @@ public class Staff extends User {
         super(HospitalID, password);
     }
 
-    protected String getName(String name) {
+    protected String getName() {
         return this.name;
     }
-    protected String getName(String gender) {
+    protected String getGender() {
         return this.gender;
     }
-    protected String getName(String age) {
+    protected String getAge() {
         return this.age;
     }
     protected void setName(String name) {
         this.name = name;
     }
-    protected void setName(String gender) {
+    protected void setGender(String gender) {
         this.gender = gender;
     }
-    protected void setName(String age) {
+    protected void setAge(String age) {
         this.age = age;
     }
 
