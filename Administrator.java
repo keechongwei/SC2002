@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -63,9 +64,9 @@ public class Administrator extends User {
 
         //admin.manageStaff();
 
-        admin.manageInventory();
+        //admin.manageInventory();
 
-        //admin.approveReplenishmentRequest();
+        admin.approveReplenishmentRequest();
 
         //Administrator.viewAllAppointments();
     }
@@ -298,7 +299,7 @@ public class Administrator extends User {
         boolean removed = lines.removeIf(line -> line.startsWith(hospitalID + ";"));
 
         if (removed) {
-            writeCSVFile(lines);
+            writeCSVFile(lines, staffRecordsCSV);
             System.out.println("Staff with HospitalID " + hospitalID + " removed successfully.");
         } else {
             System.out.println("No staff found with HospitalID " + hospitalID + ".");
@@ -395,7 +396,7 @@ public class Administrator extends User {
                 break;
             }
         } 
-        writeCSVFile(lines);
+        writeCSVFile(lines, staffRecordsCSV);
 
     }
     
@@ -419,8 +420,15 @@ public class Administrator extends User {
         List<String> lines = readCSVFile(staffRecordsCSV);
         lines.add(String.join(";", hospitalID, name, role, gender, age));
 
-        writeCSVFile(lines);
+        writeCSVFile(lines, staffRecordsCSV);
         System.out.println("New staff added successfully.");
+
+        // If adding new Doctor, create new doctor's appt slots
+        if(role == "Doctor") {
+            Doctor newDoc = new Doctor(hospitalID, name, gender, age);
+            List<Doctor> temp = new ArrayList<>(Arrays.asList(newDoc));
+            AppointmentManager.makeDailyAppointments(temp); 
+        }
     }
 
     private String getNextID(List<List<String>> doubleList) {
@@ -458,8 +466,8 @@ public class Administrator extends User {
         return lines;
     }
 
-    private static void writeCSVFile(List<String> lines) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("Staff_List.csv"))) {
+    private static void writeCSVFile(List<String> lines, String CSVFile) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSVFile))) {
             for (String line : lines) {
                 bw.write(line);
                 bw.newLine();
@@ -594,19 +602,26 @@ public class Administrator extends User {
 
         for (int i = 1; i < lines.size(); i++) { // Start from index 1 to skip header
             String[] fields = lines.get(i).split(";");
+
+            // If request is already approved, skip entry
+            if(fields[3].equals("Approved")) {
+                System.out.println("Skipping Approved Req");
+                continue;
+            }
+
             System.out.println("Request ID: " + fields[0] + " Medicine Name: " + fields[1] + " Add Amount: " + fields[2]);
         }
 
         //Select to approve by index
         int index_to_approve = input_scanner.nextInt();
         input_scanner.nextLine();
-        List<String> temp = new ArrayList<>();
 
-        for (String line : lines) { // Start from index 1 to skip header
-            String[] fields = line.split(";");
+        for (int i = 0; i<lines.size(); i++) { // Start from index 1 to skip header
+            String[] fields = lines.get(i).split(";");
+
             if (fields[0].equals(String.valueOf(index_to_approve))) {
 
-                // Get list of medicine already available, run through list to see if requested med in already in inventory
+                // Get list of medicine already available, run through list to see if requested med already in inventory
                 Inventory inventory = new Inventory("Medicine_List.csv");
                 List<Medication> medications = inventory.getInventory();
                 boolean medInInventory = false;
@@ -618,6 +633,7 @@ public class Administrator extends User {
                         //update stock value and csv file
                         inventory.updateMedication(fields[1], Integer.parseInt(fields[2]), true);
                         medInInventory = true;
+                        fields[3] = "Approved"; 
                         break;
                     }   
                 }
@@ -629,13 +645,16 @@ public class Administrator extends User {
                     input_scanner.nextLine();
 
                     inventory.addNewMedication(fields[1], Integer.parseInt(fields[2]), alertValue);
-                }
-                
-                continue;
-            } 
+                    fields[3] = "Approved"; 
 
-            temp.add(line);
+                    break;
+                }
+
+                lines.set(i, String.join(";", fields[0], fields[1], fields[2], fields[3]));
+            }
         }
+
+        Administrator.writeCSVFile(lines, replenishRecordsCSV);
 	}
 
 }

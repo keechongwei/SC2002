@@ -140,7 +140,7 @@ public class Inventory {
 			medication.updateLowStockAlert();
 			if (medication.isLowStockAlert() == true) {
 				temp.add(medication);
-				System.out.println("Inventory low for "+ medication.getMedicationName + "...");
+				System.out.println("Inventory low for "+ medication.getMedicationName() + "...");
 			}
 		}
 		writeCSVFile();
