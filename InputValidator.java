@@ -20,7 +20,7 @@ public class InputValidator {
     private static final String DATE_PATTERN = "dd/MM/yyyy";
     private static final String TIME_PATTERN = "HH:mm";
     private static final String PASSWORD_PATTERN = "^(?=.*\\d).{8,}$";
-
+    private static final String ROLE_PATTERN = "^(Doctor|Pharmacist|Administrator)$";
 
     /**
      * Gets a valid integer input within a specified range
@@ -262,7 +262,16 @@ public class InputValidator {
     /**
      * Validates and gets a medication name
      */
+
     public static String getMedicationName(String prompt) {
         return getNonEmptyString(prompt);
+    }
+
+    public static String getRole(String prompt) {
+        return getPatternedInput(
+            prompt,
+            ROLE_PATTERN,
+            "Invalid role. Please enter Doctor, Pharmacist, or Administrator."
+        );
     }
 }

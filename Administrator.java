@@ -49,7 +49,8 @@ public class Administrator extends Staff {
             System.out.println("(3) View and Manage Medication History");
             System.out.println("(4) Approve Replenishment Requests");
             System.out.println("(5) Logout");
-            choice = sc.nextInt();
+            choice = InputValidator.getIntegerInput("Choice: ", 1, 5);
+            System.out.println("");
 
             Administrator administrator = new Administrator("A001", "password");
 
@@ -129,13 +130,7 @@ public class Administrator extends Staff {
 	public static List<List<String>> filterStaff(Filter_type filter_type) {        
         if (filter_type != Filter_type.Age) {System.out.println("Please enter a valid integer value for age");}
 
-        System.out.print("Size of staff ");
-        System.out.println(staffs.size());
-
         List<List<String>> filteredStaffs = new ArrayList<List<String>>(staffs);
-
-        System.out.print("Size of filtered ");
-        System.out.println(filteredStaffs.size());
 
         Collections.sort(filteredStaffs, new Comparator<List<String>>() {
             @Override
@@ -145,9 +140,6 @@ public class Administrator extends Staff {
                 return Integer.compare(age1, age2);
             }
         });
-
-        System.out.print("Size of filtered 2");
-        System.out.println(filteredStaffs.size());
 
         return filteredStaffs;
 	}
@@ -233,16 +225,7 @@ public class Administrator extends Staff {
         System.out.println("4 - Add Staff");
         System.out.println();
 
-        System.out.print("Choice: ");
-        int input = 0;
-        try {
-            input = input_scanner.nextInt();
-            input_scanner.nextLine();
-        } catch (Exception e) {
-            System.out.println("Invalid choice");
-        }
-
-        System.out.println(staffs.size());
+        int input = InputValidator.getIntegerInput("Choice: ", 1, 4);
 
         switch (input) {
             case 1: 
@@ -264,25 +247,16 @@ public class Administrator extends Staff {
                 switch (manageStaff_choice) {
                     case 1:
                         String searchByname = InputValidator.getName("Name: ");
-
                         filteredStaffs = Administrator.filterStaff(Filter_type.Name, searchByname);
                         break;
 
                     case 2:
-                        String role = queryForRole();
-                        if (role == null) {return;}
+                        String role = InputValidator.getRole("Role: ");
                         filteredStaffs = Administrator.filterStaff(Filter_type.Role, role);
                         break;
 
                     case 3:
-                        System.out.println("Age: ");
-                        int searchByAge = 0;
-                        try {searchByAge = input_scanner.nextInt(); 
-                        } catch (Exception e) {
-                            System.out.println("Invalid Age");
-                        }
-                        input_scanner.nextLine();
-    
+                        int searchByAge = InputValidator.getIntegerInput("Age: ", 1, 100);    
                         filteredStaffs = Administrator.filterStaff(Filter_type.Age, searchByAge);
                         break;
 
@@ -291,8 +265,7 @@ public class Administrator extends Staff {
                         break;
 
                     case 5:
-                        String gender_choice = queryForGender();
-                        if (gender_choice == null) {return;}
+                        String gender_choice = InputValidator.getGender("Gender: ");
                         filteredStaffs = Administrator.filterStaff(Filter_type.Gender, gender_choice);
                         break;    
         
@@ -309,8 +282,9 @@ public class Administrator extends Staff {
                 if (filteredStaffs.size() == 0) {
                     System.out.println("None found.");
                 } else {
-                    System.out.println(filteredStaffs.size() + " Found: ");
+                    System.out.println(" Found: " + filteredStaffs.size());
                     Administrator.printDoubleList(filteredStaffs);
+                    System.out.println();
                     filteredStaffs.clear();
                 }
                 break;
@@ -322,17 +296,12 @@ public class Administrator extends Staff {
 	}
     
     private void addStaff() {
-        System.out.println("Enter new staff details:");
-        System.out.println("Name: ");
-        String name = input_scanner.nextLine();
-        String role = queryForRole();
-        if (role == null) {return;}
+        System.out.println("Enter new staff details: ");
+        String name = InputValidator.getName("Name: ");
+        String role = InputValidator.getRole("Role: ");
         String gender = InputValidator.getGender("Gender: ");
         String age = String.valueOf(InputValidator.getIntegerInput("Age: ", 0, 100));
-        String password = String.valueOf(InputValidator.getIntegerInput("Age: ", 0, 100));
-        //String password = System.out.println("Password: ");
-        //String password = input_scanner.nextLine();
-
+        String password = InputValidator.getPassword("Password: ");
 
         List<List<String>> filteredStaffs = new ArrayList<>();
         filteredStaffs = filterStaff(Filter_type.Role, role);
@@ -344,23 +313,31 @@ public class Administrator extends Staff {
 
         writeCSVFile(lines, staffRecordsCSV);
 
-        // If adding new Doctor, create new doctor's appt slots
-        System.out.println(role);
-        if(role.equals("Doctor")) {
-            Doctor doctor = new Doctor(hospitalID, name, gender, age);
-            boolean check = StaffManager.doctorHandling(doctor, true);
+        Staff s = null;
+
+        if (role.equals("Pharmacist")) {
+            s = new Pharmacist(hospitalID, password, gender, age);
+            StaffManager.pharmacists.add((Pharmacist)s);
+        } else if (role.equals("Doctor")) {
+            s = new Doctor(hospitalID, name, gender, age);
+            boolean check = StaffManager.doctorHandling((Doctor)s, true);
             if (check != true) {
                 System.out.println("Unable to add Doctor");
                 return;
             } 
+            StaffManager.doctors.add((Doctor)s);
+        } else {
+            s = new Administrator(hospitalID, password, gender, age);
+            StaffManager.administrators.add((Administrator)s);
         }
 
         System.out.println("New staff added successfully.");
+        System.out.println();
     }
 
     private void removeStaff() {
-        System.out.println("Enter HospitalID: ");
-        String hospitalID = input_scanner.nextLine();
+        String hospitalID = InputValidator.getNonEmptyString("Enter HospitalID: ");
+        System.out.println("");
 
         List<String> lines = readCSVFile(staffRecordsCSV);
 
@@ -372,10 +349,17 @@ public class Administrator extends Staff {
             }
             
             writeCSVFile(lines, staffRecordsCSV);
+            StaffManager.pharmacists.clear();
+            StaffManager.doctors.clear();
+            StaffManager.administrators.clear();
+            StaffCSVHandler.loadCSV();
+
             System.out.println("Staff with HospitalID " + hospitalID + " removed successfully.");
         } else {
             System.out.println("No staff found with HospitalID " + hospitalID + ".");
         }
+
+        System.out.println();
     }
 
     public static List<String> readCSVFile(String filename) {
@@ -389,54 +373,6 @@ public class Administrator extends Staff {
             System.err.println("Error reading the CSV file: " + e.getMessage());
         }
         return lines;
-    }
-
-    private String queryForRole() {
-        System.out.println("Pick a Role: ");
-        System.out.println("1 - Doctor");
-        System.out.println("2 - Pharmacist");
-        System.out.println("3 - Administrator");
-        int role_choice = 0;
-        try {role_choice = input_scanner.nextInt();
-        } catch (Exception e) {
-            System.out.println("Invalid Choice");
-        }
-        input_scanner.nextLine();
-        String role = "";
-    
-        switch (role_choice) {
-            case 1: role = "Doctor"; break;
-            case 2: role = "Pharmacist"; break;
-            case 3: role = "Administrator"; break;
-            default: System.out.println("Invalid role choice."); return null;
-        }
-
-        return role;
-    }
-
-    private String queryForGender() {
-        System.out.println("Pick a Gender: ");
-        System.out.println("1 - Male");
-        System.out.println("2 - Female");
-        System.out.println("3 - Others");
-        System.out.println();
-
-        System.out.print("Choice: ");
-        int gender_choice = 0;
-        try {gender_choice = input_scanner.nextInt();
-        } catch (Exception e) {
-            System.out.println("Invalid gender choice");
-        }
-        input_scanner.nextLine();
-
-        switch (gender_choice) {
-            case 1: gender = "Male"; break;
-            case 2: gender = "Female"; break;
-            case 3: gender = "Others"; break;
-            default: System.out.println("Invalid gender choice."); return null;
-        }
-
-        return gender;
     }
 
     public static void writeCSVFile(List<String> lines, String CSVFile) {
@@ -507,12 +443,7 @@ public class Administrator extends Staff {
         System.out.println("5 - Update Stock");
         System.out.println("6 - Update Stock Level Alert");
 
-        int inventory_choice = 0;
-        try {inventory_choice = input_scanner.nextInt();
-        } catch (Exception e) {
-            System.out.println("Invalid inventory choice");
-        }
-        input_scanner.nextLine();
+        int inventory_choice = InputValidator.getIntegerInput("Choice: ", 1, 6);
     
         switch (inventory_choice) {
             case 1:
@@ -522,56 +453,33 @@ public class Administrator extends Staff {
     
             case 2:
                 System.out.println("=== Adding Stock ===");
-                System.out.println("Medication Name: ");
-                String medication_choice = input_scanner.nextLine();
-                System.out.println("Amount to add: ");
-                int amount = 0;
-                try {amount = input_scanner.nextInt();
-                } catch (Exception e) {
-                    System.out.println("Invalid inventory choice");
-                }
-
-                input_scanner.nextLine();
+                String medication_choice = InputValidator.getName("Medication Name: ");
+                int amount = InputValidator.getIntegerInput("Amount to add: ", 1, 10000);
+                System.out.println("");
     
                 inventory.updateMedication(medication_choice, amount, true);
                 break;
 
             case 3: // might need to add error checking for duplicates and other kinds of inputs
                 System.out.println("=== Adding New Stock ===");
-                System.out.println("Medication Name: ");
-                String new_med_choice = input_scanner.nextLine();
-                System.out.println("Stock: ");
-                int new_med_amount = 0;
-                try {new_med_amount = input_scanner.nextInt();
-                } catch (Exception e) {
-                    System.out.println("Invalid inventory choice");
-                }
-                
-                input_scanner.nextLine();
-                System.out.println("Low Stock Value: ");
-                int alertValue = 0;
-                try {
-                    alertValue = input_scanner.nextInt();
-                    input_scanner.nextLine();
-                } catch (Exception e) {
-                    System.out.println("Invalid inventory choice");
-                }
-
-
+                String new_med_choice = InputValidator.getName("Medication Name: ");
+                System.out.println("");
+                int new_med_amount = InputValidator.getIntegerInput("Stock: ", 1, 10000);
+                System.out.println("");
+                int alertValue = InputValidator.getIntegerInput("Low Stock Value: ", 1, 10000);
+                System.out.println("");
                 inventory.addNewMedication(new_med_choice, new_med_amount, alertValue);
 
                 Medication med = inventory.getMedication(new_med_choice);
                 if(med == null) {break;}
 
                 System.out.println("Added new stock: " + med.getMedicationName() + " with stock: " + med.getStock());
-
                 break;
     
             case 4:
                 System.out.println("=== Deleting Stock ===");
-                System.out.println("Medication Name: ");
-                String deleted_choice = input_scanner.nextLine();
-    
+                String deleted_choice = InputValidator.getName("Medication Name: ");
+
                 Medication deleted_med = inventory.getMedication(deleted_choice);
                 if(deleted_med == null) {break;}
 
@@ -581,16 +489,11 @@ public class Administrator extends Staff {
     
             case 5:
                 System.out.println("=== Updating Stock ===");
-                System.out.println("Medication Name: ");
-                String updated_choice = input_scanner.nextLine();
-                System.out.println("Updated Amount: ");
-                int updated_amount = 0;
-                try {
-                    updated_amount = input_scanner.nextInt();
-                    input_scanner.nextLine();
-                } catch (Exception e) {
-                    System.out.println("Invalid choice");
-                }
+                String updated_choice = InputValidator.getName("Medication Name: ");
+                System.out.println("");
+
+                int updated_amount = InputValidator.getIntegerInput("Updated Amount: ", 1, 10000);
+                System.out.println("");
 
                 boolean add_or_remove = false;
                 int current_stock = 0;
@@ -616,17 +519,10 @@ public class Administrator extends Staff {
     
             case 6:
                 System.out.println("=== Updating Stock Alert Level ===");
-                System.out.println("Medication Name: ");
-                String med_level_choice = input_scanner.nextLine();
-                System.out.println("New Alert Level: ");
-                int new_limit = 0;
-                try {
-                    new_limit = input_scanner.nextInt();
-                    input_scanner.nextLine();
-                } catch (Exception e) {
-                    System.out.println("Invalid choice");
-                }
-
+                String med_level_choice = InputValidator.getName("Medication Name: ");
+                System.out.println("");
+                int new_limit = InputValidator.getIntegerInput("New Alert Level: ", 1, 10000);
+                System.out.println("");
 
                 Medication updated_med = inventory.getMedication(med_level_choice);
                 if(updated_med == null) {break;}
@@ -690,14 +586,8 @@ public class Administrator extends Staff {
                 
                 // If new med add to csv
                 if (medInInventory == false) {
-                    System.out.println("Enter Low Stock Value: ");
-                    int alertValue = 0;
-                    try {
-                        alertValue = input_scanner.nextInt();
-                        input_scanner.nextLine();
-                    } catch (Exception e) {
-                        System.out.println("Invalid choice");
-                    }
+                    int alertValue = InputValidator.getIntegerInput("Enter Low Stock Value: ", 1, 10000);
+                    System.out.println("");
 
                     inventory.addNewMedication(fields[MEDICATIONNAME], Integer.parseInt(fields[ADDEDAMT]), alertValue);
                     fields[STATUS] = "Approved"; 

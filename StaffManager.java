@@ -49,7 +49,6 @@ public class StaffManager implements Manager {
             System.out.println(tempStaff.getHospitalID());
             if (tempStaff.getHospitalID().equalsIgnoreCase(hospitalID)) {
                 staff = tempStaff;
-                System.out.println("found in list");
                 break;
             }
         }
@@ -65,8 +64,7 @@ public class StaffManager implements Manager {
         System.out.println("3 - Gender");
         System.out.println("4 - Age");
 
-        int input = input_scanner.nextInt();
-        input_scanner.nextLine(); // Skip \n
+        int input = InputValidator.getIntegerInput("Choice: ", 1, 4);
 
         switch (input) {
             case 1:
@@ -193,7 +191,6 @@ public class StaffManager implements Manager {
 
     // true means adding new doctor
     public static boolean doctorHandling(Doctor doctor, boolean addOrRemove) {
-        boolean removed = false;
         if (addOrRemove == true) {
             List<Doctor> temp = new ArrayList<>();
             temp.add(doctor);
