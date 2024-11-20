@@ -77,10 +77,10 @@ public class MedicalRecord {
         return patientID;
     }
 
-    // public void setPatientID(String patientID) {
-    //     this.patientID = patientID;
-    //     updateCSV();
-    // }
+    public void setPatientID(String patientID) {
+        this.patientID = patientID;
+        updateCSV();
+    }
 
     public String getName() {
         return name;
