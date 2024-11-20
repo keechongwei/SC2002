@@ -42,7 +42,7 @@ public class MedicalRecord {
     }
 
     private MedicalRecord getLatestFromCSV() {
-        PatientManagerCSVHandler.loadRecordsCSV();
+        PatientManagerCSVHandler.loadCSV();
         for(Patient p : PatientManager.allPatients) {
             if(p.getHospitalID().equals(this.patientID)) {
                 return p.getMedicalRecord();

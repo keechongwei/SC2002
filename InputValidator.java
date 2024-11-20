@@ -9,7 +9,7 @@ public class InputValidator {
     private static final Scanner scanner = new Scanner(System.in);
 
     // Common patterns
-    private static final String PATIENT_ID_PATTERN = "P\\d{3}";
+    private static final String PATIENT_ID_PATTERN = "P\\d{4}";
     private static final String DOCTOR_ID_PATTERN = "D\\d{3}";
     private static final String APPOINTMENT_ID_PATTERN = "A\\d{3}";
     private static final String PHONE_PATTERN = "\\d{8,12}";

@@ -97,27 +97,17 @@ public class Patient extends User{
             System.out.println("2. Update email address");
             System.out.println("3. Exit");
             System.out.println("=".repeat(35));
-            System.out.println("\nEnter your choice (1-3): ");
-
-            choice = sc.nextInt();
-            sc.nextLine();
-            //error checking
-            if(!Character.isDigit(choice)) {
-                System.out.println("Invalid choice. Please enter a number from 1-3\n");
-                break;
-            }
+            choice = InputValidator.getIntegerInput("\nEnter your choice (1-3): ", 1, 3);
 
             switch (choice) {
                 case 1: //update phone number
-                    System.out.print("Enter new phone number: ");
-                    String newPhoneNumber = sc.nextLine();
+                    String newPhoneNumber = InputValidator.getPhoneNumber("Enter new phone number: ");
                     this.medicalRecord.setPhoneNumber(newPhoneNumber);
                     System.out.println("Phone number updated. New phone number: "  + this.medicalRecord.getPhoneNumber());
                     break;
 
                 case 2:
-                    System.out.print("Enter new email address: ");
-                    String newEmail = sc.nextLine();
+                    String newEmail = InputValidator.getEmailAddress("Enter new email address: ");
                     this.medicalRecord.setEmailAddress(newEmail);
                     System.out.println("Email address updated. New email address: "  + this.medicalRecord.getEmailAddress());
                     break;
@@ -132,7 +122,7 @@ public class Patient extends User{
 
             }
 
-        } while(choice < 3);
+        } while(choice <= 3);
 
     }
 
@@ -212,19 +202,7 @@ public class Patient extends User{
         System.out.println("\n=== Schedule New Appointment ===");
 
         //select doctor buy ID
-        System.out.println("\nEnter Doctor ID to schedule appointment (e.g D001): ");
-        String selectedDoctorID = sc.nextLine().trim().toUpperCase();
-
-        //error checking
-        boolean isValidDoctorID = false;
-        while(!isValidDoctorID) {
-            if(selectedDoctorID.matches("D\\d{3}")) {
-                isValidDoctorID = true;
-            } else {
-                System.out.println("Invalid Doctor ID format. Please enter ID in format D followed by 3 digits (e.g. D001): ");
-                selectedDoctorID = sc.nextLine().trim().toUpperCase();
-            }
-        }
+        String selectedDoctorID = InputValidator.getDoctorId("\nEnter Doctor ID (eg. D001) to schedule appointment: ");
 
         //get avail slots for selected doctor
         List<AppointmentSlot> availSlots = new ArrayList<>();
@@ -247,14 +225,7 @@ public class Patient extends User{
         }
 
         //create and save the appt
-        System.out.print("\nSelect appointment slot (enter number): ");
-        int choice = sc.nextInt();
-        sc.nextLine();
-
-        if(choice<1 || choice>availSlots.size()) {
-            System.out.println("Invalid selection.\n");
-            return;
-        }
+        int choice = InputValidator.getIntegerInput("\nSelect appointment slot (enter number): ", 1, availSlots.size());
 
         //update selected slot
         AppointmentSlot selectedSlot = availSlots.get(choice-1);
@@ -307,14 +278,7 @@ public class Patient extends User{
         }
 
         //select appts to reschedule
-        System.out.printf("\nSelect appointment to reschedule (enter number 1- %d): ", curSlots.size());
-        int choice = sc.nextInt();
-        sc.nextLine();
-
-        if(choice<1 || choice>curSlots.size()) {
-            System.out.println("Invalid selection.\n");
-            return;
-        }
+        int choice = InputValidator.getIntegerInput("\nSelect appointment to reschedule (enter number): ", 1, curSlots.size());
 
         AppointmentSlot oldSlot = curSlots.get(choice - 1);
 
@@ -344,14 +308,7 @@ public class Patient extends User{
         }
 
         //select new slot
-        System.out.print("\nSelect new appointment slot (enter number e.g. 1): ");
-        choice = sc.nextInt();
-        sc.nextLine(); // Clear buffer
-
-        if (choice < 1 || choice > availSlots.size()) {
-            System.out.println("Invalid selection.\n");
-            return;
-        }
+        choice = InputValidator.getIntegerInput("\nSelect new appointment slot (enter number): ", 1, availSlots.size());
 
         AppointmentSlot newSlot = availSlots.get(choice-1);
 
