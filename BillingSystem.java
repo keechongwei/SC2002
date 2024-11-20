@@ -13,6 +13,7 @@ public class BillingSystem {
         put("Paracetamol", 0.1);
         put("Ibuprofen", 0.5);
         put("Amoxicillin", 0.2);
+        put("Zrytec", 1.0);
     }};
 
     private static final Map<TypeOfService, Double> SERVICE_FEES = new HashMap<>() {{
