@@ -7,11 +7,11 @@ public class InventoryManager implements Manager {
     public static int lastRequestId = 0;
 
     public static int getLastRequestID(){
-        return Inventory.lastRequestId;
+        return InventoryManager.lastRequestId;
     }
 
     public static void setLastRequestID(int ID){
-         Inventory.lastRequestId = ID;
+         InventoryManager.lastRequestId = ID;
     }
 
 	// public static void main(String[] args) {		
