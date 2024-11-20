@@ -229,7 +229,7 @@ public class InputValidator {
             } else if (input.equals("n") || input.equals("no")) {
                 return false;
             } else {
-                System.out.println("Please enter 'y' or 'n'.");
+                System.out.println("Please enter 'y' for yes or 'n' for no.");
             }
         }
     }

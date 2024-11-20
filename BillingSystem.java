@@ -298,12 +298,10 @@ public class BillingSystem {
     }
 
     public void processPayment() {
-        Scanner sc = new Scanner(System.in);
-        try {
             while (true) {
                 System.out.println("\n=== Payment Processing ===");
                 System.out.print("Enter Bill ID (or 'exit' to cancel): ");
-                String billId = sc.nextLine().trim();
+                String billId = InputValidator.getNonEmptyString("Enter Bill ID (or 'exit' to cancel): ");
                 
                 if (billId.equalsIgnoreCase("exit")) {
                     System.out.println("Payment processing cancelled.");
@@ -324,25 +322,20 @@ public class BillingSystem {
                 // display bill for confirmation
                 displayBill(billId);
                 
-                System.out.print("\nConfirm payment for Bill " + billId + "? (y/n): ");
-                String confirm = sc.nextLine().trim().toLowerCase();
+                boolean confirm = InputValidator.getConfirmation("\nConfirm payment for Bill " + billId + "?");
                 
-                if (confirm.equals("y")) {
+                if (confirm) {
                     markAsPaid(billId);
                     System.out.println("Payment processed successfully!");
-                    break;
+                    return;
                 } else {
                     System.out.println("Payment cancelled.");
-                    break;
+                    return;
                 }
             }
-        } catch (Exception e) {
-            System.out.println("An error occurred during payment processing: " + e.getMessage());
-        }
     }
 
-    public static void BillingMenu() {
-        Scanner sc = new Scanner(System.in);
+    public static void BillingMenu(String patientID) {
         BillingSystem billingSystem = new BillingSystem();
         billingSystem.processCompletedAppointments();
         
@@ -352,36 +345,26 @@ public class BillingSystem {
             System.out.println("(1) View My Bills");
             System.out.println("(2) Process Payment");
             System.out.println("(3) Return to Patient Menu");
+        
+            choice = InputValidator.getIntegerInput("Enter your choice: ", 1, 3);
             
-            try {
-                choice = sc.nextInt();
-                sc.nextLine();
-                
-                switch (choice) {
-                    case 1:
-                        System.out.println("\n=== Your Bills ===");
-                        billingSystem.viewPatientBills("P1001");
-                        System.out.println("\nPress Enter to continue...");
-                        sc.nextLine();
-                        break;
-                        
-                    case 2:
-                        billingSystem.processPayment();
-                        System.out.println("\nPress Enter to continue...");
-                        sc.nextLine();
-                        break;
-                        
-                    case 3:
-                        System.out.println("Returning to Patient Menu...");
-                        break;
-                        
-                    default:
-                        System.out.println("Invalid choice. Please try again.");
-                        break;
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a number.");
-                sc.nextLine(); 
+            switch (choice) {
+                case 1:
+                    System.out.println("\n=== Your Bills ===");
+                    billingSystem.viewPatientBills(patientID);
+                    break;
+                    
+                case 2:
+                    billingSystem.processPayment();    
+                    break;
+                    
+                case 3:
+                    System.out.println("Returning to Patient Menu...");
+                    return;
+                    
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
             }
         }
     }

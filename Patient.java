@@ -70,7 +70,7 @@ public class Patient extends User{
                 this.viewAppointmentOutcomeRecord();// View Past Appointments Outcome Record
                 break;
                 case 9:
-                BillingSystem.BillingMenu();// view bills, process bills
+                BillingSystem.BillingMenu(this.medicalRecord.getPatientID());// view bills, process bills
                 break;
                 case 10:
                 System.out.println("Logging out...");
