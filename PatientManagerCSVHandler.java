@@ -37,9 +37,14 @@ public class PatientManagerCSVHandler {
                 String gender = patientFields[3];
                 String bloodType = patientFields[4];
                 String emailAddress = patientFields[5];
-
+                String password = "";
                 String phoneNumber = (patientFields.length > 6) ? patientFields[6] : "";
-
+                if (patientFields[9].equals("password")){
+                    password = "password";
+                }
+                else{
+                    password = patientFields[9];
+                }
                 ArrayList<String> pastDiagnoses = new ArrayList<>();
                     if (patientFields.length > 7 && !patientFields[7].isEmpty()) {
                         pastDiagnoses.addAll(Arrays.asList(patientFields[7].split(LIST_DELIMITER)));
@@ -51,8 +56,9 @@ public class PatientManagerCSVHandler {
                     }
 
                 Patient p = new Patient(patientID, name, dateofbirth, gender, bloodType, 
-                                     phoneNumber, emailAddress, pastDiagnoses, pastTreatments);
+                                     phoneNumber, emailAddress, pastDiagnoses, pastTreatments,password);
                 PatientManager.allPatients.add(p);
+                PatientManager.nextPatientNumber++;
             }
         } catch (FileNotFoundException e) {
             System.err.println("Patient list file not found: " + e.getMessage());

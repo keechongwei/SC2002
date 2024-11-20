@@ -16,14 +16,14 @@ public class Patient extends User{
     private static Scanner sc = new Scanner(System.in);
 
     //patient Constructor
-    public Patient(String patientID, String patientName, String dateofBirth, String gender, String bloodType, String phoneNumber, String emailAddress) {
-        super(patientID, "password");
+    public Patient(String patientID, String patientName, String dateofBirth, String gender, String bloodType, String phoneNumber, String emailAddress,String password) {
+        super(patientID, password);
         this.medicalRecord = new MedicalRecord(patientID, patientName, dateofBirth, gender, phoneNumber, emailAddress, bloodType);
         this.medicalRecord.setPatient(this); 
     }
 
-    public Patient(String patientID, String patientName, String dateofBirth, String gender, String bloodType, String phoneNumber, String emailAddress, ArrayList<String> pastDiagnoses, ArrayList<String> pastTreatments) {
-        super(patientID, "password");
+    public Patient(String patientID, String patientName, String dateofBirth, String gender, String bloodType, String phoneNumber, String emailAddress, ArrayList<String> pastDiagnoses, ArrayList<String> pastTreatments,String password) {
+        super(patientID, password);
         this.medicalRecord = new MedicalRecord(patientID, patientName, dateofBirth, gender, phoneNumber, emailAddress, bloodType, pastDiagnoses, pastTreatments);
         this.medicalRecord.setPatient(this); 
     }
@@ -122,7 +122,7 @@ public class Patient extends User{
 
             }
 
-        } while(choice <= 3);
+        } while(choice < 3);
 
     }
 
