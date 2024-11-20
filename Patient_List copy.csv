@@ -1,5 +1,4 @@
 Patient ID;Name;Date of Birth;Gender;Blood Type;Email;Phone;Past Diagnoses;Past Treatments;Password
-P1001;Alice Brown;1980-05-14;Female;A+;com@e;77777777;concussed;sleep;password
-P1002;Bob Stone;1975-11-22;Male;B+;bob.stone@example.com;;;password
-P1003;Charlie White;1990-07-08;Male;O-;charlie.white@example.com;;;password
-P0001;asdfg;1212-12-12;Male;A+;kkk@mail;99999999;;;password
+P1001;Alice Brown;1980-05-14;Female;A+;alice.brown@example.com;;;;password
+P1002;Bob Stone;1975-11-22;Male;B+;bob.stone@example.com;;;;password
+P1003;Charlie White;1990-07-08;Male;O-;charlie.white@example.com;;;;password
