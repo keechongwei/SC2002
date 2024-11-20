@@ -495,7 +495,7 @@ public class Administrator extends Staff {
 
     // might need to add error checking for duplicates and other kinds of inputs
 	public void manageInventory() { 
-        Inventory inventory = new Inventory(medicineListCSV);
+        InventoryManager inventory = new InventoryManager(medicineListCSV);
     
         System.out.println("=== Course of Action: ===");
         System.out.println("1 - View Inventory");
@@ -598,7 +598,7 @@ public class Administrator extends Staff {
 
                 updated_med.updateLowStockLevel(new_limit);
                 System.out.println("Updated: " + updated_med.getMedicationName() + " with limit: " + updated_med.getLowStockValue());
-                InventoryCSVHandler.writeCSVFile();
+                InventoryCSVHandler.writeCSV();
                 break;
     
             default:
@@ -637,7 +637,7 @@ public class Administrator extends Staff {
             if (fields[0].equals(String.valueOf(index_to_approve))) {
 
                 // Get list of medicine already available, run through list to see if requested med already in inventory
-                Inventory inventory = new Inventory("Medicine_List.csv");
+                InventoryManager inventory = new InventoryManager("Medicine_List.csv");
                 List<Medication> medications = inventory.getInventory();
                 boolean medInInventory = false;
                 for(Medication medication : medications) {

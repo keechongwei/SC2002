@@ -24,8 +24,8 @@ public class InventoryCSVHandler implements CSVHandler {
                     String[] parts = line.split(";");
                     requests.add(parts);
                     int requestId = Integer.parseInt(parts[0]);
-                    if (requestId > Inventory.getLastRequestID()) {
-                        Inventory.setLastRequestID(requestId);
+                    if (requestId > InventoryManager.getLastRequestID()) {
+                        InventoryManager.setLastRequestID(requestId);
                     }
                 }
             }
@@ -38,7 +38,7 @@ public class InventoryCSVHandler implements CSVHandler {
     public static void loadCSV() {
     String line;
     String csvSplitBy = ";";
-    Inventory.listOfMedications.clear(); // Clear existing list before loading
+    InventoryManager.listOfMedications.clear(); // Clear existing list before loading
 
     try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
         br.readLine(); // Skip the header line
@@ -52,7 +52,7 @@ public class InventoryCSVHandler implements CSVHandler {
                     
                     // Check if medication already exists
                     boolean exists = false;
-                    for (Medication med : Inventory.listOfMedications) {
+                    for (Medication med : InventoryManager.listOfMedications) {
                         if (med.getMedicationName().equalsIgnoreCase(medicationName)) {
                             exists = true;
                             break;
@@ -61,7 +61,7 @@ public class InventoryCSVHandler implements CSVHandler {
                     
                     if (!exists) {
                         Medication medication = new Medication(medicationName, initialStock, lowStockValue);
-                        Inventory.listOfMedications.add(medication);
+                        InventoryManager.listOfMedications.add(medication);
                     }
                 }
             }
@@ -76,7 +76,7 @@ public class InventoryCSVHandler implements CSVHandler {
     public static void writeCSV() {
         // First, create a temporary list to store unique medications
         List<Medication> uniqueMedications = new ArrayList<>();
-        for (Medication med : Inventory.listOfMedications) {
+        for (Medication med : InventoryManager.listOfMedications) {
             boolean exists = false;
             for (Medication uniqueMed : uniqueMedications) {
                 if (uniqueMed.getMedicationName().equalsIgnoreCase(med.getMedicationName())) {
