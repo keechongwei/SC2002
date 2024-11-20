@@ -198,10 +198,8 @@ public class Pharmacist extends Staff {
         loadAppointments();
         viewAllAppointmentOutcomes();
         
-        String appointmentId = InputValidator.getPatternedInput(
-            "\nEnter Appointment ID to dispense prescription (or 'cancel' to exit): ", 
-            "A\\d{3}|cancel", 
-            "Invalid Appointment ID format."
+        String appointmentId = InputValidator.getAppointmentId(
+            "\nEnter Appointment ID to dispense prescription (or 'cancel' to exit): "
         );
         
         if (appointmentId.equalsIgnoreCase("cancel")) return;
