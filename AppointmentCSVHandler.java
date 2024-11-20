@@ -10,7 +10,12 @@ public class AppointmentCSVHandler implements CSVHandler{
     public static String appointmentsCSVHeader = "Date;Time;Appointment ID; DoctorID; PatientID;Appointment Status; OutcomeDate | Outcome Time |  Type Of Service | Medication Name ^ Medication Status ^ Medication Dosage | Consultation Notes";
     public static final File csvFile = new File("appointments.csv");
 
-        // write header to Appointments CSV file
+    /** 
+    * Write header to appointments.csv file
+    * This header is an attribute of AppointmentsCSVHandler as appointmentsCSVHeader
+    * @param void
+    * @return void
+    */ 
     public static void writeHeader(String header){
         try (FileWriter writer = new FileWriter(csvFile, true)) {
             writer.write(header + "\n");
@@ -20,6 +25,13 @@ public class AppointmentCSVHandler implements CSVHandler{
         }
     }
 
+    /**
+    * Overridden Method from CSVHandler Interface.
+    * Loads information from a csv file
+    * For this class, loads appointments based on csvFile attribute of AppointmentCSVHandler from appointments.csv
+    * @param void
+    * @return void
+    */
     public static void loadCSV() {
     boolean headerline = true;
     try (Scanner scanner = new Scanner(csvFile)) {
@@ -51,7 +63,13 @@ public class AppointmentCSVHandler implements CSVHandler{
         e.printStackTrace();
     }   
     }
-    // function to add new values of AppointmentSlots
+    
+    /**
+     * Appends an appointment slot to appointments.csv
+     * @param AppointmentSlot An AppointmentSlot object containing details such as Date,Time,Appointment ID, etc.
+     * @return void
+     * @see AppointmentSlot
+     */
     public static void appendAppointmentToCSV(AppointmentSlot slot) {
         try (FileWriter writer = new FileWriter(csvFile, true)) {
             writer.write(slot.toCSV() + "\n");
@@ -60,7 +78,13 @@ public class AppointmentCSVHandler implements CSVHandler{
             e.printStackTrace();
         }
     }
-        // function to edit values of AppointmentSlots without creating rows
+    /**
+     * Writes AppointmentSlots to appointments.csv
+     * Retrieves Data From AppointmentManager to update appointments.csv
+     * @param appointments Static List Of AppointmentSlots from AppointmentManager
+     * @return void
+     * @see AppointmentManager
+     */   // function to edit values of AppointmentSlots without creating rows
     public static void writeCSV(List<AppointmentSlot> appointments) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFile))) {
             // Write the header line first
