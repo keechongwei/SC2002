@@ -5,13 +5,13 @@ import java.util.Optional;
 
 public class Pharmacist extends Staff {
     private List<AppointmentSlot> appointments;
-    private final Inventory inventory;
+    private final InventoryManager inventory;
 
     // Primary constructor with basic authentication details
     public Pharmacist(String HospitalID, String password) {
         super(HospitalID, password);
         this.appointments = new ArrayList<>();
-        this.inventory = new Inventory("Medicine_List.csv");
+        this.inventory = new InventoryManager("Medicine_List.csv");
         loadAppointments();
     }
 
@@ -22,7 +22,7 @@ public class Pharmacist extends Staff {
         this.gender = InputValidator.getGender(gender);
         this.age = age;
         this.appointments = new ArrayList<>();
-        this.inventory = new Inventory("Medicine_List.csv");
+        this.inventory = new InventoryManager("Medicine_List.csv");
 
     }
 
