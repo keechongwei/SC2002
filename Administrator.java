@@ -50,7 +50,6 @@ public class Administrator extends Staff {
             System.out.println("(4) Approve Replenishment Requests");
             System.out.println("(5) Logout");
             choice = InputValidator.getIntegerInput("Choice: ", 1, 5);
-            System.out.println("");
 
             Administrator administrator = new Administrator("A001", "password");
 

@@ -29,16 +29,12 @@ public class StaffManager implements Manager {
         Staff staff = null;
 
         // Flag to check if found
-        boolean found = false;
 
         if (roleLetter.equals("P")) {
-            System.out.println("pharmacists");
             temp = pharmacists;
         } else if (roleLetter.equals("D")) {
-            System.out.println("d");
             temp = doctors;
         } else if (roleLetter.equals("A")) {
-            System.out.println("A");
             temp = administrators;
         } else {
             System.out.println("Invalid Hospital ID");
@@ -46,7 +42,6 @@ public class StaffManager implements Manager {
         }
 
         for (Staff tempStaff : temp) {
-            System.out.println(tempStaff.getHospitalID());
             if (tempStaff.getHospitalID().equalsIgnoreCase(hospitalID)) {
                 staff = tempStaff;
                 break;
@@ -83,7 +78,6 @@ public class StaffManager implements Manager {
 
                 String role = "";
                 String newHospitalID = "";
-                boolean changedtoDoc = false;
 
                 String name = staff.getName();
                 String gender = staff.getGender();
@@ -92,12 +86,12 @@ public class StaffManager implements Manager {
                 switch (role_choice) {
                     case 1: 
                         role = "Doctor";
-                        
                         // Check if there is a switch of role, if yes make new obj;
                         if (!(role.substring(0,1).equals(roleLetter))) {
 
                             newHospitalID = getNextID(doctors);
                             Doctor doc = new Doctor(newHospitalID, name, gender, age); 
+                            doc.setPassword((staff.getPassword()));
                             doctors.add(doc);
 
                             // Handle addition of new doc appt slots
@@ -110,10 +104,13 @@ public class StaffManager implements Manager {
                         if (!(role.substring(0,1).equals(roleLetter))) {
                             newHospitalID = getNextID(pharmacists);
                             Pharmacist pharm = new Pharmacist(newHospitalID, name, gender, age); 
+                            System.out.println(staff.getPassword());
+                            pharm.setPassword((staff.getPassword()));
+                            System.out.println(pharm.getPassword());
                             pharmacists.add(pharm);
-
+                            
                             // If remove doctor, remove appts
-                            if(roleLetter.equals("D")) {
+                            if(roleLetter.equalsIgnoreCase("D")) {
                                 doctorHandling((Doctor)staff, false);
                             }
                         } 
@@ -124,10 +121,11 @@ public class StaffManager implements Manager {
                         if (!(role.substring(0,1).equals(roleLetter))) {
                             newHospitalID = getNextID(administrators);
                             Administrator admin = new Administrator(newHospitalID, name, gender, age); 
+                            admin.setPassword((staff.getPassword()));
                             administrators.add(admin);
 
                             // If remove doctor, remove appts
-                            if(roleLetter.equals("D")) {
+                            if(roleLetter.equalsIgnoreCase("D")) {
                                 doctorHandling((Doctor)staff, false);
                             }
                         } 
@@ -186,6 +184,7 @@ public class StaffManager implements Manager {
                 break;
         }
         
+
         StaffCSVHandler.writeCSV();        
     }
 
@@ -202,7 +201,6 @@ public class StaffManager implements Manager {
             // If still have pending appointments for the doctor, stop removal, return false
             return true;
         }
-
     }
 
     private static String getNextID(List<? extends Staff> objList) {
