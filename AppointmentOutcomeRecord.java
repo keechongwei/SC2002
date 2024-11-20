@@ -3,7 +3,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * An object meant to store vital information of every appointment
+ * An object meant to store vital information of the appointment outcome
  * @author SCSKGroup2
  * @version 1.0
  * @since 2024-11-21

@@ -2,13 +2,40 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * AppointmentSlot meant to contain important information of every appointment
+ * @author SCSKGroup2
+ * @version 1.0
+ * @since 2024-11-21
+ */
 public class AppointmentSlot {
+    /*
+     * Date of Appointment
+     */
     private LocalDate date;
+    /*
+     * Time of Appointment
+     */
     private LocalTime time;
+    /*
+     * Status of AppointmentSlot
+     */
     private AppointmentStatus status;
+    /*
+     * Unique appointment ID
+     */
     private String appointmentID;
+    /*
+     * Unique doctor ID
+     */
     private String doctorID;
+    /*
+     * Unique patient ID
+     */
     private String patientID;
+    /*
+     * AppointmentOutcomeRecord object
+     */
     private AppointmentOutcomeRecord outcome;
 
     //  for constructing appointments from scratch?
