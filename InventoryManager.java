@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Inventory {
+public class InventoryManager implements Manager {
     public static List<Medication> listOfMedications;
     public static int lastRequestId = 0;
 
