@@ -20,7 +20,6 @@ public class AppointmentSlot {
         this.patientID = patientID;
         this.outcome = null;
         this.appointmentID = "APT" + String.valueOf(AppointmentManager.nextAppointmentID);
-        AppointmentManager.addAppointment(this); 
     }
 
     // for constructing appointments from CSV
@@ -119,4 +118,5 @@ public class AppointmentSlot {
         // Combine all attributes into a CSV string
         return dateString + ";" + timeString + ";" + appointmentID + ";" + doctorID + ";" + patientID + ";" + status + ";" + outcomeString;
     }
+
 }
