@@ -3,7 +3,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppointmentManager {
+public class AppointmentManager implements Manager{
     public static List<AppointmentSlot> appointmentSlotArray = new ArrayList<>();
     // decides how many slots will there be in a day
     public static int numberofSlots = 10;
@@ -100,7 +100,7 @@ public class AppointmentManager {
     }
 
     // initialises appointment array
-    public static void initialiseAppointments() {
+    public static void initialise() {
         if (!((AppointmentCSVHandler.csvFile).exists()) || (AppointmentCSVHandler.csvFile).length() == 0) {
             // File doesn't exist or is empty, create daily appointments
             System.out.println("appointments.csv is empty or missing. Generating daily appointments...");

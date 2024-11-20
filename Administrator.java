@@ -87,8 +87,8 @@ public class Administrator extends Staff {
         ///System.out.println("Filtered Staff List:");
         //admin.printDoubleList(filteredStaffs);
 
-        AppointmentManager.initialiseAppointments();
-        StaffManager.initialiseStaff();
+        AppointmentManager.initialise();
+        StaffManager.initialise();
         admin.manageStaff();
 
         //admin.manageInventory();

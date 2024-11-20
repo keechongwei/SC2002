@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class StaffManager {
+public class StaffManager implements Manager {
     static List<Pharmacist> pharmacists = new ArrayList<Pharmacist>();
     static List<Administrator> administrators = new ArrayList<Administrator>();
     static List<Doctor> doctors = new ArrayList<Doctor>();
@@ -10,7 +10,7 @@ public class StaffManager {
 
     static Scanner input_scanner = new Scanner(System.in);
 
-    public static void initialiseStaff() {
+    public static void initialise() {
         if (!((StaffCSVHandler.csvFile).exists()) || (StaffCSVHandler.csvFile).length() == 0) {
             // File doesn't exist or is empty, create daily appointments
             System.out.println("Staff_List.csv is empty or missing.");

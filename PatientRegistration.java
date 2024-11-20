@@ -1,5 +1,4 @@
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
 public class PatientRegistration {
     static Scanner sc = new Scanner(System.in);
@@ -40,40 +39,16 @@ public class PatientRegistration {
     }
     
     public static void register() {
-            String name = queryInput("===[1/6] NAME ===", input -> !input.trim().isEmpty(), "Name cannot be empty.");
-            String dob = queryInput("===[2/6] DATE OF BIRTH (YYYY-MM-DD) ===", 
-                                    input -> input.matches("\\d{4}-\\d{2}-\\d{2}"), 
-                                    "Invalid date format. Please use YYYY-MM-DD.");
-            String gender = queryForGender();
-            String bloodType = queryInput("===[4/6] BLOOD TYPE ===", 
-                                          input -> Pattern.matches("^(A|B|AB|O)[+-]$", input.toUpperCase()), 
-                                          "Invalid blood type. Use A+, A-, B+, etc.");
-            String email = queryInput("===[5/6] EMAIL ===", 
-                                      input -> input.matches("^[\\w.%+-]+@[\\w.-]+\\.[A-Za-z]{2,}$"), 
-                                      "Invalid email format.");
-            String phoneNumber = queryInput("===[6/6] PHONE NUMBER ===", 
-                                            input -> input.matches("\\d{8,15}"), 
-                                            "Invalid phone number. Use 8-15 digits only.");
-            
+            String name = InputValidator.getNonEmptyString("=== [1/6] NAME ===\n");
+            String dob = InputValidator.getDateInput("=== [2/6] DATE OF BIRTH ===\n").toString();
+            String gender = InputValidator.getGender("=== [3/6] GENDER ===\n");
+            String bloodType = InputValidator.getBloodType("=== [4/6] BLOOD TYPE ===\n");
+            String email = InputValidator.getEmailAddress("===[5/6] EMAIL ===\n");
+            String phoneNumber = InputValidator.getPhoneNumber("===[6/6] PHONE NUMBER ===\n");
             String patientID = "P100" + PatientManager.nextPatientNumber;
             Patient p = new Patient(patientID, name, dob, gender, bloodType, phoneNumber, email);
             PatientManager.addPatient(p);
             System.out.println("=Patient Successfully Created!");
         }
 
-    public static String queryInput(String prompt, InputValidator validator, String errorMessage) {
-        while (true) {
-            System.out.println(prompt);
-            String input = sc.nextLine().trim();
-            if (validator.isValid(input)) {
-                return input;
-            }
-            System.out.println(errorMessage);
-        }
-    }
-
-    @FunctionalInterface
-    interface InputValidator {
-        boolean isValid(String input);
-    }
 }

@@ -14,20 +14,20 @@ public class Login {
     // function used to initialise patient, staff, medicine data
     public static void initialise(){
         try{
-            AppointmentManager.initialiseAppointments();
+            AppointmentManager.initialise();
         } catch (Exception e){
             System.out.println("Unable to Initialise Appointments!");
             e.printStackTrace(); 
         }
         try{
-            PatientManager.initialisePatients();
+            PatientManager.initialise();
             System.out.println("Patients Information Retrieved Successfully!");
         } catch (Exception e){
             System.out.println("Unable to Retrieve Patients Information!");
             e.printStackTrace();
         }
         try{
-            StaffManager.initialiseStaff();
+            StaffManager.initialise();
             System.out.println("Staff Information Retrieved Successfully!");
             //System.out.println(staffs);
         } catch (Exception e){
