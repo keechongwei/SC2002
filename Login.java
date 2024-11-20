@@ -44,7 +44,7 @@ public class Login {
     }
     public static void IDCheck(String ID){
         for(Patient p : PatientManager.allPatients ){
-            if (p.getHospitalID().equals(ID)){
+            if (p.getHospitalID().equalsIgnoreCase(ID)){
                 validID = true;
             } 
         }
@@ -54,12 +54,12 @@ public class Login {
             } 
         }
         for(Pharmacist ph : StaffManager.pharmacists){
-            if (ph.getHospitalID().equals(ID)){
+            if (ph.getHospitalID().equalsIgnoreCase(ID)){
                 validID = true;
             } 
         }
         for(Administrator adm : StaffManager.administrators){
-            if (adm.getHospitalID().equals(ID)){
+            if (adm.getHospitalID().equalsIgnoreCase(ID)){
                 validID = true;
             } 
         }
@@ -67,23 +67,15 @@ public class Login {
     public static void passwordCheck(String ID,String password){
         Scanner sc = new Scanner(System.in);
         for(Patient p : PatientManager.allPatients ){
-            if (p.getHospitalID().equals(ID)){    
+            if (p.getHospitalID().equalsIgnoreCase(ID)){    
                 user = (Patient) p;    
                 if (p.getPassword().equals("password")){
-                    System.out.println("Change Your Password: ");
-                    password = sc.nextLine();
-                    while(password.equalsIgnoreCase("password")){
-                        System.out.println("Change Your Password. Your New Password Cannot Be Password: ");
-                        password = sc.nextLine();
-                    }
-                    System.out.println("Verify Your New Password: ");
-                    String check = sc.nextLine();
+                    password = InputValidator.getPassword("First Time Login! Change Your Password (Ensure at least 8 characters and 1 number): ");
+                    String check = InputValidator.getPassword("Verify Your New Password: ");
                     while (!check.equals(password) || password.length() == 0 ){
                         System.out.println("Password Change Failed.");
-                        System.out.println("Change Your Password: ");
-                        password = sc.nextLine();
-                        System.out.println("Verify Your New Password: ");
-                        check = sc.nextLine();  
+                        password = InputValidator.getPassword("Change Your Password (Ensure at least 8 characters and 1 number): ");
+                        check = InputValidator.getPassword("Verify Your New Password: ")  ;
                     }
                     validPassword = true;
                     p.setPassword(password);
@@ -98,23 +90,15 @@ public class Login {
             }
         }
         for(Doctor d : StaffManager.doctors){
-            if (d.getHospitalID().equals(ID)){
+            if (d.getHospitalID().equalsIgnoreCase(ID)){
                 user = (Doctor) d;        
                 if (d.getPassword().equals("password")){
-                    System.out.println("Change Your Password: ");
-                    password = sc.nextLine();
-                    while(password.equalsIgnoreCase("password")){
-                        System.out.println("Change Your Password. Your New Password Cannot Be Password: ");
-                        password = sc.nextLine();
-                    }
-                    System.out.println("Verify Your New Password: ");
-                    String check = sc.nextLine();
+                    password = InputValidator.getPassword("First Time Login! Change Your Password (Ensure at least 8 characters and 1 number): ");
+                    String check = InputValidator.getPassword("Verify Your New Password: ");
                     while (!check.equals(password) || password.length() == 0 ){
                         System.out.println("Password Change Failed.");
-                        System.out.println("Change Your Password: ");
-                        password = sc.nextLine();
-                        System.out.println("Verify Your New Password: ");
-                        check = sc.nextLine();  
+                        password = InputValidator.getPassword("Change Your Password (Ensure at least 8 characters and 1 number): ");
+                        check = InputValidator.getPassword("Verify Your New Password: ")  ;
                     }
                     validPassword = true;
                     d.setPassword(password);
@@ -160,23 +144,15 @@ public class Login {
             }
         }
         for(Administrator adm : StaffManager.administrators){
-            if (adm.getHospitalID().equals(ID)){   
+            if (adm.getHospitalID().equalsIgnoreCase(ID)){   
                 user = (Administrator) adm;      
                 if (adm.getPassword().equals("password")){
-                    System.out.println("Change Your Password: ");
-                    password = sc.nextLine();
-                    while(password.equalsIgnoreCase("password")){
-                        System.out.println("Change Your Password. Your New Password Cannot Be Password: ");
-                        password = sc.nextLine();
-                    }
-                    System.out.println("Verify Your New Password: ");
-                    String check = sc.nextLine();
+                    password = InputValidator.getPassword("First Time Login! Change Your Password (Ensure at least 8 characters and 1 number): ");
+                    String check = InputValidator.getPassword("Verify Your New Password: ");
                     while (!check.equals(password) || password.length() == 0 ){
                         System.out.println("Password Change Failed.");
-                        System.out.println("Change Your Password: ");
-                        password = sc.nextLine();
-                        System.out.println("Verify Your New Password: ");
-                        check = sc.nextLine();  
+                        password = InputValidator.getPassword("Change Your Password (Ensure at least 8 characters and 1 number): ");
+                        check = InputValidator.getPassword("Verify Your New Password: ")  ;
                     }
                     validPassword = true;
                     adm.setPassword(password);
