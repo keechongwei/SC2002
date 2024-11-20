@@ -12,7 +12,7 @@ public class Login {
     static User user;
     
     // function used to initialise patient, staff, medicine data
-    private static void initialise(){
+    public static void initialise(){
         try{
             AppointmentManager.initialiseAppointments();
         } catch (Exception e){
@@ -42,7 +42,7 @@ public class Login {
             e.printStackTrace();
         }
     }
-    private static void IDCheck(String ID){
+    public static void IDCheck(String ID){
         for(Patient p : PatientManager.allPatients ){
             if (p.getHospitalID().equals(ID)){
                 validID = true;
@@ -64,7 +64,7 @@ public class Login {
             } 
         }
     }
-    private static void passwordCheck(String ID,String password){
+    public static void passwordCheck(String ID,String password){
         Scanner sc = new Scanner(System.in);
         for(Patient p : PatientManager.allPatients ){
             if (p.getHospitalID().equals(ID)){    
@@ -192,7 +192,7 @@ public class Login {
         }
     }
 
-    private static void login(boolean loggedIn, Scanner sc){
+    public static void login(boolean loggedIn, Scanner sc){
         while(!loggedIn){
             System.out.println("=== HOSPITAL MANAGEMENT SYSTEM LOGIN PAGE ===");
             System.out.println("Enter Hospital ID: ");
@@ -216,6 +216,7 @@ public class Login {
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
         initialise(); // loads in data from csv
+        PatientRegistration.printMenu();
         login(loggedIn,sc);
         user.printMenu();
         PatientManagerCSVHandler.writeCSV();

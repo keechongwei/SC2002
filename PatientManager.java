@@ -3,6 +3,7 @@ import java.util.*;
 
 public class PatientManager {
     public static List<Patient> allPatients= new ArrayList<>();
+    public static int nextPatientNumber = 1;
 
     // Add new patient
     public static void addPatient(Patient patient) {
