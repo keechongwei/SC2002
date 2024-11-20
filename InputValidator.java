@@ -146,7 +146,7 @@ public class InputValidator {
             prompt,
             PASSWORD_PATTERN,
             "Invalid Password. Ensure at least 8 characters and 1 number"
-        )
+        );
     }
     /**
      * Validates and gets a doctor ID
