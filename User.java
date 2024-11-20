@@ -23,6 +23,6 @@ public class User {
 
 	public void printMenu(){
 		System.out.println("Unknown User Detected. Exiting Program.");
-	}
+	};
 
 }

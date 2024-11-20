@@ -9,7 +9,7 @@ public class StaffManager implements Manager {
     static boolean headerline = true;
 
     static Scanner input_scanner = new Scanner(System.in);
-    //hello
+
     public static void initialise() {
         if (!((StaffCSVHandler.csvFile).exists()) || (StaffCSVHandler.csvFile).length() == 0) {
             // File doesn't exist or is empty, create daily appointments

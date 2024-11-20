@@ -37,14 +37,8 @@ public class PatientManagerCSVHandler {
                 String gender = patientFields[3];
                 String bloodType = patientFields[4];
                 String emailAddress = patientFields[5];
-                String password = "";
                 String phoneNumber = (patientFields.length > 6) ? patientFields[6] : "";
-                if (patientFields[9].equals("password")){
-                    password = "password";
-                }
-                else{
-                    password = patientFields[9];
-                }
+                String password = (patientFields.length > 7) ? patientFields[9] : patientFields[7];
                 ArrayList<String> pastDiagnoses = new ArrayList<>();
                     if (patientFields.length > 7 && !patientFields[7].isEmpty()) {
                         pastDiagnoses.addAll(Arrays.asList(patientFields[7].split(LIST_DELIMITER)));
@@ -69,7 +63,7 @@ public class PatientManagerCSVHandler {
     public static void writeCSV() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile))) {
             // Write header
-            writer.write("Patient ID;Name;Date of Birth;Gender;Blood Type;Email;Phone;Past Diagnoses;Past Treatments");
+            writer.write("Patient ID;Name;Date of Birth;Gender;Blood Type;Email;Phone;Past Diagnoses;Past Treatments;Password");
             writer.newLine();
 
             // Write each patient record
@@ -105,8 +99,9 @@ public class PatientManagerCSVHandler {
             ArrayList<String> treatments = patient.getMedicalRecord().getPastTreatments();
             sb.append(treatments != null && !treatments.isEmpty() 
                      ? String.join(LIST_DELIMITER, treatments) 
-                     : "");
-    
+                     : "").append(CSV_DELIMITER);
+            
+            sb.append(patient.getPassword());
             return sb.toString();
         } catch (Exception e) {
             throw new RuntimeException("Error converting patient to CSV: " + e.getMessage(), e);
