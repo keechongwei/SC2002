@@ -305,4 +305,9 @@ public class Pharmacist extends Staff {
         // Check for any low stock alerts and handle replenishment
         List<Medication> lowStockMeds = inventory.updateAllAlertLevels();
     }
+
+    public String toCSV() {
+        // Combine all attributes into a CSV string
+        return super.getHospitalID() + ";" + super.getPassword() + ";" + name + ";" + "Pharmacist" + ";" + gender + ";" + age;
+    }
 }
