@@ -5,14 +5,19 @@ import java.util.List;
 
 public class AppointmentManager implements Manager{
     public static List<AppointmentSlot> appointmentSlotArray = new ArrayList<>();
-    // decides how many slots will there be in a day
-    public static int numberofSlots = 10;
+    public static int numberOfSlots = 10;
     public static int nextAppointmentID = 1;
 
+    /**
+     * Generates AppointmentSlots for Doctors if appointments.csv is not populated
+     * Generates hourly slots for each Doctor in the list. The number of slots depends on the value of the attribute numberOfSlots in AppointmentManager
+     * @param doctors List of Doctors initialised from Staff.csv
+     * @return void
+     */
     public static void makeDailyAppointments(List<Doctor> doctors){
         // hour determines starting hour
         int hour = 9;
-        for(int i = 0; i < numberofSlots; i++){
+        for(int i = 0; i < numberOfSlots; i++){
             String dateString = DateTimeFormatter.ISO_LOCAL_DATE.format(LocalDate.now());
             String timeString = "";
             if (hour < 10){
@@ -30,6 +35,14 @@ public class AppointmentManager implements Manager{
             }
         }
     
+    /**
+     * Removes AppointmentSlots if a Doctor is removed
+     * If AppointmentSlot is AVAILABLE, it is removed from the list of AppointmentSlots in AppointmentManager
+     * If AppointmentSlot is PENDING, it is marked as CANCELLED
+     * appointments.csv is updated
+     * @param d Doctor to be removed
+     * @return void
+     */
     public static void removeAppointments(Doctor d) {
             appointmentSlotArray.removeIf(slot -> 
                 slot.getDoctorID().equals(d.getHospitalID()) && slot.getStatus() == AppointmentStatus.AVAILABLE
@@ -44,14 +57,25 @@ public class AppointmentManager implements Manager{
             AppointmentCSVHandler.writeCSV(appointmentSlotArray);
         }
         
-    
+    /**
+     * Adds an AppointmentSlot to List Of AppointmentManager 
+     * Writes to appointments.csv, increments nextAppointmentID in AppointmentManager 
+     * Used by makeDailyAppointments
+     * @param slot AppointmentSlot to be added
+     * @return void
+     */
     public static void addAppointment(AppointmentSlot slot) {
         appointmentSlotArray.add(slot);
         AppointmentCSVHandler.appendAppointmentToCSV(slot);
         nextAppointmentID++;
     }
 
-    // for patients to see pending appointments, get all slots depending on DoctorID
+    /**
+     * Returns a List of AppointmentSlots
+     * Depending if PatientID of AppointmentSlot matches 
+     * @param patientID PatientID to check AppointmentSlot against
+     * @return List of AppointmentSlots that match PatientID
+     */
     public static List<AppointmentSlot> getAppointmentsByPatient(String patientID) {
         List<AppointmentSlot> result = new ArrayList<>();
         for (AppointmentSlot slot : appointmentSlotArray) {
@@ -62,7 +86,12 @@ public class AppointmentManager implements Manager{
         return result;
     }
 
-    // for doctors to see pending appointments, get all slots depending on DoctorID
+    /**  
+     * Returns a List of AppointmentSlots
+     * Depending if DoctorID of AppointmentSlot matches 
+     * @param doctorID DoctorID to check AppointmentSlot against
+     * @return List of AppointmentSlots that match DoctorID
+     */
     public static List<AppointmentSlot> getAppointmentsByDoctor(String doctorID) {
         List<AppointmentSlot> result = new ArrayList<>();
         for (AppointmentSlot slot : appointmentSlotArray) {
@@ -73,7 +102,12 @@ public class AppointmentManager implements Manager{
         return result;
     }
     
-    // for patients to schedule, get all appointments that are still available
+    /**
+     * Returns a List of AppointmentSlots
+     * Depending if AppointmentStatus of AppointmentSlot is AVAILABLE
+     * @param void
+     * @return List of AppointmentSlots that have AppointmentStatus as AVAILABLE
+     */
     public static List<AppointmentSlot> getAvailableAppointments(){
         List<AppointmentSlot> availSlots = new ArrayList<AppointmentSlot>();
         for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
@@ -83,10 +117,12 @@ public class AppointmentManager implements Manager{
         }
         return availSlots;
     }
-    public static List<AppointmentSlot> getAllAppointments() {
-        return appointmentSlotArray;
-    }
-
+    
+    /**
+     * Prints all AppointmentSlots in appointmentSlotArray of AppointmentManager
+     * @param void
+     * @return void
+     */
     public static void viewAllAppointments() {
         System.out.printf("%-5s %-12s %-8s %-10s %-10s%n", "Appointment ID.", "Date", "Time", "Doctor", "PatientID", "Status");
         System.out.println("-".repeat(50));
@@ -99,7 +135,12 @@ public class AppointmentManager implements Manager{
         
     }
 
-    // initialises appointment array
+    /**
+     * Loads in data from appointments.csv
+     * Creates appointments.csv if it doesn't exist or populates it with appointment slots if its empty
+     * @param void
+     * @return void
+     */
     public static void initialise() {
         if (!((AppointmentCSVHandler.csvFile).exists()) || (AppointmentCSVHandler.csvFile).length() == 0) {
             // File doesn't exist or is empty, create daily appointments
@@ -112,5 +153,4 @@ public class AppointmentManager implements Manager{
             AppointmentCSVHandler.loadCSV();
         }
     }
-    // Other functions for filtering by patient, status, etc.
 }
