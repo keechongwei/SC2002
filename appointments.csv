@@ -1,2 +1,6 @@
-Date;Time;Appointment ID; DoctorID; PatientID;Appointment Status; OutcomeDate | Outcome Time |  Type Of Service | Medication Name ^ Medication Status ^ Medication Dosage | Consultation Notes
+Date;Time;Appointment ID;DoctorID;PatientID;Appointment Status;OutcomeDate|Outcome Time|Type Of Service|Medication Name^Medication Status^Medication Dosage|Consultation Notes
 2024-11-17;09:00;APT1;D001;P1001;COMPLETED;2024-11-17|09:00|CONSULTATION|Ibuprofen^DISPENSED^10|null
+2024-11-17;10:00;APT2;D002;P1002;COMPLETED;2024-11-17|10:00|XRAY|null|null
+2024-11-17;11:00;APT3;D001;P1003;COMPLETED;2024-11-17|11:00|CONSULTATION|Paracetamol^DISPENSED^20|Amoxicillin^DISPENSED^15|null
+2024-11-17;12:00;APT4;D003;P1004;COMPLETED;2024-11-17|12:00|BLOOD_TEST|Paracetamol^DISPENSED^5|null
+2024-11-17;13:00;APT5;D001;P1005;SCHEDULED;null|null|CONSULTATION|null|null

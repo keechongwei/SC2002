@@ -28,7 +28,6 @@ public class BillingSystem {
         LocalDateTime date;
         TypeOfService serviceType;
         double serviceFee;
-        double consultationFee;
         Map<String, Integer> medications;
         double medicationTotal;
         double totalAmount;
@@ -49,16 +48,20 @@ public class BillingSystem {
         }
 
         public String toCSV() {
-            StringBuilder medicationsStr = new StringBuilder();
+            StringBuilder billStr = new StringBuilder();
             for (Map.Entry<String, Integer> med : medications.entrySet()) {
-                medicationsStr.append(med.getKey()).append("^").append(med.getValue()).append("|");
+                billStr.append(med.getKey()).append("^").append(med.getValue()).append("|");
             }
             
-            return String.format("%s;%s;%s;%s;%.2f;%s;%.2f;%.2f;%b",
+            return String.format("%s;%s;%s;%s;%s;%.2f;%s;%.2f;%.2f;%b",
                 billId, patientId, appointmentId,
                 date.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
-                consultationFee, medicationsStr.toString(),
-                medicationTotal, totalAmount, isPaid
+                serviceType.name(),
+                serviceFee,
+                billStr.toString(),
+                medicationTotal,
+                totalAmount,
+                isPaid
             );
         }
     }
@@ -89,14 +92,21 @@ public class BillingSystem {
                 }
                 
                 String[] parts = line.split(";");
-                if (parts.length < 10) continue;
+                if (parts.length < 9) continue;
 
-                TypeOfService serviceType = TypeOfService.valueOf(parts[4]);
-                Bill bill = new Bill(parts[1], parts[2], LocalDateTime.parse(parts[3]), serviceType);
+                
+                TypeOfService serviceType = TypeOfService.valueOf(parts[4].trim());
+                Bill bill = new Bill(
+                    parts[1],
+                    parts[2],
+                    LocalDateTime.parse(parts[3]),
+                    serviceType
+                );
                 bill.billId = parts[0];
                 bill.serviceFee = Double.parseDouble(parts[5]);
                 
-                if (!parts[6].isEmpty()) {
+                // Parse medications
+                if (parts[6] != null && !parts[6].isEmpty()) {
                     String[] medStrings = parts[6].split("\\|");
                     for (String medStr : medStrings) {
                         if (!medStr.isEmpty()) {
@@ -110,7 +120,9 @@ public class BillingSystem {
                 
                 bill.medicationTotal = Double.parseDouble(parts[7]);
                 bill.totalAmount = Double.parseDouble(parts[8]);
-                bill.isPaid = Boolean.parseBoolean(parts[9]);
+                if (parts.length > 9) {
+                    bill.isPaid = Boolean.parseBoolean(parts[9]);
+                }
                 
                 bills.add(bill);
             }
@@ -130,11 +142,7 @@ public class BillingSystem {
                 }
                 
                 String[] parts = line.split(";");
-                if (parts.length < 7) continue; 
-                
-                for (int i = 0; i < parts.length; i++) {
-                    parts[i] = parts[i].trim();
-                }
+                if (parts.length < 7) continue;
                 
                 if (!"COMPLETED".equalsIgnoreCase(parts[5])) {
                     continue;
@@ -152,28 +160,31 @@ public class BillingSystem {
                 );
 
                 String[] outcomeInfo = parts[6].split("\\|");
-                TypeOfService serviceType = TypeOfService.CONSULTATION; // Default
-                if (outcomeInfo.length >= 3) {
-                    try {
-                        serviceType = TypeOfService.valueOf(outcomeInfo[2].trim());
-                    } catch (IllegalArgumentException e) {
-                        System.out.println("Invalid service type found: " + outcomeInfo[2]);
-                    }
+                if (outcomeInfo.length < 3) continue;
+
+                TypeOfService serviceType;
+                try {
+                    serviceType = TypeOfService.valueOf(outcomeInfo[2].trim());
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid service type found: " + outcomeInfo[2]);
+                    continue;
                 }
                 
                 Bill bill = new Bill(patientId, appointmentId, appointmentDateTime, serviceType);
                 
-                 // Parse medications
-                 if (outcomeInfo.length >= 4) {
-                    String medicationInfo = outcomeInfo[3];
-                    String[] medInfo = medicationInfo.split("\\^");
-                    if (medInfo.length >= 3 && "DISPENSED".equals(medInfo[1])) {
-                        String medicationName = medInfo[0];
-                        try {
-                            int dosage = Integer.parseInt(medInfo[2]);
-                            bill.medications.put(medicationName, dosage);
-                        } catch (NumberFormatException e) {
-                            System.out.println("Error parsing dosage for " + medicationName + ": " + medInfo[2]);
+                // Parse medications
+                if (outcomeInfo.length >= 4 && !outcomeInfo[3].equals("null")) {
+                    String[] medications = outcomeInfo[3].split("\\|");
+                    for (String medication : medications) {
+                        String[] medInfo = medication.split("\\^");
+                        if (medInfo.length >= 3 && "DISPENSED".equals(medInfo[1])) {
+                            String medicationName = medInfo[0];
+                            try {
+                                int dosage = Integer.parseInt(medInfo[2]);
+                                bill.medications.put(medicationName, dosage);
+                            } catch (NumberFormatException e) {
+                                System.out.println("Error parsing dosage for " + medicationName);
+                            }
                         }
                     }
                 }
@@ -198,15 +209,12 @@ public class BillingSystem {
     private void calculateTotals(Bill bill) {
         double medicationTotal = 0.0;
         for (Map.Entry<String, Integer> med : bill.medications.entrySet()) {
-            double price = MEDICATION_PRICES.getOrDefault(med.getKey(), 1.0);
-            double subtotal = price * med.getValue();
-            medicationTotal += subtotal;
-            System.out.println(String.format("Calculating %s: %d units * $%.2f = $%.2f", 
-                med.getKey(), med.getValue(), price, subtotal));  // Debug line
+            double price = MEDICATION_PRICES.getOrDefault(med.getKey(), 0.0);
+            medicationTotal += price * med.getValue();
         }
         
         bill.medicationTotal = medicationTotal;
-        bill.totalAmount = bill.consultationFee + medicationTotal;
+        bill.totalAmount = bill.serviceFee + medicationTotal;
     }
 
     private void saveBills() {
@@ -377,4 +385,6 @@ public class BillingSystem {
             }
         }
     }
+    
 }
+

@@ -30,7 +30,7 @@ public class Patient extends User{
 
     public void printMenu(){
         int choice = 0;
-        while(choice != 9){
+        while(choice != 10){
             System.out.println("=== PATIENT MENU, ENTER CHOICE ===");
             System.out.println("(1) View Medical Record");
             System.out.println("(2) Update Personal Information");
