@@ -42,7 +42,7 @@ public class Patient extends User{
             System.out.println("(8) View Past Appointment Outcome Records");
             System.out.println("(9) View and Process Bills");
             System.out.println("(10) Logout");
-            choice = sc.nextInt();
+            choice = InputValidator.getIntegerInput("\nEnter selection from 1-10: ", 1, 10);
 
             switch(choice){
                 case 1:
@@ -101,13 +101,13 @@ public class Patient extends User{
 
             switch (choice) {
                 case 1: //update phone number
-                    String newPhoneNumber = InputValidator.getPhoneNumber("Enter new phone number: ");
+                    String newPhoneNumber = InputValidator.getPhoneNumber("Enter new phone number (8-12 digits): ");
                     this.medicalRecord.setPhoneNumber(newPhoneNumber);
                     System.out.println("Phone number updated. New phone number: "  + this.medicalRecord.getPhoneNumber());
                     break;
 
                 case 2:
-                    String newEmail = InputValidator.getEmailAddress("Enter new email address: ");
+                    String newEmail = InputValidator.getEmailAddress("Enter new email address (eg. john.doe@example.com): ");
                     this.medicalRecord.setEmailAddress(newEmail);
                     System.out.println("Email address updated. New email address: "  + this.medicalRecord.getEmailAddress());
                     break;
@@ -373,14 +373,7 @@ public class Patient extends User{
         }
 
         //select appt to cancel
-        System.out.print("\nSelect appointment to cancel (enter number): ");
-        int choice = sc.nextInt();
-        sc.nextLine();
-
-        if(choice<1 || choice>curSlots.size()) {
-            System.out.println("Invalid selection.");
-            return;
-        }
+        int choice = InputValidator.getIntegerInput("\nSelect appointment to cancel (enter number): ", 1, curSlots.size());
 
         AppointmentSlot selectedSlot = curSlots.get(choice - 1);
 
