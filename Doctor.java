@@ -383,7 +383,7 @@ public class Doctor extends Staff{
         System.out.print("The prescribed medication of this diagnosis for the patient:");
         String medicineType = sc.nextLine().trim();
         while (!validMedication){
-            for (Medication med : Inventory.listOfMedications){
+            for (Medication med : InventoryManager.listOfMedications){
                 if (medicineType.equalsIgnoreCase(med.getMedicationName())){
                     validMedication = true;
                     break;
@@ -395,7 +395,7 @@ public class Doctor extends Staff{
             System.out.println("Invalid Medication");
             System.out.println("Types Of Medication:");
             System.out.println("----------------------------------------------"); 
-            for (Medication med : Inventory.listOfMedications){
+            for (Medication med : InventoryManager.listOfMedications){
                 System.out.println(med.getMedicationName());
             }
             System.out.println("----------------------------------------------"); 
