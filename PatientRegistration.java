@@ -31,7 +31,7 @@ public class PatientRegistration {
         String phoneNumber = InputValidator.getPhoneNumber("===[6/6] PHONE NUMBER ===\n");
         
         String patientID = "P" + String.format("%04d", PatientManager.nextPatientNumber);
-        Patient p = new Patient(patientID, name, dob, gender, bloodType, phoneNumber, email);
+        Patient p = new Patient(patientID, name, dob, gender, bloodType, phoneNumber, email, "password");
         PatientManager.addPatient(p);
         System.out.println("Patient Successfully Created!\n");
     }
