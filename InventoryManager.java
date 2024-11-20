@@ -37,7 +37,7 @@ public class Inventory {
 
     public Inventory(String csvFilePath) {
         listOfMedications = new ArrayList<>();
-        InventoryCSVHandler.loadMedicationsFromCSV(csvFilePath);
+        InventoryCSVHandler.loadCSV();
     }
 
     public Medication getMedication(String medicationName) {
@@ -65,7 +65,7 @@ public class Inventory {
 	public void addNewMedication(String medName, int stock, int lowStockValue) {
 		Medication medication = new Medication(medName, stock, lowStockValue);
 		listOfMedications.add(medication);
-		InventoryCSVHandler.writeCSVFile();
+		InventoryCSVHandler.writeCSV();
 	}
 
 	public void removeMedication(String medName) {
@@ -78,7 +78,7 @@ public class Inventory {
 			}
 		}
 		this.listOfMedications = temp;
-		InventoryCSVHandler.writeCSVFile();
+		InventoryCSVHandler.writeCSV();
 	}
 
 	// add is true, remove is false
@@ -102,7 +102,7 @@ public class Inventory {
 
 		System.out.println("Updated: " + med.getMedicationName() + " with stock: " + med.getStock());
 		checker = true;
-		InventoryCSVHandler.writeCSVFile();
+		InventoryCSVHandler.writeCSV();
 		return checker;
 	}
 
@@ -127,7 +127,7 @@ public class Inventory {
                 System.out.println(); // Add blank line for readability
             }
         }
-        InventoryCSVHandler.writeCSVFile();
+        InventoryCSVHandler.writeCSV();
         return lowStockMeds;
     }
 
@@ -142,7 +142,7 @@ public class Inventory {
         List<String[]> existingRequests = InventoryCSVHandler.loadReplenishRequests();
         int newRequestId = lastRequestId + 1;
         
-        try (FileWriter fw = new FileWriter(InventoryCSVHandler.replenishRequestFile);
+        try (FileWriter fw = new FileWriter(InventoryCSVHandler.replenishFile);
              BufferedWriter bw = new BufferedWriter(fw)) {
             
             bw.write("RequestID;MedicationName;AddedAmount;Status\n");

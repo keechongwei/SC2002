@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class PatientManager {
+public class PatientManager implements Manager {
     public static List<Patient> allPatients= new ArrayList<>();
     public static int nextPatientNumber = 1;
 
@@ -61,7 +61,7 @@ public class PatientManager {
         return null;
     }
 
-    public static void initialisePatients() {
+    public static void initialise() {
         if (!((PatientManagerCSVHandler.csvFile).exists()) || (PatientManagerCSVHandler.csvFile).length() == 0) {
             // File doesn't exist or is empty, create daily appointments
             System.out.println("Patient_List.csv is empty or missing.");

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 
+=======
+import java.util.Scanner;
+>>>>>>> e0cedb1371b2668f8984a38f70eb1ad37ce0a65c
 
 public class PatientRegistration {
 
@@ -23,6 +27,7 @@ public class PatientRegistration {
     }
     
     public static void register() {
+<<<<<<< HEAD
         String name = InputValidator.getName("===[1/6] NAME ===");
         String dob = InputValidator.getDateInput("===[2/6] DATE OF BIRTH").toString();
         String gender = InputValidator.getGender("===[3/6] GENDER ===");
@@ -36,3 +41,18 @@ public class PatientRegistration {
         System.out.println("=Patient Successfully Created!");
     }
 }
+=======
+            String name = InputValidator.getNonEmptyString("=== [1/6] NAME ===\n");
+            String dob = InputValidator.getDateInput("=== [2/6] DATE OF BIRTH ===\n").toString();
+            String gender = InputValidator.getGender("=== [3/6] GENDER ===\n");
+            String bloodType = InputValidator.getBloodType("=== [4/6] BLOOD TYPE ===\n");
+            String email = InputValidator.getEmailAddress("===[5/6] EMAIL ===\n");
+            String phoneNumber = InputValidator.getPhoneNumber("===[6/6] PHONE NUMBER ===\n");
+            String patientID = "P100" + PatientManager.nextPatientNumber;
+            Patient p = new Patient(patientID, name, dob, gender, bloodType, phoneNumber, email);
+            PatientManager.addPatient(p);
+            System.out.println("=Patient Successfully Created!");
+        }
+
+}
+>>>>>>> e0cedb1371b2668f8984a38f70eb1ad37ce0a65c
