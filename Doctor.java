@@ -415,7 +415,7 @@ public class Doctor extends Staff{
                 slot.setStatus(AppointmentStatus.COMPLETED);
                 AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
                 PatientManager.addDiagnosis(id, consultationNote);
-                PatientManager.addTreatment(id, medicineType);
+                PatientManager.addTreatment(id,  serviceType + "," + medicineType);
         // Log success message
                 System.out.println("Outcome successfully recorded for Appointment ID: " + selectedAppointmentID);
                 return; // Exit the loop after successfully updating
