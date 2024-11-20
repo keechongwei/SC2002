@@ -1,18 +1,18 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InventoryCSVHandler  {
-    static String csvFilePath = "Medicine_List.csv"; // Replace with your actual CSV file path
-    static String replenishRequestFile = "Replenish_Request_List.csv"; // Replace with your actual CSV file path
-
+public class InventoryCSVHandler implements CSVHandler {
+    public static final File csvFile = new File("appointments.csv");
+    public static final File replenishFile = new File("Replenish_Request_List.csv");
     public static List<String[]> loadReplenishRequests() {
         List<String[]> requests = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(replenishRequestFile))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(replenishFile))) {
             String line;
             boolean firstLine = true;
             while ((line = br.readLine()) != null) {
@@ -35,12 +35,12 @@ public class InventoryCSVHandler  {
         return requests;
     }
 
-    public static void loadMedicationsFromCSV(String filePath) {
+    public static void loadCSV() {
     String line;
     String csvSplitBy = ";";
     Inventory.listOfMedications.clear(); // Clear existing list before loading
 
-    try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+    try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
         br.readLine(); // Skip the header line
         while ((line = br.readLine()) != null) {
             if (!line.trim().isEmpty()) {
@@ -73,7 +73,7 @@ public class InventoryCSVHandler  {
     }
 }
 
-    public static void writeCSVFile() {
+    public static void writeCSV() {
         // First, create a temporary list to store unique medications
         List<Medication> uniqueMedications = new ArrayList<>();
         for (Medication med : Inventory.listOfMedications) {
@@ -90,7 +90,7 @@ public class InventoryCSVHandler  {
         }
         
         // Now write only the unique medications to the file
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFilePath))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFile))) {
             bw.write("MedicationName;Stock;LowStockValue\n"); // Write header
             for (Medication medication : uniqueMedications) {
                 bw.write(medication.toString());
