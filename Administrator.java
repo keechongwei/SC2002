@@ -10,11 +10,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class Administrator extends Staff {
+
     enum Filter_type{Name,Role,Gender,Age}
+    enum csvField{}
+
     static List<List<String>> staffs = new ArrayList<>();
     static String staffRecordsCSV = "Staff_List_Copy.csv";
+    public static final int STAFFID = 0, PASSWORD = 1, NAME = 2, ROLE = 3, GENDER = 4, AGE = 5;
+
     static String medicineListCSV = "Medicine_List.csv";
+
     static String replenishRecordsCSV = "Replenish_Request_List.csv";
+    public static final int REQID = 0, MEDICATIONNAME = 1, ADDEDAMT = 2, STATUS = 3;
 
     Scanner input_scanner = new Scanner(System.in);
 
@@ -78,7 +85,7 @@ public class Administrator extends Staff {
         Administrator admin = new Administrator("Hospital123", "Password123");
     
         // Initialize staff details
-        //admin.printDoubleList(staffs);
+
 
         // Filter staff 
         //List<List<String>> filteredStaffs = admin.filterStaff(Filter_type.Name, "John");
@@ -100,16 +107,6 @@ public class Administrator extends Staff {
 
     private static void initialise_staff_details(){
         boolean headerline = true;
-        // Scanner scanner = new Scanner(staffRecordsFile);
-        // while (scanner.hasNextLine()) {
-        //     if(headerline){
-        //         headerline = false;
-        //         getRecordFromLine(scanner.nextLine());
-        //     }
-        //     else{
-        //         staffs.add(getRecordFromLine(scanner.nextLine()));
-        //     }
-        // }
         List<String> temp = readCSVFile(staffRecordsCSV);
 
             // Loop through the lines, skipping the header
@@ -132,18 +129,27 @@ public class Administrator extends Staff {
 	public static List<List<String>> filterStaff(Filter_type filter_type) {        
         if (filter_type != Filter_type.Age) {System.out.println("Please enter a valid integer value for age");}
 
+        System.out.print("Size of staff ");
+        System.out.println(staffs.size());
+
         List<List<String>> filteredStaffs = new ArrayList<List<String>>(staffs);
+
+        System.out.print("Size of filtered ");
+        System.out.println(filteredStaffs.size());
+
         Collections.sort(filteredStaffs, new Comparator<List<String>>() {
             @Override
             public int compare(List<String> staff1, List<String> staff2) {
-                int age1 = Integer.parseInt(staff1.get(4)); // Assuming age is at index 4
-                int age2 = Integer.parseInt(staff2.get(4));
+                int age1 = Integer.parseInt(staff1.get(AGE)); // Assuming age is at index 4
+                int age2 = Integer.parseInt(staff2.get(AGE));
                 return Integer.compare(age1, age2);
             }
         });
 
+        System.out.print("Size of filtered 2");
+        System.out.println(filteredStaffs.size());
+
         return filteredStaffs;
-		//throw new UnsupportedOperationException();
 	}
 
     // For sorting staff by age
@@ -154,7 +160,7 @@ public class Administrator extends Staff {
         List<List<String>> filteredStaffs = new ArrayList<>();
 
         for(int i = 0; i<staffs.size();i++){
-            int temp = Integer.parseInt(staffs.get(i).get(4));
+            int temp = Integer.parseInt(staffs.get(i).get(AGE));
             
             if (temp == age){
                 filteredStaffs.add(staffs.get(i));
@@ -162,7 +168,6 @@ public class Administrator extends Staff {
         }
 
         return filteredStaffs;
-		//throw new UnsupportedOperationException();
 	}
 
     // For filtering staff by name role and gender
@@ -184,12 +189,11 @@ public class Administrator extends Staff {
         }
         
         switch (filterType){
-            case Name: index = 2; break;
-            case Role: index = 3; break;
-            case Gender: index = 4; break;
+            case Name: index = NAME; break;
+            case Role: index = ROLE; break;
+            case Gender: index = GENDER; break;
             default: index = -1; break;
         };
-
 
         if (index == -1) {
             System.out.println("Invalid filter type for String value.");
@@ -218,7 +222,7 @@ public class Administrator extends Staff {
 
 	public void manageStaff() {
 
-        initialise_staff_details();
+        if(staffs.size() == 0) {initialise_staff_details();}
 
         // Search by ID
         System.out.println("=== Staff Manager ===");
@@ -227,9 +231,18 @@ public class Administrator extends Staff {
         System.out.println("2 - Remove Staff");
         System.out.println("3 - Update Staff");
         System.out.println("4 - Add Staff");
+        System.out.println();
 
-        int input = input_scanner.nextInt();
-        input_scanner.nextLine(); // Clear newline
+        System.out.print("Choice: ");
+        int input = 0;
+        try {
+            input = input_scanner.nextInt();
+            input_scanner.nextLine();
+        } catch (Exception e) {
+            System.out.println("Invalid choice");
+        }
+
+        System.out.println(staffs.size());
 
         switch (input) {
             case 1: 
@@ -241,45 +254,35 @@ public class Administrator extends Staff {
                 System.out.println("4 - Age (Ascending)");
                 System.out.println("5 - Gender");
                 System.out.println("6 - View All");
+                System.out.println();
 
-                int manageStaff_choice = input_scanner.nextInt();
-                input_scanner.nextLine(); // Clear newline
+                int manageStaff_choice = InputValidator.getIntegerInput("Choice: ", 1 , 6);                
 
                 // Filtered List of Staffs
                 List<List<String>> filteredStaffs = new ArrayList<>();
 
                 switch (manageStaff_choice) {
                     case 1:
-                        System.out.println("Name: ");
-                        String searchByname = input_scanner.nextLine();
+                        String searchByname = InputValidator.getName("Name: ");
 
                         filteredStaffs = Administrator.filterStaff(Filter_type.Name, searchByname);
                         break;
 
                     case 2:
-                        System.out.println("Pick the Role: ");
-                        System.out.println("1 - Doctor");
-                        System.out.println("2 - Pharmacist");
-                        System.out.println("3 - Administrator");
-                        int role_choice = input_scanner.nextInt();
-                        input_scanner.nextLine();
-                        String role = "";
-                    
-                        switch (role_choice) {
-                            case 1: role = "Doctor"; break;
-                            case 2: role = "Pharmacist"; break;
-                            case 3: role = "Administrator"; break;
-                            default: System.out.println("Invalid role choice."); break;
-                        }
-
+                        String role = queryForRole();
+                        if (role == null) {return;}
                         filteredStaffs = Administrator.filterStaff(Filter_type.Role, role);
                         break;
 
                     case 3:
                         System.out.println("Age: ");
-                        int searchByAge = input_scanner.nextInt();
+                        int searchByAge = 0;
+                        try {searchByAge = input_scanner.nextInt(); 
+                        } catch (Exception e) {
+                            System.out.println("Invalid Age");
+                        }
                         input_scanner.nextLine();
-
+    
                         filteredStaffs = Administrator.filterStaff(Filter_type.Age, searchByAge);
                         break;
 
@@ -288,48 +291,47 @@ public class Administrator extends Staff {
                         break;
 
                     case 5:
-                        System.out.println("Gender: ");
-                        String gender_choice = input_scanner.nextLine();
-
+                        String gender_choice = queryForGender();
+                        if (gender_choice == null) {return;}
                         filteredStaffs = Administrator.filterStaff(Filter_type.Gender, gender_choice);
                         break;    
         
                     case 6:
+                        printDoubleList(filteredStaffs);
                         filteredStaffs = Administrator.filterStaff(Filter_type.Age);
                         break;
 
                     default:
                         System.out.println("Invalid Option.");
-                        break;
+                        return;
                 }
 
                 if (filteredStaffs.size() == 0) {
                     System.out.println("None found.");
                 } else {
+                    System.out.println(filteredStaffs.size() + " Found: ");
                     Administrator.printDoubleList(filteredStaffs);
+                    filteredStaffs.clear();
                 }
                 break;
             case 2: removeStaff(); break;
             case 3: StaffManager.updateStaff(); break;
             case 4: addStaff(); break;
-            default: System.out.println("1 to 3 you dummy, gtfo"); break;
+            default: System.out.println("1 to 3 you dummy, gtfo"); return;
         }
-
-		//throw new UnsupportedOperationException();
 	}
     
     private void addStaff() {
         System.out.println("Enter new staff details:");
         System.out.println("Name: ");
         String name = input_scanner.nextLine();
-        System.out.println("Role:");
-        String role = input_scanner.nextLine();
-        System.out.println("Gender: ");
-        String gender = input_scanner.nextLine();
-        System.out.println("Age: ");
-        String age = input_scanner.nextLine();
-        System.out.println("Password: ");
-        String password = input_scanner.nextLine();
+        String role = queryForRole();
+        if (role == null) {return;}
+        String gender = InputValidator.getGender("Gender: ");
+        String age = String.valueOf(InputValidator.getIntegerInput("Age: ", 0, 100));
+        String password = String.valueOf(InputValidator.getIntegerInput("Age: ", 0, 100));
+        //String password = System.out.println("Password: ");
+        //String password = input_scanner.nextLine();
 
 
         List<List<String>> filteredStaffs = new ArrayList<>();
@@ -361,13 +363,14 @@ public class Administrator extends Staff {
         String hospitalID = input_scanner.nextLine();
 
         List<String> lines = readCSVFile(staffRecordsCSV);
-        if (hospitalID.substring(0,1).equalsIgnoreCase("D")) {
-            StaffManager.doctorHandling((Doctor)StaffManager.getStaffByID(hospitalID), false);
-        }
 
         boolean removed = lines.removeIf(line -> line.startsWith(hospitalID + ";"));
 
         if (removed) {
+            if (hospitalID.substring(0,1).equalsIgnoreCase("D")) {
+                StaffManager.doctorHandling((Doctor)StaffManager.getStaffByID(hospitalID), false);
+            }
+            
             writeCSVFile(lines, staffRecordsCSV);
             System.out.println("Staff with HospitalID " + hospitalID + " removed successfully.");
         } else {
@@ -386,6 +389,54 @@ public class Administrator extends Staff {
             System.err.println("Error reading the CSV file: " + e.getMessage());
         }
         return lines;
+    }
+
+    private String queryForRole() {
+        System.out.println("Pick a Role: ");
+        System.out.println("1 - Doctor");
+        System.out.println("2 - Pharmacist");
+        System.out.println("3 - Administrator");
+        int role_choice = 0;
+        try {role_choice = input_scanner.nextInt();
+        } catch (Exception e) {
+            System.out.println("Invalid Choice");
+        }
+        input_scanner.nextLine();
+        String role = "";
+    
+        switch (role_choice) {
+            case 1: role = "Doctor"; break;
+            case 2: role = "Pharmacist"; break;
+            case 3: role = "Administrator"; break;
+            default: System.out.println("Invalid role choice."); return null;
+        }
+
+        return role;
+    }
+
+    private String queryForGender() {
+        System.out.println("Pick a Gender: ");
+        System.out.println("1 - Male");
+        System.out.println("2 - Female");
+        System.out.println("3 - Others");
+        System.out.println();
+
+        System.out.print("Choice: ");
+        int gender_choice = 0;
+        try {gender_choice = input_scanner.nextInt();
+        } catch (Exception e) {
+            System.out.println("Invalid gender choice");
+        }
+        input_scanner.nextLine();
+
+        switch (gender_choice) {
+            case 1: gender = "Male"; break;
+            case 2: gender = "Female"; break;
+            case 3: gender = "Others"; break;
+            default: System.out.println("Invalid gender choice."); return null;
+        }
+
+        return gender;
     }
 
     public static void writeCSVFile(List<String> lines, String CSVFile) {
@@ -417,8 +468,12 @@ public class Administrator extends Staff {
             role_letter = "?";
         }
 
+        System.out.println(role_letter);
+        Administrator.printDoubleList(doubleList);
+
+        int animals = 0;;
         for (List<String> singlList : doubleList) {
-            if (singlList.get(0).substring(0,1).equals(role_letter)) {
+            if (singlList.get(0).substring(0,1).equalsIgnoreCase(role_letter)) {
                 String temp = singlList.get(0);
 
                 //Remove the first letter from the ID, to get the largeset index
@@ -427,71 +482,18 @@ public class Administrator extends Staff {
                 if (ID_without_letter >= largest_ID) {
                     largest_ID = ID_without_letter;
                 }
+                animals++;
             }
         }
 
         String formattedNumber = String.format("%03d", largest_ID+1);
         String nextID = role_letter + String.valueOf(formattedNumber);
 
+        System.out.println(nextID);
+        System.out.println(animals);
+
         return nextID;
     }
-
-    // private boolean doctorHandling(String hospitalID, String name, String gender, String age, boolean addOrRemove) {
-    //     // true means adding new doctor
-    //     boolean removed = false;
-    //     if (addOrRemove == true) {
-    //         Doctor newDoc = new Doctor(hospitalID, name, gender, age);
-    //         List<Doctor> temp = new ArrayList<>();
-    //         temp.add(newDoc);
-    //         AppointmentManager.makeDailyAppointments(temp); 
-    //         return true;
-    //     } else {
-    //         //Remove doc appointments from CSV
-    //         System.out.println("");
-
-    //         // If still have pending appointments for the doctor, stop removal, return false
-    //         return removed;
-    //     }
-
-    // }
-
-    // private String getNextID(List<List<String>> doubleList, String role) {
-    //     int largest_ID  = 0;
-    //     String role_letter = "";
-
-    //     if (role.equalsIgnoreCase("Doctor")) {
-    //         role_letter = "D";
-
-    //     } else if (role.equalsIgnoreCase("Pharmacist")) {
-    //         role_letter = "P";
-
-    //     } else if (role.equalsIgnoreCase("Administrator")) {
-    //         role_letter = "A";
-            
-    //     } else {
-    //         System.out.println("Unknown Role");
-    //         role_letter = "?";
-    //     }
-
-
-    //     for (List<String> singlList : doubleList) {
-    //         if (singlList.get(0).substring(0,1).equals(role_letter)) {
-    //             String temp = singlList.get(0);
-
-    //             //Remove the first letter from the ID, to get the largeset index
-    //             int ID_without_letter = Integer.parseInt(temp.substring(1));
-                
-    //             if (ID_without_letter >= largest_ID) {
-    //                 largest_ID = ID_without_letter;
-    //             }
-    //         }
-    //     }
-
-    //     String formattedNumber = String.format("%03d", largest_ID+1);
-    //     String nextID = role_letter + String.valueOf(formattedNumber);
-
-    //     return nextID;
-    // }
 
     // might need to add error checking for duplicates and other kinds of inputs
 	public void manageInventory() { 
@@ -504,7 +506,12 @@ public class Administrator extends Staff {
         System.out.println("4 - Delete Stock");
         System.out.println("5 - Update Stock");
         System.out.println("6 - Update Stock Level Alert");
-        int inventory_choice = input_scanner.nextInt();
+
+        int inventory_choice = 0;
+        try {inventory_choice = input_scanner.nextInt();
+        } catch (Exception e) {
+            System.out.println("Invalid inventory choice");
+        }
         input_scanner.nextLine();
     
         switch (inventory_choice) {
@@ -518,7 +525,12 @@ public class Administrator extends Staff {
                 System.out.println("Medication Name: ");
                 String medication_choice = input_scanner.nextLine();
                 System.out.println("Amount to add: ");
-                int amount = input_scanner.nextInt();
+                int amount = 0;
+                try {amount = input_scanner.nextInt();
+                } catch (Exception e) {
+                    System.out.println("Invalid inventory choice");
+                }
+
                 input_scanner.nextLine();
     
                 inventory.updateMedication(medication_choice, amount, true);
@@ -529,11 +541,22 @@ public class Administrator extends Staff {
                 System.out.println("Medication Name: ");
                 String new_med_choice = input_scanner.nextLine();
                 System.out.println("Stock: ");
-                int new_med_amount = input_scanner.nextInt();
+                int new_med_amount = 0;
+                try {new_med_amount = input_scanner.nextInt();
+                } catch (Exception e) {
+                    System.out.println("Invalid inventory choice");
+                }
+                
                 input_scanner.nextLine();
                 System.out.println("Low Stock Value: ");
-                int alertValue = input_scanner.nextInt();
-                input_scanner.nextLine();
+                int alertValue = 0;
+                try {
+                    alertValue = input_scanner.nextInt();
+                    input_scanner.nextLine();
+                } catch (Exception e) {
+                    System.out.println("Invalid inventory choice");
+                }
+
 
                 inventory.addNewMedication(new_med_choice, new_med_amount, alertValue);
 
@@ -561,8 +584,14 @@ public class Administrator extends Staff {
                 System.out.println("Medication Name: ");
                 String updated_choice = input_scanner.nextLine();
                 System.out.println("Updated Amount: ");
-                int updated_amount = input_scanner.nextInt();
-                input_scanner.nextLine();
+                int updated_amount = 0;
+                try {
+                    updated_amount = input_scanner.nextInt();
+                    input_scanner.nextLine();
+                } catch (Exception e) {
+                    System.out.println("Invalid choice");
+                }
+
                 boolean add_or_remove = false;
                 int current_stock = 0;
 
@@ -590,8 +619,14 @@ public class Administrator extends Staff {
                 System.out.println("Medication Name: ");
                 String med_level_choice = input_scanner.nextLine();
                 System.out.println("New Alert Level: ");
-                int new_limit = input_scanner.nextInt();
-                input_scanner.nextLine();
+                int new_limit = 0;
+                try {
+                    new_limit = input_scanner.nextInt();
+                    input_scanner.nextLine();
+                } catch (Exception e) {
+                    System.out.println("Invalid choice");
+                }
+
 
                 Medication updated_med = inventory.getMedication(med_level_choice);
                 if(updated_med == null) {break;}
@@ -613,28 +648,29 @@ public class Administrator extends Staff {
 
         // Split each line into fields (excluding the header)
         System.out.println("=== Pending Replishment Requests ===");
-        System.out.println("Select by index, press any 0 to exit");
 
         for (int i = 1; i < lines.size(); i++) { // Start from index 1 to skip header
             String[] fields = lines.get(i).split(";");
 
             // If request is already approved, skip entry
-            if(fields[3].equals("Approved")) {
-                System.out.println("Skipping Approved Req");
+            if(fields[STATUS].equals("Approved")) {
+                // System.out.println("Skipping Approved Req");
                 continue;
             }
 
-            System.out.println("Request ID: " + fields[0] + " Medicine Name: " + fields[1] + " Add Amount: " + fields[2]);
+            System.out.println("Request ID: " + fields[REQID] + " Medicine Name: " + fields[MEDICATIONNAME] + " Add Amount: " + fields[ADDEDAMT]);
         }
 
         //Select to approve by index
-        int index_to_approve = input_scanner.nextInt();
-        input_scanner.nextLine();
+        System.out.println("Select by index, press 0 to exit: ");
+        int index_to_approve = 0;
+        index_to_approve = InputValidator.getIntegerInput("Choice: ", index_to_approve, index_to_approve);
+        if(index_to_approve == 0) {return;}
 
         for (int i = 0; i<lines.size(); i++) { // Start from index 1 to skip header
             String[] fields = lines.get(i).split(";");
 
-            if (fields[0].equals(String.valueOf(index_to_approve))) {
+            if (fields[REQID].equals(String.valueOf(index_to_approve))) {
 
                 // Get list of medicine already available, run through list to see if requested med already in inventory
                 InventoryManager inventory = new InventoryManager("Medicine_List.csv");
@@ -643,26 +679,31 @@ public class Administrator extends Staff {
                 for(Medication medication : medications) {
 
                     // If not new med, update stock amount
-                    if (fields[1].equals(medication.getMedicationName())) {
+                    if (fields[MEDICATIONNAME].equalsIgnoreCase(medication.getMedicationName())) {
 
                         //update stock value and csv file
-                        inventory.updateMedication(fields[1], Integer.parseInt(fields[2]), true);
+                        inventory.updateMedication(fields[MEDICATIONNAME], Integer.parseInt(fields[ADDEDAMT]), true);
                         medInInventory = true;
-                        fields[3] = "Approved"; 
+                        fields[STATUS] = "Approved"; 
                     }   
                 }
                 
                 // If new med add to csv
                 if (medInInventory == false) {
                     System.out.println("Enter Low Stock Value: ");
-                    int alertValue = input_scanner.nextInt();
-                    input_scanner.nextLine();
+                    int alertValue = 0;
+                    try {
+                        alertValue = input_scanner.nextInt();
+                        input_scanner.nextLine();
+                    } catch (Exception e) {
+                        System.out.println("Invalid choice");
+                    }
 
-                    inventory.addNewMedication(fields[1], Integer.parseInt(fields[2]), alertValue);
-                    fields[3] = "Approved"; 
+                    inventory.addNewMedication(fields[MEDICATIONNAME], Integer.parseInt(fields[ADDEDAMT]), alertValue);
+                    fields[STATUS] = "Approved"; 
                 }
 
-                lines.set(i, String.join(";", fields[0], fields[1], fields[2], fields[3]));
+                lines.set(i, String.join(";", fields[REQID], fields[MEDICATIONNAME], fields[ADDEDAMT], fields[STATUS]));
                 break;
             }
         }
