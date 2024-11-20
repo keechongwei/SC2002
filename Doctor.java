@@ -355,8 +355,7 @@ public class Doctor extends Staff{
                 System.out.println("Time:" + slot.getTime().toString());
                 System.out.println("----------------------------------------------");
             }
-            System.out.println("ENTER APPOINTMENT ID OF APPOINTMENT TO MAKE APPOINTMENT OUTCOME RECORD FOR [E.g APT1]: ");
-            selectedAppointmentID = sc.nextLine().trim().toUpperCase();
+            selectedAppointmentID = InputValidator.getAppointmentId("ENTER APPOINTMENT ID OF APPOINTMENT TO MAKE APPOINTMENT OUTCOME RECORD FOR [E.g APT1]:\n");
         }
         System.out.println("The type of service of this diagnosis for the patient:");
         String serviceType = sc.nextLine().trim();
@@ -415,7 +414,7 @@ public class Doctor extends Staff{
                 slot.setStatus(AppointmentStatus.COMPLETED);
                 AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
                 PatientManager.addDiagnosis(id, consultationNote);
-                PatientManager.addTreatment(id,  serviceType + "," + medicineType);
+                PatientManager.addTreatment(id, serviceType + "," + medicineType);
         // Log success message
                 System.out.println("Outcome successfully recorded for Appointment ID: " + selectedAppointmentID);
                 return; // Exit the loop after successfully updating
