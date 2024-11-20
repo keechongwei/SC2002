@@ -9,6 +9,14 @@ public class AppointmentOutcomeRecord {
     private Prescription prescribedMedication;
     private String consultationNotes;
 
+    // public AppointmentOutcomeRecord(String date, String time,String typeOfService, Prescription prescribedMedication, String consultationNotes) {
+    //     this.date = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    //     this.time = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
+    //     this.typeOfService = TypeOfService.valueOf(typeOfService);
+    //     this.prescribedMedication = prescribedMedication;
+    //     this.consultationNotes = consultationNotes;
+    // }
+
     /**
      * Constructor 
      * Creates an AppointmentOutcomeRecord object with the input parameters
@@ -17,6 +25,8 @@ public class AppointmentOutcomeRecord {
      * @param typeOfService TypeOfService type 
      * @param prescribedMedication Prescription type 
      * @param consultationNotes String containing consultation notes for AppointmentSlot
+     * @see TypeOfService
+     * @see Prescription
      */
     public AppointmentOutcomeRecord(String date, String time,TypeOfService typeOfService, Prescription prescribedMedication, String consultationNotes) {
         this.date = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
