@@ -2,11 +2,32 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * An object meant to store vital information of every appointment
+ * @author SCSKGroup2
+ * @version 1.0
+ * @since 2024-11-21
+ */
 public class AppointmentOutcomeRecord {
+    /*
+     * Date of Appointment
+     */
     private LocalDate date;
+    /**
+     * Time of Appointment
+     */
     private LocalTime time;
+    /*
+     * Type of Service provided during Appointment
+     */
     private TypeOfService typeOfService;
+    /**
+     * Prescription object containing information of medicationName,dosage
+     */
     private Prescription prescribedMedication;
+    /**
+     * Consultation Notes from Appointment
+     */
     private String consultationNotes;
 
     // public AppointmentOutcomeRecord(String date, String time,String typeOfService, Prescription prescribedMedication, String consultationNotes) {

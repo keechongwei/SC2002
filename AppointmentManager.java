@@ -3,9 +3,24 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A Manager object meant to handle any appointment scheduling
+ * @author SCSKGroup2
+ * @version 1.0
+ * @since 2024-11-21
+ */
 public class AppointmentManager implements Manager{
+    /**
+     * List of Appointment Slots
+     */
     public static List<AppointmentSlot> appointmentSlotArray = new ArrayList<>();
+    /**
+     * Number of Slots to be created per doctor
+     */
     public static int numberOfSlots = 10;
+    /**
+     * ID of next appointment to be created
+     */
     public static int nextAppointmentID = 1;
 
     /**
