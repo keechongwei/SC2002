@@ -19,6 +19,8 @@ public class InputValidator {
     private static final String GENDER_PATTERN = "^(M|F|Male|Female|Other)$";
     private static final String DATE_PATTERN = "dd/MM/yyyy";
     private static final String TIME_PATTERN = "HH:mm";
+    private static final String PASSWORD_PATTERN = "^(?=.*\\d).{8,}$";
+
 
     /**
      * Gets a valid integer input within a specified range
@@ -139,6 +141,13 @@ public class InputValidator {
         ).toUpperCase();
     }
 
+    public static String getPassword(String prompt){
+        return getPatternedInput(
+            prompt,
+            PASSWORD_PATTERN,
+            "Invalid Password. Ensure at least 8 characters and 1 number"
+        )
+    }
     /**
      * Validates and gets a doctor ID
      */
