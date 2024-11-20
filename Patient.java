@@ -399,7 +399,7 @@ public class Patient extends User{
         List<AppointmentSlot> curSlots = AppointmentManager.getAppointmentsByPatient(this.medicalRecord.getPatientID());
 
         if(curSlots.isEmpty()) {
-            System.out.println("No current appointments.");
+            System.out.println("No current appointments.\n");
             return;
         }
 
