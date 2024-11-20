@@ -18,8 +18,8 @@ public class Pharmacist extends Staff {
     // Constructor with all the details
     public Pharmacist(String HospitalID, String name, String gender, String age) {
         super(HospitalID, "password");
-        this.name = InputValidator.getName(name);
-        this.gender = InputValidator.getGender(gender);
+        this.name = name;
+        this.gender = gender;
         this.age = age;
         this.appointments = new ArrayList<>();
         this.inventory = new InventoryManager("Medicine_List.csv");
