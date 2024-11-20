@@ -35,7 +35,7 @@ public class InventoryManager implements Manager {
 	// }
 
 
-    public Inventory(String csvFilePath) {
+    public InventoryManager(String csvFilePath) {
         listOfMedications = new ArrayList<>();
         InventoryCSVHandler.loadCSV();
     }
