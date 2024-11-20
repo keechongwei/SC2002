@@ -70,7 +70,7 @@ public class Patient extends User{
                 this.viewAppointmentOutcomeRecord();// View Past Appointments Outcome Record
                 break;
                 case 9:
-                BillingSystem.BillingMenu();
+                BillingSystem.BillingMenu();// view bills, process bills
                 break;
                 case 10:
                 System.out.println("Logging out...");
@@ -101,9 +101,14 @@ public class Patient extends User{
 
             choice = sc.nextInt();
             sc.nextLine();
+            //error checking
+            if(!Character.isDigit(choice)) {
+                System.out.println("Invalid choice. Please enter a number from 1-3\n");
+                break;
+            }
 
             switch (choice) {
-                case 1: 
+                case 1: //update phone number
                     System.out.print("Enter new phone number: ");
                     String newPhoneNumber = sc.nextLine();
                     this.medicalRecord.setPhoneNumber(newPhoneNumber);
@@ -122,7 +127,7 @@ public class Patient extends User{
                     break;
 
                 default:
-                    System.out.println("Invalid choice. Please enter a choice from 1-3\n");
+                    System.out.println("Invalid choice. Please enter a number from 1-3\n");
                     break;
 
             }
@@ -162,7 +167,7 @@ public class Patient extends User{
         System.out.printf("%-15s: %s%n", "Phone Number", this.medicalRecord.getPhoneNumber());
         System.out.printf("%-15s: %s%n", "Email Address", this.medicalRecord.getEmailAddress());
 
-        //past diagnosis
+        //past diagnoses and treatment
         System.out.println("\nPAST DIAGNOSES AND TREATMENT:");
         System.out.println("-".repeat(30));
         List<String> diagnoses = this.medicalRecord.getPastDiagnoses();
@@ -210,6 +215,17 @@ public class Patient extends User{
         System.out.println("\nEnter Doctor ID to schedule appointment (e.g D001): ");
         String selectedDoctorID = sc.nextLine().trim().toUpperCase();
 
+        //error checking
+        boolean isValidDoctorID = false;
+        while(!isValidDoctorID) {
+            if(selectedDoctorID.matches("D\\d{3}")) {
+                isValidDoctorID = true;
+            } else {
+                System.out.println("Invalid Doctor ID format. Please enter ID in format D followed by 3 digits (e.g. D001): ");
+                selectedDoctorID = sc.nextLine().trim().toUpperCase();
+            }
+        }
+
         //get avail slots for selected doctor
         List<AppointmentSlot> availSlots = new ArrayList<>();
         for (AppointmentSlot slot :  AppointmentManager.getAvailableAppointments()) {
@@ -244,11 +260,15 @@ public class Patient extends User{
         AppointmentSlot selectedSlot = availSlots.get(choice-1);
 
         for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
+            //find the slot by Appt ID
             if(slot.getAppointmentID().equals(selectedSlot.getAppointmentID())) {
+                //update the details
                 slot.setStatus(AppointmentStatus.PENDING);
                 slot.setPatientID(this.medicalRecord.getPatientID());
                 System.out.println("Appointment scheduled, status: pending.");
+                //print the new details to user
                 System.out.printf("Appointment ID: %s, Date: %s, Time: %s, Doctor: %s, Status: %s%n", slot.getAppointmentID(), slot.getDate(), slot.getTime(), slot.getDoctorID(), slot.getStatus());
+                //update csv
                 AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
             }
         }
@@ -267,13 +287,13 @@ public class Patient extends User{
                 curSlots.add(slot);   
             }
         }
-
+        //error checking
         if(curSlots.isEmpty()) {
             System.out.println("No scheduled appointment slots.\n");
             return;
         }
 
-        //show cur appts
+        //print cur appts
         System.out.println("\nYour Current Appointments:");
         for (int i = 0; i < curSlots.size(); i++) {
             AppointmentSlot slot = curSlots.get(i);
@@ -287,7 +307,7 @@ public class Patient extends User{
         }
 
         //select appts to reschedule
-        System.out.print("\nSelect appointment to reschedule (enter number): ");
+        System.out.printf("\nSelect appointment to reschedule (enter number 1- %d): ", curSlots.size());
         int choice = sc.nextInt();
         sc.nextLine();
 
