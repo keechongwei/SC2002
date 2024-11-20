@@ -26,6 +26,11 @@ public class Staff extends User {
     protected void setAge(String age) {
         this.age = age;
     }
-
+    
+    protected String toCSV() {
+        // Combine all attributes into a CSV string
+        return super.getHospitalID() + ";" + super.getPassword() + ";" + name + ";" + "Staff" + ";" + gender + ";" + age;
+    }
+    
     
 }
