@@ -29,7 +29,7 @@ public class PatientManager {
             }
         }
         // Rewrite file with updates
-        PatientManagerCSVHandler.writeAllRecords();
+        PatientManagerCSVHandler.writeCSV();
     }
 
     // Add diagnosis to patient
@@ -66,7 +66,7 @@ public class PatientManager {
             System.out.println("Patient_List.csv is empty or missing.");
         } else {
             System.out.println("Loading Patients from Patient_List.csv...");
-            PatientManagerCSVHandler.loadRecordsCSV();
+            PatientManagerCSVHandler.loadCSV();
         }
     }
 }
