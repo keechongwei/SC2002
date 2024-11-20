@@ -40,6 +40,10 @@ public class InventoryManager implements Manager {
         InventoryCSVHandler.loadCSV();
     }
 
+    public void initialise() {
+        InventoryCSVHandler.loadCSV();
+    }
+    
     public Medication getMedication(String medicationName) {
 		for(Medication med : listOfMedications) {
 			if (med.getMedicationName().equalsIgnoreCase(medicationName)) {
