@@ -166,31 +166,31 @@ public class AppointmentSlot {
      */
     public void updateAppointmentOutcomeRecord(LocalDate date,LocalTime time, String serviceType, Prescription pres, String consult) {
         TypeOfService typeOfServiceEnum;
-    try {
-        typeOfServiceEnum = TypeOfService.valueOf(serviceType.toUpperCase());
-    } catch (IllegalArgumentException e) {
-        System.out.println("Invalid service type: " + serviceType);
-        return; // Exit if the service type is invalid
-    }
+        try {
+            typeOfServiceEnum = TypeOfService.valueOf(serviceType.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid service type: " + serviceType);
+            return; // Exit if the service type is invalid
+        }
 
-    if (this.outcome == null) {
-        System.out.println("Initializing outcome for the first time...");
-        // Properly initialize with the correct enum type
-        this.outcome = new AppointmentOutcomeRecord(
-            date.toString(),
-            time.toString(),
-            typeOfServiceEnum, // Pass enum instead of string
-            pres,
-            consult
-        );
-    } else {
-        // Update existing outcome
-        this.outcome.setDate(date);
-        this.outcome.setTime(time);
-        this.outcome.setTypeOfService(typeOfServiceEnum); // Pass enum instead of string
-        this.outcome.setPrescribedMedication(pres);
-        this.outcome.setConsultationNotes(consult);
-    }
+        if (this.outcome == null) {
+            System.out.println("Initializing outcome for the first time...");
+            // Properly initialize with the correct enum type
+            this.outcome = new AppointmentOutcomeRecord(
+                date.toString(),
+                time.toString(),
+                typeOfServiceEnum, // Pass enum instead of string
+                pres,
+                consult
+            );
+        } else {
+            // Update existing outcome
+            this.outcome.setDate(date);
+            this.outcome.setTime(time);
+            this.outcome.setTypeOfService(typeOfServiceEnum); // Pass enum instead of string
+            this.outcome.setPrescribedMedication(pres);
+            this.outcome.setConsultationNotes(consult);
+        }
     }
 
 
