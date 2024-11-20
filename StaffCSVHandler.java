@@ -9,7 +9,7 @@ public class StaffCSVHandler {
     static String staffCSVHeader = "Staff ID; Password ; Name ; Role ; Gender ; Age";
     public static final File csvFile = new File("Staff_List_Copy.csv"); 
 
-        public static void loadRecordsCSV(){
+        public static void loadCSV(){
             boolean headerline = true;
             try (Scanner scanner = new Scanner(csvFile)){
                 while (scanner.hasNextLine()) {
@@ -64,7 +64,7 @@ public class StaffCSVHandler {
             }
         }
 
-    public static void updateStaffCSV(){
+    public static void writeCSV(){
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFile))) {
             // Write the header line first
             bw.write(staffCSVHeader);

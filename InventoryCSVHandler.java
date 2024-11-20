@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InventoryCSVHandler {
+public class InventoryCSVHandler  {
     static String csvFilePath = "Medicine_List.csv"; // Replace with your actual CSV file path
     static String replenishRequestFile = "Replenish_Request_List.csv"; // Replace with your actual CSV file path
 

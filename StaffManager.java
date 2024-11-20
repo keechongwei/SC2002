@@ -16,7 +16,7 @@ public class StaffManager {
             System.out.println("Staff_List.csv is empty or missing.");
         } else {
             System.out.println("Loading Staff from Staff_List.csv...");
-            StaffCSVHandler.loadRecordsCSV();
+            StaffCSVHandler.loadCSV();
         }
     }
     public static void updateStaff() {
@@ -188,7 +188,7 @@ public class StaffManager {
                 break;
         }
         
-        StaffCSVHandler.updateStaffCSV();        
+        StaffCSVHandler.writeCSV();        
     }
 
     // true means adding new doctor

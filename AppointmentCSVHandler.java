@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
-public class AppointmentCSVHandler {
+public class AppointmentCSVHandler implements CSVHandler{
     public static String appointmentsCSVHeader = "Date;Time;Appointment ID; DoctorID; PatientID;Appointment Status; OutcomeDate | Outcome Time |  Type Of Service | Medication Name ^ Medication Status ^ Medication Dosage | Consultation Notes";
     public static final File csvFile = new File("appointments.csv");
 
@@ -20,7 +20,7 @@ public class AppointmentCSVHandler {
         }
     }
 
-    public static void loadAppointmentsFromCSV(File csvFile) {
+    public static void loadCSV() {
     boolean headerline = true;
     try (Scanner scanner = new Scanner(csvFile)) {
         while (scanner.hasNextLine()) {

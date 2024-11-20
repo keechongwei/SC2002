@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 public class Login {
+    // figure out Inventory InitialiseMedicine
     /* remember to convert functions involving appointments to print name cause appointment slots only have ID
        cause rn its just doctor and patient ID */
     static boolean loggedIn = false;
@@ -217,8 +218,8 @@ public class Login {
         initialise(); // loads in data from csv
         login(loggedIn,sc);
         user.printMenu();
-        PatientManagerCSVHandler.writeAllRecords();
-        StaffCSVHandler.updateStaffCSV();
+        PatientManagerCSVHandler.writeCSV();
+        StaffCSVHandler.writeCSV();
         AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
     }   
 }

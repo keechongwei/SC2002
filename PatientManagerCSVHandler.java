@@ -13,7 +13,7 @@ public class PatientManagerCSVHandler {
     private static final String CSV_DELIMITER = ";";
     private static final String LIST_DELIMITER = ",";  // For separating items within ArrayLists
         // Load records from CSV
-    public static void loadRecordsCSV() {
+    public static void loadCSV() {
        
         if(!(PatientManager.allPatients.isEmpty())) {
             PatientManager.allPatients.clear();
@@ -60,7 +60,7 @@ public class PatientManagerCSVHandler {
     }
 
         // Write all records to CSV
-    public static void writeAllRecords() {
+    public static void writeCSV() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile))) {
             // Write header
             writer.write("Patient ID;Name;Date of Birth;Gender;Blood Type;Email;Phone;Past Diagnoses;Past Treatments");

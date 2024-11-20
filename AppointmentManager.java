@@ -109,7 +109,7 @@ public class AppointmentManager {
         } else {
             // File exists and is not empty, load appointments from the CSV
             System.out.println("Loading appointments from appointments.csv...");
-            AppointmentCSVHandler.loadAppointmentsFromCSV(AppointmentCSVHandler.csvFile);
+            AppointmentCSVHandler.loadCSV();
         }
     }
     // Other functions for filtering by patient, status, etc.
