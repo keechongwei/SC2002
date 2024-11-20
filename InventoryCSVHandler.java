@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryCSVHandler implements CSVHandler {
-    public static final File csvFile = new File("appointments.csv");
+    public static final File csvFile = new File("Medicine_List.csv");
     public static final File replenishFile = new File("Replenish_Request_List.csv");
     public static List<String[]> loadReplenishRequests() {
         List<String[]> requests = new ArrayList<>();
