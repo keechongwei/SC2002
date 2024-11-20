@@ -20,9 +20,7 @@ public class StaffManager implements Manager {
         }
     }
     public static void updateStaff() {
-        System.out.println("Enter HospitalID: ");
-        String hospitalID = input_scanner.nextLine();
-    
+        String hospitalID = InputValidator.getNonEmptyString("Enter HospitalID: ");
         String roleLetter = hospitalID.substring(0,1);
 
         List<? extends Staff> temp;
@@ -63,31 +61,30 @@ public class StaffManager implements Manager {
 
         switch (input) {
             case 1:
-                System.out.println("New Name: ");
-                String inputName = input_scanner.nextLine();
+                String inputName = InputValidator.getName("New Name: ");
                 staff.setName(inputName);
                 break;
 
             case 2:
-                System.out.println("Pick the Role: ");
-                System.out.println("1 - Doctor");
-                System.out.println("2 - Pharmacist");
-                System.out.println("3 - Administrator");
-                int role_choice = input_scanner.nextInt();
-                input_scanner.nextLine();
+                int role_index = 0;
+                String role_choice = InputValidator.getRole("Role: ");
+                if (role_choice.equalsIgnoreCase("Doctor")) {
+                    role_index = 1;
+                } else if (role_choice.equalsIgnoreCase("Pharmacist")) {
+                    role_index = 2;
+                } else if (role_choice.equalsIgnoreCase("Administrator")){
+                    role_index = 3;
+                }
 
-                String role = "";
                 String newHospitalID = "";
-
                 String name = staff.getName();
                 String gender = staff.getGender();
                 String age = staff.getAge();
                 
-                switch (role_choice) {
+                switch (role_index) {
                     case 1: 
-                        role = "Doctor";
                         // Check if there is a switch of role, if yes make new obj;
-                        if (!(role.substring(0,1).equals(roleLetter))) {
+                        if (!(role_choice.substring(0,1).equals(roleLetter))) {
 
                             newHospitalID = getNextID(doctors);
                             Doctor doc = new Doctor(newHospitalID, name, gender, age); 
@@ -100,8 +97,7 @@ public class StaffManager implements Manager {
                         break;
 
                     case 2: 
-                        role = "Pharmacist";
-                        if (!(role.substring(0,1).equals(roleLetter))) {
+                        if (!(role_choice.substring(0,1).equals(roleLetter))) {
                             newHospitalID = getNextID(pharmacists);
                             Pharmacist pharm = new Pharmacist(newHospitalID, name, gender, age); 
                             System.out.println(staff.getPassword());
@@ -117,8 +113,7 @@ public class StaffManager implements Manager {
                         break;
 
                     case 3: 
-                        role = "Administrator"; 
-                        if (!(role.substring(0,1).equals(roleLetter))) {
+                        if (!(role_choice.substring(0,1).equals(roleLetter))) {
                             newHospitalID = getNextID(administrators);
                             Administrator admin = new Administrator(newHospitalID, name, gender, age); 
                             admin.setPassword((staff.getPassword()));
@@ -147,35 +142,12 @@ public class StaffManager implements Manager {
                 break;
 
             case 3:
-                System.out.println("Pick the Gender: ");
-                System.out.println("1 - Male");
-                System.out.println("2 - Female");
-                System.out.println("3 - Others");
-                int gender_choice = input_scanner.nextInt();
-                input_scanner.nextLine();
-                String inputGender = "";
-
-                switch (gender_choice) {
-                    case 1:
-                        inputGender = "Male";
-                        break;
-                    case 2:
-                        inputGender = "Female";
-                        break;
-                    case 3:
-                        inputGender = "Others";
-                        break;
-                    default:
-                        System.out.println("Invalid gender choice. Keeping the current gender.");
-                        break;
-                }
-
-                staff.setGender(inputGender);
+                String gender_choice = InputValidator.getGender("New Gender: ");
+                staff.setGender(gender_choice);
                 break;
 
             case 4:
-                System.out.println("New Age: ");
-                String inputAge = input_scanner.nextLine();
+                String inputAge = String.valueOf(InputValidator.getIntegerInput("New Age: ", 1, 100));
                 staff.setAge(inputAge);
                 break;
 
