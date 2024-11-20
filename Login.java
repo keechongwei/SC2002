@@ -35,7 +35,7 @@ public class Login {
             e.printStackTrace();
         }
         try{
-            InventoryCSVHandler.loadCSV();
+            InventoryManager.initialise();
             System.out.println("Medicine Information Retrieved Successfully!");
         } catch (Exception e){
             System.out.println("Unable to Retrieve Medicine Information!");
