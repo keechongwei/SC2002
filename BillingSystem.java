@@ -5,35 +5,98 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * A BillingSystem Class that singlehandedly manages all Bill related functions
+ * @author SCSKGroup2
+ * @version 1.0
+ * @since 2024-11-21
+ */
 public class BillingSystem {
+    /**
+     * List of all bills
+     */
+    private List<Bill> bills;
+    /**
+     * String containing name of Billing File
+     */
     private static final String BILLING_FILE = "Bills.csv";
+    /**
+     * String containing name of Appointments File
+     */
     private static final String APPOINTMENTS_FILE = "appointments.csv";
 
+    /**
+     * Hash Map containing names of medications as keys and prices of the medications as values
+     */
     private static final Map<String, Double> MEDICATION_PRICES = new HashMap<>() {{
         put("Paracetamol", 0.1);
         put("Ibuprofen", 0.5);
         put("Amoxicillin", 0.2);
-        put("Zrytec", 1.0);
     }};
-
+    /**
+     * Hash Map containing types of service as keys and prices of the services as values
+     */
     private static final Map<TypeOfService, Double> SERVICE_FEES = new HashMap<>() {{
         put(TypeOfService.CONSULTATION, 50.00);
         put(TypeOfService.XRAY, 200.00);
         put(TypeOfService.BLOOD_TEST, 150.00);  
     }};
     
+    /**
+     * A Bill Class contains important information commonly found on a bill
+     * @author SCSKGroup2
+     * @version 1.0
+     * @since 2024-11-21
+     */
     private static class Bill {
+        /**
+         * Unique Bill ID
+         */
         String billId;
+        /*
+         * Unique Patient ID
+         */
         String patientId;
+        /**
+         * Unique Appointment ID
+         */
         String appointmentId;
+        /**
+         * Date
+         */
         LocalDateTime date;
+        /**
+         * Type Of Service 
+         */
         TypeOfService serviceType;
+        /**
+         * Service Fee
+         */
         double serviceFee;
+        /**
+         * Hashmap of Medications and Prices
+         */
         Map<String, Integer> medications;
+        /**
+         * Medication Total Amount
+         */
         double medicationTotal;
+        /**
+         * Total Amount of Bill including service fee and medication total
+         */
         double totalAmount;
+        /**
+         * Boolean to determine if bill has been paid
+         */
         boolean isPaid;
 
+        /**
+         * Constructor for a Bill object
+         * @param patientId String representing Unique Patient ID
+         * @param appointmentId String representing Unique AppointmentID
+         * @param date LocalDateTime representing current date and time
+         * @param serviceType TypeOfService representing serviceType
+         */
         public Bill(String patientId, String appointmentId, LocalDateTime date, TypeOfService serviceType) {
             String timestamp = String.valueOf(System.currentTimeMillis());
             this.billId = "B" + timestamp.substring(timestamp.length() - 4);
@@ -48,6 +111,10 @@ public class BillingSystem {
             this.isPaid = false;
         }
 
+        /**
+         * Function to return bill information as a String
+         * @return String of bill object for appending to Bills.csv
+         */
         public String toCSV() {
             StringBuilder billStr = new StringBuilder();
             for (Map.Entry<String, Integer> med : medications.entrySet()) {
@@ -67,15 +134,19 @@ public class BillingSystem {
         }
     }
 
-    private List<Bill> bills;
-
-    //constructor for billing system
+    /**
+     * Constructor for Billing System
+     */
     public BillingSystem() {
         this.bills = new ArrayList<>();
         loadBills();
     }
 
-    //update bill to csv
+    /**
+     * Loads bills from Bills.csv
+     * @param void
+     * @return void
+     */
     private void loadBills() {
         File file = new File(BILLING_FILE);
         if (!file.exists()) {
@@ -132,6 +203,11 @@ public class BillingSystem {
         }
     }
 
+    /**
+     * Makes bills from completed points
+     * @param void
+     * @return void
+     */
     public void processCompletedAppointments() {
         try (BufferedReader br = new BufferedReader(new FileReader(APPOINTMENTS_FILE))) {
             String line;
@@ -203,10 +279,20 @@ public class BillingSystem {
         }
     }
 
+    /**
+     * Determines if a bill exists for an appointment
+     * @param appointmentId Unique Appointment ID to check if bill exists for 
+     * @return boolean, if bill exists returns true, else return false
+     */
     private boolean billExistsForAppointment(String appointmentId) {
         return bills.stream().anyMatch(bill -> appointmentId.equals(bill.appointmentId));
     }
 
+    /**
+     * Calculate total amount of bill including medication and service fee
+     * @param bill Bill object with total amount to be calculated
+     * @return void
+     */
     private void calculateTotals(Bill bill) {
         double medicationTotal = 0.0;
         for (Map.Entry<String, Integer> med : bill.medications.entrySet()) {
@@ -218,6 +304,11 @@ public class BillingSystem {
         bill.totalAmount = bill.serviceFee + medicationTotal;
     }
 
+    /**
+     * Writes Bills to bills.csv
+     * @param void
+     * @return void
+     */
     private void saveBills() {
         try (PrintWriter writer = new PrintWriter(new FileWriter(BILLING_FILE))) {
             writer.println("BillID;PatientID;AppointmentID;Date;ServiceType;ServiceFee;Prescriptions;MedicationTotal;TotalAmount;IsPaid");
@@ -229,6 +320,11 @@ public class BillingSystem {
         }
     }
 
+    /**
+     * Mark a bill as paid
+     * @param billId Unique Bill ID for bill to be marked as paid
+     * @return void
+     */
     public void markAsPaid(String billId) {
         Bill bill = findBill(billId);
         if (bill != null) {
@@ -240,6 +336,11 @@ public class BillingSystem {
         }
     }
 
+    /**
+     * Prints information of bill
+     * @param billId Unique Bill ID for bill to be printed
+     * @return void
+     */
     public void displayBill(String billId) {
         Bill bill = findBill(billId);
         if (bill == null) {
@@ -276,6 +377,11 @@ public class BillingSystem {
         System.out.println("=".repeat(40));
     }
 
+    /**
+     * Prints all bills addressed to a certain patient
+     * @param patientId Unique Patient ID for bills to be viewed for
+     * @return void
+     */
     public void viewPatientBills(String patientId) {
         boolean found = false;
         // System.out.println("Searching for bills with patient ID: " + patientId); // Debug line
@@ -291,6 +397,12 @@ public class BillingSystem {
         }
     }
 
+    /**
+     * Finds a bill depending on its unique bill ID
+     * @param billId Unique bill ID to search for bill
+     * @return bill object
+     * @see Bill
+     */
     private Bill findBill(String billId) {
         return bills.stream()
             .filter(b -> b.billId.equals(billId))
@@ -298,6 +410,11 @@ public class BillingSystem {
             .orElse(null);
     }
 
+    /**
+     * Payment Processing System for payment of bills
+     * @param void
+     * @return void
+     */
     public void processPayment() {
             while (true) {
                 System.out.println("\n=== Payment Processing ===");
@@ -336,6 +453,11 @@ public class BillingSystem {
             }
     }
 
+    /**
+     * Prints Billing System Menu
+     * @param patientID Unique patient ID to view bills with respect to
+     * @return void
+     */
     public static void BillingMenu(String patientID) {
         BillingSystem billingSystem = new BillingSystem();
         billingSystem.processCompletedAppointments();
@@ -369,7 +491,6 @@ public class BillingSystem {
             }
         }
     }
-    
     
 }
 
