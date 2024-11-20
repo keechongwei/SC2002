@@ -191,8 +191,8 @@ public class BillingSystem {
                 
                 calculateTotals(bill);
                 bills.add(bill);
-                System.out.println("Created new bill: " + bill.billId + " for appointment: " + appointmentId);
-                System.out.println("Service type: " + serviceType + " - Fee: $" + bill.serviceFee);
+                // System.out.println("Created new bill: " + bill.billId + " for appointment: " + appointmentId);
+                // System.out.println("Service type: " + serviceType + " - Fee: $" + bill.serviceFee);
             }
             saveBills();
             
@@ -277,9 +277,9 @@ public class BillingSystem {
 
     public void viewPatientBills(String patientId) {
         boolean found = false;
-        System.out.println("Searching for bills with patient ID: " + patientId); // Debug line
+        // System.out.println("Searching for bills with patient ID: " + patientId); // Debug line
         for (Bill bill : bills) {
-            System.out.println("Checking bill with patient ID: " + bill.patientId); // Debug line
+            // System.out.println("Checking bill with patient ID: " + bill.patientId); // Debug line
             if (bill.patientId.equals(patientId)) {
                 displayBill(bill.billId);
                 found = true;
@@ -300,7 +300,7 @@ public class BillingSystem {
     public void processPayment() {
             while (true) {
                 System.out.println("\n=== Payment Processing ===");
-                System.out.print("Enter Bill ID (or 'exit' to cancel): ");
+                // System.out.print("Enter Bill ID (or 'exit' to cancel): ");
                 String billId = InputValidator.getNonEmptyString("Enter Bill ID (or 'exit' to cancel): ");
                 
                 if (billId.equalsIgnoreCase("exit")) {
@@ -369,5 +369,8 @@ public class BillingSystem {
         }
     }
     
+    
 }
+
+
 
