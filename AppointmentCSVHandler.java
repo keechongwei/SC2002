@@ -6,8 +6,20 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * A CSVHandler object meant to write and read from appointments.csv
+ * @author SCSKGroup2
+ * @version 1.0
+ * @since 2024-11-21
+ */
 public class AppointmentCSVHandler implements CSVHandler{
+    /**
+     * Header String for appointments.csv
+     */
     public static String appointmentsCSVHeader = "Date;Time;Appointment ID; DoctorID; PatientID;Appointment Status; OutcomeDate | Outcome Time |  Type Of Service | Medication Name ^ Medication Status ^ Medication Dosage | Consultation Notes";
+    /**
+     * File object to write to and read from
+     */
     public static final File csvFile = new File("appointments.csv");
 
     /** 
