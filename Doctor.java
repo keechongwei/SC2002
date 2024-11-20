@@ -4,11 +4,30 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A Doctor class, a subclass of Staff
+ * @author SCSKGroup2
+ * @version 1.0
+ * @since 2024-11-21
+ */
 public class Doctor extends Staff{
+    /**
+     * List of patients under the doctor's care
+     */
     private List<Patient> patientList = new ArrayList<>();
     
+    /**
+     * Scanner object to read inputs
+     */
     private static Scanner sc = new Scanner(System.in);
     
+    /**
+     * Constructor for Doctor object
+     * @param HospitalID Unique HospitalID
+     * @param doctorName Doctor's Name
+     * @param gender Doctor's Gender
+     * @param age Doctor's 
+     */
     public Doctor(String HospitalID, String doctorName, String gender, String age) {
         super(HospitalID,"password");
         this.name = doctorName;
@@ -16,6 +35,11 @@ public class Doctor extends Staff{
         this.age = age;
     }
 
+    /**
+     * Function to add Patient with confirmed appointments with Doctor to the List of Patients under Doctor's care
+     * @param void
+     * @return void
+     */
     public void addPatientsUnderCare(){
         for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray){
             if (slot.getDoctorID().equals(this.getHospitalID()) && slot.getStatus().equals(AppointmentStatus.CONFIRMED)){
@@ -24,6 +48,11 @@ public class Doctor extends Staff{
         }
     }
 
+    /**
+     * Function to print Menu for Doctor
+     * @param void
+     * @return void
+     */
     public void printMenu(){
         int choice = 0;
         while(choice != 8){
@@ -71,11 +100,22 @@ public class Doctor extends Staff{
             }
         }
     }
-    
+
+    /**
+     * Adds a patient to the list of patients under Doctor's care
+     * @param patient Patient to be added to list
+     * @return void
+     * @see Patient
+     */
     public void addPatient(Patient patient) {
         patientList.add(patient);
     }
 
+    /**
+     * View the Medical Record of Patients under Doctor's Care
+     * @param void
+     * @return void
+     */
     public void viewPatientRecords(){
         if (patientList.isEmpty()) {
             System.out.println("No Patient Record Found");
@@ -88,7 +128,14 @@ public class Doctor extends Staff{
             }
     }
     
-    
+    /**
+     * Sets Availability for Appointments
+     * If AppointmentSlot is PENDING, it will be set as UNAVAILABLE
+     * @param void
+     * @return void
+     * @see AppointmentSlot
+     * @see AppointmentStatus
+     */
     public void setAvailabilityForAppointments() {
         List <AppointmentSlot> schedule = AppointmentManager.getAppointmentsByDoctor(super.getHospitalID());
         System.out.println("Manage Availability for Appointments:");
@@ -150,6 +197,12 @@ public class Doctor extends Staff{
         }
     }}
 
+    /**
+     * Prints out Doctor's upcoming appointments and available AppointmentSlots
+     * @param void
+     * @return void
+     * @see AppointmentSlot
+     */
     public void viewPersonalSchedule() {
         System.out.println("=== Doctor's Personal Schedule ===");
         viewUpcomingAppointment();
@@ -164,6 +217,13 @@ public class Doctor extends Staff{
         }
     }
 
+    /**
+     * Updates details in Medical Record of Patient under Care
+     * @param void
+     * @return void
+     * @see MedicalRecord
+     * @see Patient
+     */
     public void updatePatientRecord() {
     System.out.print("Enter patient ID to update their record: ");
     String id = sc.nextLine();
@@ -206,28 +266,38 @@ public class Doctor extends Staff{
 
     System.out.println("Patient record updated successfully for ID: " + id);
 }
-
-   public void viewUpcomingAppointment(){
-    System.out.println("Doctor's Upcoming Appointments");
-     boolean hasAppointments = false;
-    for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
-        if (slot.getDoctorID().equals(super.getHospitalID()) && slot.getStatus() == AppointmentStatus.CONFIRMED) {
-            hasAppointments = true; 
-            System.out.println("----------------------------------------------");
-            System.out.println("Date: " + slot.getDate().toString());
-            System.out.println("Time: " + slot.getTime().toString());
-            System.out.println("PatientID: " + slot.getPatientID());
-            System.out.println("----------------------------------------------");
+    
+    /**
+     * Prints upcoming appointments of Doctor
+     * @param void
+     * @return void
+     */
+    public void viewUpcomingAppointment(){
+        System.out.println("Doctor's Upcoming Appointments");
+        boolean hasAppointments = false;
+        for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
+            if (slot.getDoctorID().equals(super.getHospitalID()) && slot.getStatus() == AppointmentStatus.CONFIRMED) {
+                hasAppointments = true; 
+                System.out.println("----------------------------------------------");
+                System.out.println("Date: " + slot.getDate().toString());
+                System.out.println("Time: " + slot.getTime().toString());
+                System.out.println("PatientID: " + slot.getPatientID());
+                System.out.println("----------------------------------------------");
+            }
+        }
+        if (!hasAppointments) {
+            System.out.println("No upcoming appointments found.");
         }
     }
-    if (!hasAppointments) {
-        System.out.println("No upcoming appointments found.");
-    }
-    }
 
-   public void acceptOrDeclineAppointments(){
-    System.out.println("PENDING APPOINTMENTS");
-    for (AppointmentSlot slot : AppointmentManager.getAppointmentsByDoctor(super.getHospitalID())) {
+    /**
+     * Function for Doctor to accept or decline Pending Appointments
+     * @param void
+     * @return void
+     */
+    public void acceptOrDeclineAppointments(){
+        System.out.println("PENDING APPOINTMENTS");
+        for (AppointmentSlot slot : AppointmentManager.getAppointmentsByDoctor(super.getHospitalID())) {
             if (slot.getStatus() == AppointmentStatus.PENDING) {
                 System.out.println("----------------------------------------------");
                 System.out.println("Appointment ID: " + slot.getAppointmentID());
@@ -238,64 +308,71 @@ public class Doctor extends Staff{
             }
         }
     
-    int choice = 0;
-    String choice2 = "";
-    while (choice <3){
-        System.out.println("(1) ACCEPT APPOINTMENT");
-        System.out.println("(2) DECLINE APPOINTMENT");
-        System.out.println("(3) QUIT");
-        choice = sc.nextInt();
-        sc.nextLine();
-        switch(choice){
-            case 1:
-            System.out.println("PENDING APPOINTMENTS");
-            for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
-                if (slot.getDoctorID().equals(super.getHospitalID()) && slot.getStatus() == AppointmentStatus.PENDING){ 
-                    System.out.println("----------------------------------------------");
-                    System.out.println("Appointment ID: " + slot.getAppointmentID());
-                    System.out.println("Date: " + slot.getDate().toString());
-                    System.out.println("Time: " + slot.getTime().toString());
-                    System.out.println("PatientID: " + slot.getPatientID());
-                    System.out.println("----------------------------------------------");
+        int choice = 0;
+        String choice2 = "";
+        while (choice <3){
+            System.out.println("(1) ACCEPT APPOINTMENT");
+            System.out.println("(2) DECLINE APPOINTMENT");
+            System.out.println("(3) QUIT");
+            choice = sc.nextInt();
+            sc.nextLine();
+            switch(choice){
+                case 1:
+                System.out.println("PENDING APPOINTMENTS");
+                for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
+                    if (slot.getDoctorID().equals(super.getHospitalID()) && slot.getStatus() == AppointmentStatus.PENDING){ 
+                        System.out.println("----------------------------------------------");
+                        System.out.println("Appointment ID: " + slot.getAppointmentID());
+                        System.out.println("Date: " + slot.getDate().toString());
+                        System.out.println("Time: " + slot.getTime().toString());
+                        System.out.println("PatientID: " + slot.getPatientID());
+                        System.out.println("----------------------------------------------");
+                    }
                 }
-            }
-            System.out.println("Enter Appointment ID to Accept: ");
-            choice2 = sc.nextLine().trim();
-            for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
-                if (slot.getAppointmentID().equals(choice2) ){ 
-                    slot.setStatus(AppointmentStatus.CONFIRMED);
-                    this.patientList.add(PatientManager.findPatient(slot.getPatientID()));
-                    AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
-                    System.out.println("Appointment ID " + choice2 + " has been CONFIRMED.");
+                System.out.println("Enter Appointment ID to Accept: ");
+                choice2 = sc.nextLine().trim();
+                for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
+                    if (slot.getAppointmentID().equals(choice2) ){ 
+                        slot.setStatus(AppointmentStatus.CONFIRMED);
+                        this.patientList.add(PatientManager.findPatient(slot.getPatientID()));
+                        AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
+                        System.out.println("Appointment ID " + choice2 + " has been CONFIRMED.");
+                    }
                 }
-            }
-            break;
-            case 2:
-            System.out.println("PENDING APPOINTMENTS");
-            for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
-                if (slot.getDoctorID().equals(super.getHospitalID()) && slot.getStatus() == AppointmentStatus.PENDING){ 
-                    System.out.println("----------------------------------------------");
-                    System.out.println("Appointment ID: " + slot.getAppointmentID());
-                    System.out.println("Date: " + slot.getDate().toString());
-                    System.out.println("Time: " + slot.getTime().toString());
-                    System.out.println("PatientID: " + slot.getPatientID());
-                    System.out.println("----------------------------------------------");
+                break;
+                case 2:
+                System.out.println("PENDING APPOINTMENTS");
+                for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
+                    if (slot.getDoctorID().equals(super.getHospitalID()) && slot.getStatus() == AppointmentStatus.PENDING){ 
+                        System.out.println("----------------------------------------------");
+                        System.out.println("Appointment ID: " + slot.getAppointmentID());
+                        System.out.println("Date: " + slot.getDate().toString());
+                        System.out.println("Time: " + slot.getTime().toString());
+                        System.out.println("PatientID: " + slot.getPatientID());
+                        System.out.println("----------------------------------------------");
+                    }
                 }
-            }
-            System.out.println("Enter Appointment ID to Decline: ");
-            choice2 = sc.nextLine().trim();
-            for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
-                if (slot.getAppointmentID().equals(choice2)){ 
-                    slot.setStatus(AppointmentStatus.CANCELLED);
-                    AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
-                    System.out.println("Appointment ID " + choice2 + " has been DECLINED.");
+                System.out.println("Enter Appointment ID to Decline: ");
+                choice2 = sc.nextLine().trim();
+                for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
+                    if (slot.getAppointmentID().equals(choice2)){ 
+                        slot.setStatus(AppointmentStatus.CANCELLED);
+                        AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
+                        System.out.println("Appointment ID " + choice2 + " has been DECLINED.");
+                    }
                 }
-            }
-            break;
+                break;
         }
     }
 }  
 
+    /**
+     *  Function to make AppointmentOutcomeRecord for COMPLETED AppointmentSlots
+     * @param void
+     * @return void
+     * @see AppointmentOutcomeRecord
+     * @see AppointmentSlot
+     */
     public void makeAppointmentOutcomeRecord(){
         List<AppointmentSlot> confirmedAppointmentSlots;
         confirmedAppointmentSlots = AppointmentManager.getAppointmentsByDoctor(this.getHospitalID());
@@ -422,8 +499,13 @@ public class Doctor extends Staff{
     }
 }
 
-public String toCSV() {
-    // Combine all attributes into a CSV string
-    return super.getHospitalID() + ";" + super.getPassword() + ";" + super.name + ";" + "Doctor" + ";" + super.gender + ";" + super.age;
-}
+    /**
+     * Function to convert information of Doctor into a string to be added to staff CSV
+     * @param void
+     * @return void
+     */
+    public String toCSV() {
+        // Combine all attributes into a CSV string
+        return super.getHospitalID() + ";" + super.getPassword() + ";" + super.name + ";" + "Doctor" + ";" + super.gender + ";" + super.age;
+    }
 }
