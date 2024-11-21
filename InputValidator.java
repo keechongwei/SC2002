@@ -5,6 +5,14 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * A utility class for validating and obtaining user input from the console.
+ * Provides methods for validating integers, doubles, strings, patterns, dates, times,
+ * and other specific input formats such as IDs, emails, and phone numbers.
+ * @author SCSKGroup2
+ * @version 1.0
+ * @since 2024-11-21
+ */
 public class InputValidator {
     private static final Scanner scanner = new Scanner(System.in);
 
@@ -22,8 +30,14 @@ public class InputValidator {
     private static final String PASSWORD_PATTERN = "^(?=.*\\d).{8,}$";
     private static final String ROLE_PATTERN = "^(Doctor|Pharmacist|Administrator)$";
 
+
     /**
-     * Gets a valid integer input within a specified range
+     * Prompts the user to enter an integer within a specified range.
+     *
+     * @param prompt the message to display to the user
+     * @param min    the minimum allowable value
+     * @param max    the maximum allowable value
+     * @return the validated integer input
      */
     public static int getIntegerInput(String prompt, int min, int max) {
         while (true) {
@@ -45,7 +59,12 @@ public class InputValidator {
     }
 
     /**
-     * Gets a valid double input within a specified range
+     * Prompts the user to enter a double within a specified range.
+     *
+     * @param prompt the message to display to the user
+     * @param min    the minimum allowable value
+     * @param max    the maximum allowable value
+     * @return the validated double input
      */
     public static double getDoubleInput(String prompt, double min, double max) {
         while (true) {
@@ -67,7 +86,12 @@ public class InputValidator {
     }
 
     /**
-     * Gets a valid string input matching a specific pattern
+     * Prompts the user to enter a string matching a specific pattern.
+     *
+     * @param prompt       the message to display to the user
+     * @param pattern      the regex pattern for validation
+     * @param errorMessage the error message to display if validation fails
+     * @return the validated string input
      */
     public static String getPatternedInput(String prompt, String pattern, String errorMessage) {
         while (true) {
@@ -83,7 +107,10 @@ public class InputValidator {
     }
 
     /**
-     * Gets a non-empty string input
+     * Prompts the user to enter a non-empty string.
+     *
+     * @param prompt the message to display to the user
+     * @return the validated non-empty string
      */
     public static String getNonEmptyString(String prompt) {
         while (true) {
@@ -99,7 +126,10 @@ public class InputValidator {
     }
 
     /**
-     * Gets a valid date input
+     * Prompts the user to enter a date in the format "DD/MM/YYYY".
+     *
+     * @param prompt the message to display to the user
+     * @return the validated {@link LocalDate} input
      */
     public static LocalDate getDateInput(String prompt) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
@@ -115,7 +145,10 @@ public class InputValidator {
     }
 
     /**
-     * Gets a valid time input
+     * Prompts the user to enter a time in the 24-hour format "HH:mm".
+     *
+     * @param prompt the message to display to the user
+     * @return the validated {@link LocalTime} input
      */
     public static LocalTime getTimeInput(String prompt) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TIME_PATTERN);
@@ -131,7 +164,10 @@ public class InputValidator {
     }
 
     /**
-     * Validates and gets a patient ID
+     * Prompts the user to enter a valid patient ID in the format "PXXXX".
+     *
+     * @param prompt the message to display to the user
+     * @return the validated patient ID
      */
     public static String getPatientId(String prompt) {
         return getPatternedInput(
@@ -141,6 +177,12 @@ public class InputValidator {
         ).toUpperCase();
     }
 
+    /**
+     * Prompts the user to enter a valid password with at least 8 characters and one number.
+     *
+     * @param prompt the message to display to the user
+     * @return the validated password
+     */
     public static String getPassword(String prompt){
         return getPatternedInput(
             prompt,
@@ -148,8 +190,12 @@ public class InputValidator {
             "Invalid Password. Ensure at least 8 characters and 1 number"
         );
     }
+
     /**
-     * Validates and gets a doctor ID
+     * Prompts the user to enter a valid doctor ID in the format "DXXX".
+     *
+     * @param prompt the message to display to the user
+     * @return the validated doctor ID
      */
     public static String getDoctorId(String prompt) {
         return getPatternedInput(
@@ -160,7 +206,10 @@ public class InputValidator {
     }
 
     /**
-     * Validates and gets an appointment ID
+     * Prompts the user to enter a valid appointment ID in the format "APTXXX".
+     *
+     * @param prompt the message to display to the user
+     * @return the validated appointment ID
      */
     public static String getAppointmentId(String prompt) {
         return getPatternedInput(
@@ -171,7 +220,10 @@ public class InputValidator {
     }
 
     /**
-     * Validates and gets a phone number
+     * Prompts the user to enter a valid phone number (8-12 digits).
+     *
+     * @param prompt the message to display to the user
+     * @return the validated phone number
      */
     public static String getPhoneNumber(String prompt) {
         return getPatternedInput(
@@ -182,7 +234,10 @@ public class InputValidator {
     }
 
     /**
-     * Validates and gets an email address
+     * Prompts the user to enter a valid email address.
+     *
+     * @param prompt the message to display to the user
+     * @return the validated email address
      */
     public static String getEmailAddress(String prompt) {
         return getPatternedInput(
@@ -193,7 +248,10 @@ public class InputValidator {
     }
 
     /**
-     * Validates and gets a name
+     * Prompts the user to enter a valid name (letters, spaces, hyphens, apostrophes).
+     *
+     * @param prompt the message to display to the user
+     * @return the validated name
      */
     public static String getName(String prompt) {
         return getPatternedInput(
@@ -204,7 +262,10 @@ public class InputValidator {
     }
 
     /**
-     * Validates and gets a blood type
+     * Prompts the user to enter a valid blood type (A+, B-, O+, etc.).
+     *
+     * @param prompt the message to display to the user
+     * @return the validated blood type
      */
     public static String getBloodType(String prompt) {
         return getPatternedInput(
@@ -215,7 +276,10 @@ public class InputValidator {
     }
 
     /**
-     * Validates and gets a gender
+     * Prompts the user to enter a valid gender (e.g., Male, Female, Other).
+     *
+     * @param prompt the message to display to the user
+     * @return the validated gender
      */
     public static String getGender(String prompt) {
         return getPatternedInput(
@@ -226,7 +290,10 @@ public class InputValidator {
     }
 
     /**
-     * Gets a yes/no confirmation
+     * Prompts the user to confirm with "y" or "n".
+     *
+     * @param prompt the message to display to the user
+     * @return true for "yes", false for "no"
      */
     public static boolean getConfirmation(String prompt) {
         while (true) {
@@ -244,7 +311,11 @@ public class InputValidator {
     }
 
     /**
-     * Validates and gets a consultation note
+     * Prompts the user to enter consultation notes.
+     * The input ends when "END" is typed on a new line.
+     *
+     * @param prompt the message to display to the user
+     * @return the consultation notes as a string
      */
     public static String getConsultationNotes(String prompt) {
         System.out.println(prompt);
@@ -260,13 +331,21 @@ public class InputValidator {
     }
 
     /**
-     * Validates and gets a medication name
+     * Prompts the user to enter a medication name.
+     *
+     * @param prompt the message to display to the user
+     * @return the validated medication name
      */
-
     public static String getMedicationName(String prompt) {
         return getNonEmptyString(prompt);
     }
 
+    /**
+     * Prompts the user to enter a valid role (e.g., Doctor, Pharmacist, Administrator).
+     *
+     * @param prompt the message to display to the user
+     * @return the validated role
+     */
     public static String getRole(String prompt) {
         return getPatternedInput(
             prompt,
