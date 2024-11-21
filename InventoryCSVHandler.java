@@ -7,9 +7,31 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handles CSV file operations for managing inventory data, including reading
+ * and writing medication data and replenishment requests.
+ * Implements CSV Handler Interface
+ * @author SCSKGroup2
+ * @version 1.0
+ * @since 2024-11-21
+ */
 public class InventoryCSVHandler implements CSVHandler {
+    /**
+     * The file where medication data is stored.
+     */
     public static final File csvFile = new File("Medicine_List.csv");
+    /**
+     * The file where replenishment request data is stored.
+     */
     public static final File replenishFile = new File("Replenish_Request_List.csv");
+
+    /**
+     * Loads replenishment requests from the replenishment request CSV file.
+     * Updates the last request ID in {@link InventoryManager}.
+     *
+     * @return a list of replenishment requests, where each request is represented
+     *         as an array of strings.
+     */
     public static List<String[]> loadReplenishRequests() {
         List<String[]> requests = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(replenishFile))) {
@@ -35,6 +57,11 @@ public class InventoryCSVHandler implements CSVHandler {
         return requests;
     }
 
+    /**
+     * Loads medication data from the medication CSV file into the inventory manager.
+     * Clears the existing list of medications in {@link InventoryManager} before loading.
+     * Ensures that duplicate medications are not added to the list.
+     */
     public static void loadCSV() {
     String line;
     String csvSplitBy = ";";
@@ -73,6 +100,10 @@ public class InventoryCSVHandler implements CSVHandler {
     }
 }
 
+    /**
+     * Writes the current list of medications from {@link InventoryManager} to the medication CSV file.
+     * Ensures that only unique medications are written to the file.
+     */
     public static void writeCSV() {
         // First, create a temporary list to store unique medications
         List<Medication> uniqueMedications = new ArrayList<>();
