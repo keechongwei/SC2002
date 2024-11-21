@@ -1,4 +1,4 @@
 RequestID;MedicationName;AddedAmount;Status
-3;Paracetamol;100;Approved
-2;Ibuprofen;100;Approved
-1;PARACETAMol;50;Approved
+3;paracetamol;100;Pending
+2;Ibuprofen;100;Pending
+1;PARACETAMol;50;Pending
