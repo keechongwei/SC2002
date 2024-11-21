@@ -167,14 +167,18 @@ public class Doctor extends Staff{
         }
         }System.out.println("No matching slot found for the given Appointment ID.");
     } else if (pick==2){
+        int counter = 0;
         System.out.println("YOUR CURRENT AVAILABLE SLOTS: ");
         for (AppointmentSlot slot : schedule){
             if (slot.getDate().equals(date) && slot.getStatus().equals(AppointmentStatus.AVAILABLE)){
                 System.out.printf("Appointment ID: %s, Time: %s\n", slot.getAppointmentID(), slot.getTime().toString());
+                counter++;
             }
         }
-        System.out.println("Enter Appointment ID of Slot To Be Removed (E.g APT1): ");
-        String choice = sc.nextLine().trim();
+        // Counter to quit if no slot available
+        if (counter == 0) {System.out.println("No slots available during that day"); return;}
+
+        String choice = InputValidator.getAppointmentId("Enter Appointment ID of Slot To Be Removed (E.g APT1)");
         for (AppointmentSlot changedslot : schedule){
             if (changedslot.getAppointmentID().equals(choice) && changedslot.getDate().equals(date)){
                 changedslot.setStatus(AppointmentStatus.UNAVAILABLE);
