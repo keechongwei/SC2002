@@ -102,8 +102,7 @@ public class BillingSystem {
          * @param serviceType TypeOfService representing serviceType
          */
         public Bill(String patientId, String appointmentId, LocalDateTime date, TypeOfService serviceType) {
-            String timestamp = String.valueOf(System.currentTimeMillis());
-            this.billId = "B" + timestamp.substring(timestamp.length() - 4);
+            this.billId = "B" + String.format("%04d", new Random().nextInt(10000));
             this.patientId = patientId;
             this.appointmentId = appointmentId;
             this.date = date;
