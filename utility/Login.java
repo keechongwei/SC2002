@@ -50,17 +50,6 @@ public class Login {
     static User user;
     
     /**
-     * Initializes the system by loading patient, staff, medicine, and appointment data.
-     * Displays success or error messages depending on the outcome of each initialization step.
-     */
-    public static void initialise() {
-        initialiseManager(new PatientManager(), "Patients");
-        initialiseManager(new StaffManager(), "Staff");
-        initialiseManager(new InventoryManager("Medicine_List.csv"), "Medicine");
-        initialiseManager(new AppointmentManager(), "Appointments");
-    }
-    
-    /**
      * Helper method to initialise alls manager and show success or error message.
      * @param manager 
      * @param managerType A string representing the type of manager to intialise
@@ -74,7 +63,17 @@ public class Login {
             e.printStackTrace();
         }
     }
-    
+
+    /**
+     * Initializes the system by loading patient, staff, medicine, and appointment data.
+     * Displays success or error messages depending on the outcome of each initialization step.
+     */
+    public static void initialise() {
+        initialiseManager(new PatientManager(), "Patients");
+        initialiseManager(new StaffManager(), "Staff");
+        initialiseManager(new InventoryManager("Medicine_List.csv"), "Medicine");
+        initialiseManager(new AppointmentManager(), "Appointments");
+    }
     
     /**
      * Validates the provided ID against known IDs for patients, doctors, pharmacists, and administrators.
