@@ -2,14 +2,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * A Manager object meant to handle any update to staff details
+ * @author SCSKGroup2
+ * @version 1.0
+ * @since 2024-11-21
+ */
 public class StaffManager implements Manager {
+    /**
+     * List of Pharmacists
+     */
     static List<Pharmacist> pharmacists = new ArrayList<Pharmacist>();
+    /**
+     * List of Administrators
+     */
     static List<Administrator> administrators = new ArrayList<Administrator>();
+    /**
+     * List of Doctors
+     */
     static List<Doctor> doctors = new ArrayList<Doctor>();
-    static boolean headerline = true;
 
+    static boolean headerline = true;
     static Scanner input_scanner = new Scanner(System.in);
 
+    /**
+     * Check if Staff_List.csv exists
+     * If yes, uses StaffCSVHandler to load Staff details into separate static lists
+     * @param void
+     * @return void
+     * @see StaffCSVHandler
+     */
     public static void initialise() {
         if (!((StaffCSVHandler.csvFile).exists()) || (StaffCSVHandler.csvFile).length() == 0) {
             // File doesn't exist or is empty, create daily appointments
@@ -19,6 +41,17 @@ public class StaffManager implements Manager {
             StaffCSVHandler.loadCSV();
         }
     }
+
+     /**
+     * Check if HospitalID exists
+     * If yes, get the Staff object from respective static role list
+     * Queries for udpate details, uses switch cases to handle different changes to name, role, gender and age
+     * If changing roles, create new respective staff Object, appends to respective static list and remove old Oject from list
+     * Write changes back to CSV using StaffCSVHandler
+     * @param void
+     * @return void
+     * @see StaffCSVHandler
+     */
     public static void updateStaff() {
         String hospitalID = InputValidator.getNonEmptyString("Enter HospitalID: ");
         String roleLetter = hospitalID.substring(0,1);
@@ -51,6 +84,7 @@ public class StaffManager implements Manager {
             return;
         }
 
+        System.out.println();
         System.out.println("Pick category to update: ");
         System.out.println("1 - Name");
         System.out.println("2 - Role");
@@ -116,7 +150,9 @@ public class StaffManager implements Manager {
                         if (!(role_choice.substring(0,1).equals(roleLetter))) {
                             newHospitalID = getNextID(administrators);
                             Administrator admin = new Administrator(newHospitalID, name, gender, age); 
+                            System.out.println(staff.getPassword());
                             admin.setPassword((staff.getPassword()));
+                            System.out.println(admin.getPassword());
                             administrators.add(admin);
 
                             // If remove doctor, remove appts
@@ -160,7 +196,13 @@ public class StaffManager implements Manager {
         StaffCSVHandler.writeCSV();        
     }
 
-    // true means adding new doctor
+    /**
+     * Adds or removes appointments tagged to Doctor Object from Appointment.csv using AppointmentManager
+     * @param Doctor 
+     * @param addOrRemove If true, adds appointments for Doctor Object, if false, removes appointments for Doctor Object
+     * @return void
+     * @see AppointmentManager
+     */
     public static boolean doctorHandling(Doctor doctor, boolean addOrRemove) {
         if (addOrRemove == true) {
             List<Doctor> temp = new ArrayList<>();
@@ -175,6 +217,12 @@ public class StaffManager implements Manager {
         }
     }
 
+    /**
+     * Runs through list of Staff Objects to find largest current ID, return next ID
+     * @param objList
+     * @return nextID Next largest ID
+     * @see AppointmentManager
+     */
     private static String getNextID(List<? extends Staff> objList) {
         int largest_ID  = 0;
         String role_letter = objList.get(0).getHospitalID().substring(0,1);
@@ -189,6 +237,11 @@ public class StaffManager implements Manager {
         return nextID;
     }
 
+    /**
+     * With unique hospital ID searches through static list and returns appropriate Staff Object 
+     * @param hospitalID 
+     * @return Staff
+     */
     public static Staff getStaffByID(String hospitalID) {
         String role_letter = hospitalID.substring(0,1);
 
