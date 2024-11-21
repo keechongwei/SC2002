@@ -1,1 +1,4 @@
 BillID;PatientID;AppointmentID;Date;ServiceType;ServiceFee;Prescriptions;MedicationTotal;TotalAmount;IsPaid
+B4122;P1001;APT2;2024-03-22T14:30:00;XRAY;200.00;;0.00;200.00;false
+B4123;P1001;APT3;2024-04-05T09:15:00;BLOOD_TEST;150.00;Amoxicillin^15|;3.00;153.00;true
+B4123;P1001;APT5;2024-04-20T16:00:00;CONSULTATION;50.00;Ibuprofen^12|;6.00;56.00;false
