@@ -472,7 +472,7 @@ public class Administrator extends Staff {
      * @param role
      * @return nextID Next largest ID
      */
-    private static String getNextID(List<List<String>> doubleList, String role) {
+    private static String agetNextID(List<List<String>> doubleList, String role) {
         int largest_ID  = 0;
         String role_letter = "";
 
@@ -489,9 +489,6 @@ public class Administrator extends Staff {
             System.out.println("Unknown Role");
             role_letter = "?";
         }
-
-        System.out.println(role_letter);
-        Administrator.printDoubleList(doubleList);
 
         for (List<String> singlList : doubleList) {
             if (singlList.get(0).substring(0,1).equalsIgnoreCase(role_letter)) {
