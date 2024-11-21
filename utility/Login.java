@@ -162,20 +162,12 @@ public class Login {
             if (ph.getHospitalID().equals(ID)){ 
                 user = (Pharmacist) ph;        
                 if (ph.getPassword().equals("password")){
-                    System.out.println("Change Your Password: ");
-                    password = sc.nextLine();
-                    while(password.equalsIgnoreCase("password")){
-                        System.out.println("Change Your Password. Your New Password Cannot Be Password: ");
-                        password = sc.nextLine();
-                    }
-                    System.out.println("Verify Your New Password: ");
-                    String check = sc.nextLine();
+                    password = InputValidator.getPassword("First Time Login! Change Your Password (Ensure at least 8 characters and 1 number): ");
+                    String check = InputValidator.getPassword("Verify Your New Password: ");
                     while (!check.equals(password) || password.length() == 0 ){
                         System.out.println("Password Change Failed.");
-                        System.out.println("Change Your Password: ");
-                        password = sc.nextLine();
-                        System.out.println("Verify Your New Password: ");
-                        check = sc.nextLine();  
+                        password = InputValidator.getPassword("Change Your Password (Ensure at least 8 characters and 1 number): ");
+                        check = InputValidator.getPassword("Verify Your New Password: ")  ;
                     }
                     validPassword = true;
                     ph.setPassword(password);
@@ -187,8 +179,8 @@ public class Login {
                     System.out.println("Invalid Password.");
                     validPassword = false;
                 }
-            }
         }
+    }
         for(Administrator adm : StaffManager.administrators){
             if (adm.getHospitalID().equalsIgnoreCase(ID)){   
                 user = (Administrator) adm;      
@@ -212,8 +204,13 @@ public class Login {
                 }
             }
         }
+        if (validPassword){
+            PatientManagerCSVHandler.writeCSV();
+            PatientManagerCSVHandler.loadCSV();
+            StaffCSVHandler.writeCSV();
+            StaffCSVHandler.loadCSV();
+        }
     }
-
     /**
      * Handles the login process, requiring the user to provide valid credentials.
      *
