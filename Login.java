@@ -1,17 +1,49 @@
 import java.util.Scanner;
 
+/**
+ * Handles the login process for the Hospital Management System, including 
+ * user authentication, password validation, and initialization of data 
+ * for patients, staff, medicines, and appointments.
+ * @author SCSKGroup2
+ * @version 1.0
+ * @since 2024-11-21
+ */
 public class Login {
-    // figure out Inventory InitialiseMedicine
-    /* remember to convert functions involving appointments to print name cause appointment slots only have ID
-       cause rn its just doctor and patient ID */
+
+    /**
+     * Indicates whether the user is logged in.
+     */
     static boolean loggedIn = false;
+
+    /**
+     * Indicates whether the provided ID is valid.
+     */
     static boolean validID = false;
+
+    /**
+     * Indicates whether the provided password is valid.
+     */
     static boolean validPassword = false;
+
+    /**
+     * Stores the user ID of the current user.
+     */
     static String ID = "NULL";
+
+    /**
+     * Stores the password of the current user.
+     */
     static String password = "NULL";
+
+    /**
+     * Represents the currently logged-in user.
+     */
     static User user;
     
-    // function used to initialise patient, staff, medicine data
+    /**
+     * Initializes the system by loading patient, staff, medicine, and appointment data.
+     * Displays success or error messages depending on the outcome of each initialization step.
+     */
     public static void initialise(){
         try{
             PatientManager.initialise();
@@ -42,6 +74,12 @@ public class Login {
             e.printStackTrace(); 
         }
     }
+    
+    /**
+     * Validates the provided ID against known IDs for patients, doctors, pharmacists, and administrators.
+     *
+     * @param ID the ID to validate
+     */
     public static void IDCheck(String ID){
         for(Patient p : PatientManager.allPatients ){
             if (p.getHospitalID().equalsIgnoreCase(ID)){
@@ -64,6 +102,14 @@ public class Login {
             } 
         }
     }
+
+    /**
+     * Validates the provided password for the specified user ID.
+     * If the password is a default password ("password"), the user is required to change it.
+     *
+     * @param ID       the user ID
+     * @param password the password to validate
+     */
     public static void passwordCheck(String ID,String password){
         Scanner sc = new Scanner(System.in);
         for(Patient p : PatientManager.allPatients ){
@@ -166,8 +212,15 @@ public class Login {
                 }
             }
         }
+        sc.close();
     }
 
+    /**
+     * Handles the login process, requiring the user to provide valid credentials.
+     *
+     * @param loggedIn indicates whether the user is currently logged in
+     * @param sc       the {@code Scanner} used for user input
+     */
     public static void login(boolean loggedIn, Scanner sc){
         while(!loggedIn){
             System.out.println("=== HOSPITAL MANAGEMENT SYSTEM LOGIN PAGE ===");
@@ -189,6 +242,12 @@ public class Login {
             System.out.println("Successful Login!");
         }
     }
+
+    /**
+     * Main entry point for the login system. Initializes data, manages login, and handles user session.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
         initialise(); // loads in data from csv
@@ -198,5 +257,6 @@ public class Login {
         PatientManagerCSVHandler.writeCSV();
         StaffCSVHandler.writeCSV();
         AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
+        sc.close();
     }   
 }
