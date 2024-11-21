@@ -81,7 +81,7 @@ public class Doctor extends Staff{
             System.out.println("(6) View Upcoming Appointments");
             System.out.println("(7) Record Appointment Outcome");
             System.out.println("(8) Logout");
-            choice = sc.nextInt();
+            choice = InputValidator.getIntegerInput("Enter a choice from 1-8: ", 1, 8);
             switch(choice){
                 case 1:
                 this.viewPatientRecords();
