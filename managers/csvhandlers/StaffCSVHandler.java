@@ -32,10 +32,11 @@ public class StaffCSVHandler implements CSVHandler{
     * Overridden Method from CSVHandler Interface.
     * Loads information from a csv file
     * For this class, loads appointments based on csvFile attribute of StaffCSVHandler from Staff_List_Copy.csv
-    * @param void
-    * @return void
     */
     public static void loadCSV(){
+        StaffManager.administrators.clear();
+        StaffManager.doctors.clear();
+        StaffManager.pharmacists.clear();
         boolean headerline = true;
         try (Scanner scanner = new Scanner(csvFile)){
             while (scanner.hasNextLine()) {
@@ -93,8 +94,6 @@ public class StaffCSVHandler implements CSVHandler{
     /** 
      * Writes Staff information to Staff_List_Copy.csv
      * Retrieves Data From StaffManager to update Staff_List_Copy.csv
-     * @param void
-     * @return void
      * @see StaffManager
      */
     public static void writeCSV(){
