@@ -617,7 +617,16 @@ public class Administrator extends Staff {
                 break;
         }
     }
-    
+     
+    /**
+     * Function to manage Replenishment Requests
+     * Allow administratotr to veiw all Replenishment Requests and approve 
+     * Updates stock or create new medication via Inventory Manager
+     * Write changes by to Replenih Reques csv 
+     * @param  void
+     * @return void
+     * @see InventorManager
+     */
 	public void approveReplenishmentRequest() {
         //Show all pending requests
         List<String> lines = readCSVFile(replenishRecordsCSV);
