@@ -6,6 +6,9 @@
  * Completed - Doctor has conducted appointment and completed Appointment Outcome Record
  * Available - Free slots for patient to schedule with doctor
  * Unavailable - Doctor has marked slot as unavailable  
+ * @author SCSKGroup2
+ * @version 1.0
+ * @since 2024-11-21
  */
 public enum AppointmentStatus {
     PENDING,
