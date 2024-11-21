@@ -7,12 +7,40 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+
+/**
+ * The {@code PatientManagerCSVHandler} class handles the reading and writing of patient
+ * data from and to a CSV file. It uses the {@code PatientManager} class to store 
+ * patient records in memory and manages data consistency between the CSV file and memory.
+ * @author SCSKGroup2
+ * @version 1.0
+ * @since 2024-11-21
+ */
 public class PatientManagerCSVHandler {
 
+    /**
+     * The CSV file where patient data is stored.
+     */
     public static final File csvFile = new File("Patient_List copy.csv");
+
+    /**
+     * The delimiter used to separate fields in the CSV file.
+     */
     private static final String CSV_DELIMITER = ";";
-    private static final String LIST_DELIMITER = ",";  // For separating items within ArrayLists
-        // Load records from CSV
+
+    /**
+     * The delimiter used to separate items within lists (e.g., past diagnoses, past treatments).
+     */
+    private static final String LIST_DELIMITER = ",";
+
+
+    /**
+     * Loads patient data from the CSV file into memory. If the {@code PatientManager.allPatients}
+     * list is not empty, it is cleared before loading new records.
+     * 
+     * This method skips the header row in the CSV file and reads each subsequent line
+     * to create {@code Patient} objects, which are added to the {@code PatientManager.allPatients} list.
+     */
     public static void loadCSV() {
        
         if(!(PatientManager.allPatients.isEmpty())) {
@@ -59,7 +87,13 @@ public class PatientManagerCSVHandler {
         }
     }
 
-        // Write all records to CSV
+    /**
+     * Writes all patient data from memory to the CSV file. Existing data in the file
+     * will be overwritten.
+     * 
+     * This method first writes a header row and then iterates over the 
+     * {@code PatientManager.allPatients} list to write each patient's data as a line in the file.
+     */
     public static void writeCSV() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile))) {
             // Write header
@@ -76,7 +110,15 @@ public class PatientManagerCSVHandler {
         }
     }
 
-    // Convert Patient object to CSV line
+    /**
+     * Converts a {@code Patient} object to a CSV-formatted string.
+     * 
+     * This method serializes all patient fields, including lists (e.g., past diagnoses
+     * and past treatments), using the specified delimiters.
+     * 
+     * @param patient the {@code Patient} object to be converted.
+     * @return a string representing the patient in CSV format.
+     */
     public static String convertToCSV(Patient patient) {
         StringBuilder sb = new StringBuilder();
         try {
