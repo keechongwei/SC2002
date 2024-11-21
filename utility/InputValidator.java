@@ -338,7 +338,20 @@ public class InputValidator {
      * @return the validated medication name
      */
     public static String getMedicationName(String prompt) {
-        return getNonEmptyString(prompt);
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine().trim();
+            for (Medication med : InventoryManager.listOfMedications){
+                if (input.equalsIgnoreCase(med.getMedicationName())){
+                    return input;
+                }
+            }
+            System.out.println("Input is not a valid Medication. Please try again.");
+            System.out.println("List of Medications:");
+            for (Medication med : InventoryManager.listOfMedications){
+                System.out.println(med.getMedicationName());
+            }
+        }
     }
 
     /**
