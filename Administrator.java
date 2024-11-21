@@ -9,29 +9,54 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * An Administrator class, a subclass of Staff
+ * @author SCSKGroup2
+ * @version 1.0
+ * @since 2024-11-21
+ */
 public class Administrator extends Staff {
 
-    enum Filter_type{Name,Role,Gender,Age}
+    enum FilterType{Name,Role,Gender,Age}
     enum csvField{}
 
+     /**
+     * Full list of all staff 
+     */
     static List<List<String>> staffs = new ArrayList<>();
+
+    /**
+     * Fileanme of staff csv to be read
+     * Constants defined by index of details in csv row
+     */
     static String staffRecordsCSV = "Staff_List_Copy.csv";
     public static final int STAFFID = 0, PASSWORD = 1, NAME = 2, ROLE = 3, GENDER = 4, AGE = 5;
 
+    /**
+     * Fileanme of medication inventory csv to be read 
+     * Constants defined by index of details in csv row
+     */
     static String medicineListCSV = "Medicine_List.csv";
 
+    /**
+     * Fileanme of repplenish requet csv to be read 
+     * Constants defined by index of details in csv row
+     */
     static String replenishRecordsCSV = "Replenish_Request_List.csv";
     public static final int REQID = 0, MEDICATIONNAME = 1, ADDEDAMT = 2, STATUS = 3;
 
+    /**
+     * Scanner object to read inputs
+     */
     Scanner input_scanner = new Scanner(System.in);
 
-	private Object _attribute;
-
-     // Constructor for Administrator class
-     public Administrator(String HospitalID, String password) {
-        super(HospitalID, password);
-    }
-
+     /**
+     * Constructor for Administrator Object
+     * @param HospitalID Unique HospitalID
+     * @param name Admin's Name
+     * @param gender Admin's Gender
+     * @param age Admin's Age
+     */
      public Administrator(String HospitalID, String name, String gender, String age) {
         super(HospitalID, "password");
         this.name = name;
@@ -39,8 +64,12 @@ public class Administrator extends Staff {
         this.age = age;
     }
 
+    /**
+     * Function to print Menu for Administrator
+     * @param void
+     * @return void
+     */
     public void printMenu(){
-        Scanner sc = new Scanner(System.in);
         int choice = 0;
         while(choice != 5){
             System.out.println("=== ADMINISTRATOR MENU, ENTER CHOICE ===");
@@ -50,8 +79,6 @@ public class Administrator extends Staff {
             System.out.println("(4) Approve Replenishment Requests");
             System.out.println("(5) Logout");
             choice = InputValidator.getIntegerInput("Choice: ", 1, 5);
-
-            Administrator administrator = new Administrator("A001", "password");
 
             // Made manage staff and inventroy non-static for security
             switch(choice){
@@ -75,36 +102,21 @@ public class Administrator extends Staff {
         }
     }
 
+    /**
+     * Function to convert information of DocAdministratortor into a string to be added to staff CSV
+     * @param void
+     * @return String row to be written into Staff CSV
+     */
     public String toCSV() {
         // Combine all attributes into a CSV string
         return super.getHospitalID() + ";" + super.getPassword() + ";" + name + ";" + "Administrator" + ";" + gender + ";" + age;
     }
-    
-    public static void main(String[] args) {
-        // Create an Administrator instance
-        Administrator admin = new Administrator("Hospital123", "Password123");
-    
-        // Initialize staff details
 
-
-        // Filter staff 
-        //List<List<String>> filteredStaffs = admin.filterStaff(Filter_type.Name, "John");
-    
-        // Print the filtered staff list
-        ///System.out.println("Filtered Staff List:");
-        //admin.printDoubleList(filteredStaffs);
-
-        AppointmentManager.initialise();
-        StaffManager.initialise();
-        admin.manageStaff();
-
-        //admin.manageInventory();
-
-        //admin.approveReplenishmentRequest();
-
-        //Administrator.viewAllAppointments();
-    }
-
+    /**
+     * Function to add all staff from Staff.csv into a static staffs list
+     * @param void
+     * @return void
+     */
     private static void initialise_staff_details(){
         boolean headerline = true;
         List<String> temp = readCSVFile(staffRecordsCSV);
@@ -122,12 +134,15 @@ public class Administrator extends Staff {
         }
         
         System.out.println("Staff Information Retrieved Successfully!");
-        //System.out.println(staffs);
     }
 
-    // For filtering staff by age
-	public static List<List<String>> filterStaff(Filter_type filter_type) {        
-        if (filter_type != Filter_type.Age) {System.out.println("Please enter a valid integer value for age");}
+    /**
+     * Overloaded function for filtering staff by age in ascending order
+     * @param filter_type type of filter must be Age
+     * @return filteredStaffs filtered list of Staff
+     */
+	public static List<List<String>> filterStaff(FilterType filterType) {        
+        if (filterType != FilterType.Age) {System.out.println("Please enter a valid filter.");}
 
         List<List<String>> filteredStaffs = new ArrayList<List<String>>(staffs);
 
@@ -143,10 +158,15 @@ public class Administrator extends Staff {
         return filteredStaffs;
 	}
 
-    // For sorting staff by age
-	public static List<List<String>> filterStaff(Filter_type filter_type, int age) {
+    /**
+     * Overloaded function for filtering staff by specific age
+     * @param filter_type type of filter must be Age
+     * @param age specific age to look for
+     * @return filteredStaffs filtered list of Staff
+     */
+	public static List<List<String>> filterStaff(FilterType filterType, int age) {
         
-        if (filter_type != Filter_type.Age) {System.out.println("Please enter a valid integer value for age");}
+        if (filterType != FilterType.Age) {System.out.println("Please enter a valid filter.");}
 
         List<List<String>> filteredStaffs = new ArrayList<>();
 
@@ -161,10 +181,15 @@ public class Administrator extends Staff {
         return filteredStaffs;
 	}
 
-    // For filtering staff by name role and gender
-    public static List<List<String>> filterStaff(Filter_type filterType, String name_role_gender) {
+    /**
+     * Overloaded function for filtering staff by name, role or gender
+     * @param filter_type type of filter must be Name, Role or Gender
+     * @param name_role_gender specific name, role or gender to look for
+     * @return filteredStaffs filtered list of Staff
+     */
+    public static List<List<String>> filterStaff(FilterType filterType, String name_role_gender) {
 
-        //System.out.println("filterbystr");
+        if (filterType == FilterType.Age) {System.out.println("Please enter a valid filter.");}
 
         List<List<String>> filteredStaffs = new ArrayList<>();
         int index = -1;
@@ -202,6 +227,11 @@ public class Administrator extends Staff {
 		//throw new UnsupportedOperationException();
 	}
 
+     /**
+     * Function to print a nested list of Strings
+     * @param doubList
+     * @return void
+     */
     public static void printDoubleList(List<List<String>> doubList) { 
         for (List<String> singleList : doubList) {
             for (String string : singleList) {
@@ -211,9 +241,22 @@ public class Administrator extends Staff {
         }
     }
 
+    /**
+     * Function to manage all staffs
+     * Allow administratotr or choose between searching for staff w/o filters, removing staff, updating staff details or adding new staff
+     * Searching for staff w/o filters using appropriate filter function to get a filtered list, before using printDoubeleList to print
+     * Removing staff uses removeStaff function (private)
+     * Udpdating staff details uses updateStaff from StaffManager
+     * Adding staff uses addStaff function (private)
+     * Removing and Adding are (private) to Administrator class for security and encapsulation purposes
+     * Changes are written to static list of staffs before being written to CSV
+     * @param  void
+     * @return void
+     * @see StaffManager
+     */
 	public void manageStaff() {
-
-        if(staffs.size() == 0) {initialise_staff_details();}
+        // Reinitalise static staff list to reflect any changes to Staff_List.csv
+        staffs.clear(); initialise_staff_details();
 
         // Search by ID
         System.out.println("=== Staff Manager ===");
@@ -246,31 +289,31 @@ public class Administrator extends Staff {
                 switch (manageStaff_choice) {
                     case 1:
                         String searchByname = InputValidator.getName("Name: ");
-                        filteredStaffs = Administrator.filterStaff(Filter_type.Name, searchByname);
+                        filteredStaffs = Administrator.filterStaff(FilterType.Name, searchByname);
                         break;
 
                     case 2:
                         String role = InputValidator.getRole("Role: ");
-                        filteredStaffs = Administrator.filterStaff(Filter_type.Role, role);
+                        filteredStaffs = Administrator.filterStaff(FilterType.Role, role);
                         break;
 
                     case 3:
                         int searchByAge = InputValidator.getIntegerInput("Age: ", 1, 100);    
-                        filteredStaffs = Administrator.filterStaff(Filter_type.Age, searchByAge);
+                        filteredStaffs = Administrator.filterStaff(FilterType.Age, searchByAge);
                         break;
 
                     case 4:
-                        filteredStaffs = Administrator.filterStaff(Filter_type.Age);
+                        filteredStaffs = Administrator.filterStaff(FilterType.Age);
                         break;
 
                     case 5:
                         String gender_choice = InputValidator.getGender("Gender: ");
-                        filteredStaffs = Administrator.filterStaff(Filter_type.Gender, gender_choice);
+                        filteredStaffs = Administrator.filterStaff(FilterType.Gender, gender_choice);
                         break;    
         
                     case 6:
                         printDoubleList(filteredStaffs);
-                        filteredStaffs = Administrator.filterStaff(Filter_type.Age);
+                        filteredStaffs = Administrator.filterStaff(FilterType.Age);
                         break;
 
                     default:
@@ -294,6 +337,15 @@ public class Administrator extends Staff {
         }
 	}
     
+    /**
+     * Function to add new staff
+     * Queries for new Staff details
+     * Creates new Doctor/Pharmacist/Administrator Object and adds it to static list staffs and respective static role list in StaffManager
+     * Writes changes to Staff_List.csv
+     * @param  void
+     * @return void
+     * @see StaffManager
+     */
     private void addStaff() {
         System.out.println("Enter new staff details: ");
         String name = InputValidator.getName("Name: ");
@@ -303,7 +355,7 @@ public class Administrator extends Staff {
         String password = InputValidator.getPassword("Password: ");
 
         List<List<String>> filteredStaffs = new ArrayList<>();
-        filteredStaffs = filterStaff(Filter_type.Role, role);
+        filteredStaffs = filterStaff(FilterType.Role, role);
 
         String hospitalID = getNextID(filteredStaffs, role);
 
@@ -334,6 +386,15 @@ public class Administrator extends Staff {
         System.out.println();
     }
 
+    /**
+     * Function to remove staff
+     * Queries for new unqiue Hospital ID and retrieve specific Staff Object using StaffManager
+     * Removes staff from Staff_List.csv, removes object from static staff list in StaffManager
+     * If removing a doctor handles changes to appointments using StaffManager
+     * @param  void
+     * @return void
+     * @see StaffManager
+     */
     private void removeStaff() {
         String hospitalID = InputValidator.getNonEmptyString("Enter HospitalID: ");
         System.out.println("");
@@ -361,6 +422,11 @@ public class Administrator extends Staff {
         System.out.println();
     }
 
+    /**
+     * Function to read Staff_List.csv
+     * @param filename
+     * @return lines
+     */
     public static List<String> readCSVFile(String filename) {
         List<String> lines = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
@@ -374,6 +440,12 @@ public class Administrator extends Staff {
         return lines;
     }
 
+    /**
+     * Function to wrtie to Staff_List.csv
+     * @param lines
+     * @param CSVFile
+     * @return lines
+     */
     public static void writeCSVFile(List<String> lines, String CSVFile) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSVFile))) {
             for (String line : lines) {
@@ -385,6 +457,12 @@ public class Administrator extends Staff {
         }
     }
 
+    /**
+     * Runs through list to find largest current ID, return next ID
+     * @param doubleList
+     * @param role
+     * @return nextID Next largest ID
+     */
     private static String getNextID(List<List<String>> doubleList, String role) {
         int largest_ID  = 0;
         String role_letter = "";
@@ -406,7 +484,6 @@ public class Administrator extends Staff {
         System.out.println(role_letter);
         Administrator.printDoubleList(doubleList);
 
-        int animals = 0;;
         for (List<String> singlList : doubleList) {
             if (singlList.get(0).substring(0,1).equalsIgnoreCase(role_letter)) {
                 String temp = singlList.get(0);
@@ -417,20 +494,29 @@ public class Administrator extends Staff {
                 if (ID_without_letter >= largest_ID) {
                     largest_ID = ID_without_letter;
                 }
-                animals++;
             }
         }
 
+        // To format the ID to reflect A001 format, where A is specific to role
         String formattedNumber = String.format("%03d", largest_ID+1);
         String nextID = role_letter + String.valueOf(formattedNumber);
-
-        System.out.println(nextID);
-        System.out.println(animals);
 
         return nextID;
     }
 
-    // might need to add error checking for duplicates and other kinds of inputs
+    /**
+     * Function to manage inventory
+     * Allow administratotr or choose between veiwing inventory, adding new or current stock, updating or deleting stock, and udapting stock's low alert value
+     * View inventory prints entire inventory
+     * Add to current stock by getting and setting specific medication Object by Name through InventoryManager
+     * Add new stock uses InventoryManager to create and update new Medication Object
+     * Removing stock uses InventoryManager to create and delete new Medication Object
+     * Update Stock allows stock level to be directly udapted through InventoryManager
+     * Update Stock Alert allows low stock level to be directly udapted through InventoryManager
+     * @param  void
+     * @return void
+     * @see InventorManager
+     */
 	public void manageInventory() { 
         InventoryManager inventory = new InventoryManager(medicineListCSV);
     
@@ -459,14 +545,11 @@ public class Administrator extends Staff {
                 inventory.updateMedication(medication_choice, amount, true);
                 break;
 
-            case 3: // might need to add error checking for duplicates and other kinds of inputs
+            case 3:
                 System.out.println("=== Adding New Stock ===");
                 String new_med_choice = InputValidator.getName("Medication Name: ");
-                System.out.println("");
                 int new_med_amount = InputValidator.getIntegerInput("Stock: ", 1, 10000);
-                System.out.println("");
                 int alertValue = InputValidator.getIntegerInput("Low Stock Value: ", 1, 10000);
-                System.out.println("");
                 inventory.addNewMedication(new_med_choice, new_med_amount, alertValue);
 
                 Medication med = inventory.getMedication(new_med_choice);
@@ -519,9 +602,7 @@ public class Administrator extends Staff {
             case 6:
                 System.out.println("=== Updating Stock Alert Level ===");
                 String med_level_choice = InputValidator.getName("Medication Name: ");
-                System.out.println("");
                 int new_limit = InputValidator.getIntegerInput("New Alert Level: ", 1, 10000);
-                System.out.println("");
 
                 Medication updated_med = inventory.getMedication(med_level_choice);
                 if(updated_med == null) {break;}
@@ -601,138 +682,3 @@ public class Administrator extends Staff {
 	}
 
 }
-
-
-
-    // private void updateStaff() {
-    //     System.out.println("Enter HospitalID: ");
-    //     String hospitalID = input_scanner.nextLine();
-    
-    //     List<String> lines = readCSVFile(staffRecordsCSV);
-
-    //     // Flag to check if found
-    //     boolean found = false;
-    
-    //     for (int i = 0; i < lines.size(); i++) {
-    //         if (lines.get(i).startsWith(hospitalID + ";")) {
-    //             String[] fields = lines.get(i).split(";");
-
-    //             // Update found flag to true;
-    //             found = true;
-    //             int roleHandlingFlag = 0;
-    
-    //             // Split the existing line to get the current details
-    //             String[] details = lines.get(i).split(";");
-    //             String name = details[1];
-    //             String role = details[2];
-    //             String gender = details[3];
-    //             String age = details[4];
-    
-    //             System.out.println("Pick category to update: ");
-    //             System.out.println("1 - Name");
-    //             System.out.println("2 - Role");
-    //             System.out.println("3 - Gender");
-    //             System.out.println("4 - Age");
-    
-    //             int input = input_scanner.nextInt();
-    //             input_scanner.nextLine(); // Skip \n
-    
-    //             switch (input) {
-    //                 case 1:
-    //                     System.out.println("Name: ");
-    //                     name = input_scanner.nextLine();
-    //                     break;
-    
-    //                 case 2:
-    //                     System.out.println("Pick the Role: ");
-    //                     System.out.println("1 - Doctor");
-    //                     System.out.println("2 - Pharmacist");
-    //                     System.out.println("3 - Administrator");
-    //                     int role_choice = input_scanner.nextInt();
-    //                     input_scanner.nextLine();
-                    
-    //                     switch (role_choice) {
-    //                         case 1:
-    //                             role = "Doctor";
-
-    //                             // Assuming fields[2] is previous role, if there is a change in role, from another to Doctor, update doctor handling 
-    //                             if(!role.equalsIgnoreCase(fields[2])) {
-    //                                 roleHandlingFlag = 1;
-    //                             }
-                                
-    //                             break;
-    //                         case 2:
-    //                             role = "Pharmacist";
-    //                             // Assuming fields[2] is previous role, if there is a change in role, from another to Doctor, update doctor handling 
-    //                             if(!role.equalsIgnoreCase(fields[2])) {
-    //                                 roleHandlingFlag = 2;
-    //                             }
-    //                             break;
-    //                         case 3:
-    //                             role = "Administrator";
-    //                             if(!role.equalsIgnoreCase(fields[2])) {
-    //                                 roleHandlingFlag = 3;
-    //                             }
-    //                             break;
-    //                         default:
-    //                             System.out.println("Invalid role choice. Keeping the current role.");
-    //                             break;
-    //                     }
-    //                     break;
-    
-    //                 case 3:
-    //                     System.out.println("Pick the Gender: ");
-    //                     System.out.println("1 - Male");
-    //                     System.out.println("2 - Female");
-    //                     int gender_choice = input_scanner.nextInt();
-    //                     input_scanner.nextLine();
-
-    //                     switch (gender_choice) {
-    //                         case 1:
-    //                             gender = "Male";
-    //                             break;
-    //                         case 2:
-    //                             gender = "Female";
-    //                             break;
-    //                         default:
-    //                             System.out.println("Invalid gender choice. Keeping the current gender.");
-    //                             break;
-    //                     }
-    //                     break;
-    
-    //                 case 4:
-    //                     System.out.println("Age: ");
-    //                     age = input_scanner.nextLine();
-    //                     break;
-    
-    //                 default:
-    //                     System.out.println("Invalid input noob.");
-    //                     break;
-    //             }
-
-    //             // if switch to diff role, handle change in ID or/and DoctorHandling 
-    //             if (roleHandlingFlag == 1) {
-    //                 hospitalID = getNextID(staffs, role);
-    //                 boolean check = doctorHandling(hospitalID, name, gender, age, true);
-                    
-    //                 if (check != true) {
-    //                     System.out.println("Unable to add Doctor");
-    //                     return;
-    //                 } 
-    //             } else { // Edit here to handle different incremenitng
-    //                 hospitalID = getNextID(staffs, role);
-    //             }
-
-    //             // Replace the old line with the updated details
-    //             lines.set(i, String.join(";", hospitalID, name, role, gender, age));
-    //             break;
-    //         }
-
-    //     } 
-    //     if (found) {
-    //         writeCSVFile(lines, staffRecordsCSV);
-    //     } else {
-    //         System.out.println("Invalid HospitalID");
-    //     }
-        
-    // }

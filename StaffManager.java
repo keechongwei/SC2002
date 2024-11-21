@@ -21,8 +21,9 @@ public class StaffManager implements Manager {
      * List of Doctors
      */
     static List<Doctor> doctors = new ArrayList<Doctor>();
-
-    static boolean headerline = true;
+    /**
+     * Scanner object to read inputs
+     */
     static Scanner input_scanner = new Scanner(System.in);
 
     /**

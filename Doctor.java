@@ -26,7 +26,7 @@ public class Doctor extends Staff{
      * @param HospitalID Unique HospitalID
      * @param doctorName Doctor's Name
      * @param gender Doctor's Gender
-     * @param age Doctor's 
+     * @param age Doctor's Age
      */
     public Doctor(String HospitalID, String doctorName, String gender, String age) {
         super(HospitalID,"password");
@@ -502,7 +502,7 @@ public class Doctor extends Staff{
     /**
      * Function to convert information of Doctor into a string to be added to staff CSV
      * @param void
-     * @return void
+     * @return String row to be written into Staff CSV
      */
     public String toCSV() {
         // Combine all attributes into a CSV string

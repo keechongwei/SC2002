@@ -283,6 +283,11 @@ public class Pharmacist extends Staff {
         List<Medication> lowStockMeds = inventory.updateAllAlertLevels();
     }
 
+    /**
+     * Function to convert information of Pharamcist into a string to be added to staff CSV
+     * @param void
+     * @return String row to be written into Staff CSV
+     */
     public String toCSV() {
         // Combine all attributes into a CSV string
         return super.getHospitalID() + ";" + super.getPassword() + ";" + name + ";" + "Pharmacist" + ";" + gender + ";" + age;
