@@ -53,8 +53,6 @@ public class Doctor extends Staff{
 
     /**
      * Function to add Patient with confirmed appointments with Doctor to the List of Patients under Doctor's care
-     * @param void
-     * @return void
      */
     public void addPatientsUnderCare(){
         for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray){
@@ -66,8 +64,6 @@ public class Doctor extends Staff{
 
     /**
      * Function to print Menu for Doctor
-     * @param void
-     * @return void
      */
     public void printMenu(){
         int choice = 0;
@@ -120,7 +116,6 @@ public class Doctor extends Staff{
     /**
      * Adds a patient to the list of patients under Doctor's care
      * @param patient Patient to be added to list
-     * @return void
      * @see Patient
      */
     public void addPatient(Patient patient) {
@@ -129,8 +124,6 @@ public class Doctor extends Staff{
 
     /**
      * View the Medical Record of Patients under Doctor's Care
-     * @param void
-     * @return void
      */
     public void viewPatientRecords(){
         if (patientList.isEmpty()) {
@@ -147,8 +140,6 @@ public class Doctor extends Staff{
     /**
      * Sets Availability for Appointments
      * If AppointmentSlot is PENDING, it will be set as UNAVAILABLE
-     * @param void
-     * @return void
      * @see AppointmentSlot
      * @see AppointmentStatus
      */
@@ -157,15 +148,9 @@ public class Doctor extends Staff{
         System.out.println("Manage Availability for Appointments:");
         System.out.println("(1) Set Slot as Available");
         System.out.println("(2) Set Slot as Unavailable");
-        System.out.print("Enter your choice: ");
-        int pick = sc.nextInt();
-        sc.nextLine();
-        
-        System.out.println("Enter Date in (YYYY-MM-DD) format, eg: 2024-11-15 :");
-        String dateinput = sc.nextLine();
-        LocalDate date = LocalDate.parse(dateinput, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
-           if (pick == 1) {
+        int pick = InputValidator.getIntegerInput("Enter your choice: ", 1, 2);
+        LocalDate date = InputValidator.getDateInput("Enter Date");
+        if (pick == 1) {
         System.out.println("YOUR CURRENT UNAVAILABLE SLOTS: ");
         for (AppointmentSlot slot : schedule){
             if (slot.getDate().equals(date) && slot.getStatus().equals(AppointmentStatus.UNAVAILABLE)){
@@ -213,8 +198,6 @@ public class Doctor extends Staff{
 
     /**
      * Prints out Doctor's upcoming appointments and available AppointmentSlots
-     * @param void
-     * @return void
      * @see AppointmentSlot
      */
     public void viewPersonalSchedule() {
@@ -233,8 +216,6 @@ public class Doctor extends Staff{
 
     /**
      * Updates details in Medical Record of Patient under Care
-     * @param void
-     * @return void
      * @see MedicalRecord
      * @see Patient
      */
@@ -253,18 +234,6 @@ public class Doctor extends Staff{
         return;
     }
 
-    //AppointmentSlot matchedSlot = null;
-    //for (AppointmentSlot slot : appointmentSlotArray) {
-    //    if (slot.getPatientID().equals(id)) {
-    //        matchedSlot = slot;
-    //        break;
-    //    }
-    //}
-
-    //if (matchedSlot.getStatus() != AppointmentStatus.CONFIRMED) {
-    //    System.out.println("The patient's appointment status is not confirmed. Cannot update records.");
-    //    return;
-    //}
 
     // Update the patient's records
     System.out.print("Enter the diagnosis for the patient: ");
@@ -283,8 +252,6 @@ public class Doctor extends Staff{
     
     /**
      * Prints upcoming appointments of Doctor
-     * @param void
-     * @return void
      */
     public void viewUpcomingAppointment(){
         System.out.println("Doctor's Upcoming Appointments");
@@ -306,8 +273,6 @@ public class Doctor extends Staff{
 
     /**
      * Function for Doctor to accept or decline Pending Appointments
-     * @param void
-     * @return void
      */
     public void acceptOrDeclineAppointments(){
         System.out.println("PENDING APPOINTMENTS");
@@ -328,8 +293,7 @@ public class Doctor extends Staff{
             System.out.println("(1) ACCEPT APPOINTMENT");
             System.out.println("(2) DECLINE APPOINTMENT");
             System.out.println("(3) QUIT");
-            choice = sc.nextInt();
-            sc.nextLine();
+            choice = InputValidator.getIntegerInput("Choose by number: ",1,3);
             switch(choice){
                 case 1:
                 System.out.println("PENDING APPOINTMENTS");
@@ -382,8 +346,6 @@ public class Doctor extends Staff{
 
     /**
      *  Function to make AppointmentOutcomeRecord for COMPLETED AppointmentSlots
-     * @param void
-     * @return void
      * @see AppointmentOutcomeRecord
      * @see AppointmentSlot
      */
@@ -412,11 +374,7 @@ public class Doctor extends Staff{
             id = sc.nextLine().trim();
         }
         confirmedAppointmentSlots.retainAll(AppointmentManager.getAppointmentsByPatient(id));
-        for (AppointmentSlot slot : confirmedAppointmentSlots){
-            if (slot.getStatus() != AppointmentStatus.CONFIRMED){
-                confirmedAppointmentSlots.remove(slot);
-            }
-        }
+        confirmedAppointmentSlots.removeIf(slot -> slot.getStatus() != AppointmentStatus.CONFIRMED);
         System.out.println("LIST OF APPOINTMENTS");
         System.out.println("----------------------------------------------");    
         for (AppointmentSlot slot : confirmedAppointmentSlots){
@@ -470,8 +428,7 @@ public class Doctor extends Staff{
             System.out.println("The type of service of this diagnosis for the patient:");
             serviceType = sc.nextLine().trim();
         }
-        System.out.print("The prescribed medication of this diagnosis for the patient:");
-        String medicineType = sc.nextLine().trim();
+        String medicineType = InputValidator.getMedicationName("The prescribed medication of this diagnosis for the patient:");
         while (!validMedication){
             for (Medication med : InventoryManager.listOfMedications){
                 if (medicineType.equalsIgnoreCase(med.getMedicationName())){
@@ -492,11 +449,9 @@ public class Doctor extends Staff{
             System.out.println("The prescribed medication of this diagnosis for the patient:");
             medicineType = sc.nextLine().trim();
         }
-        System.out.print("The amount of prescribed medication of this diagnosis for the patient:");
-        String dosageAmount = sc.nextLine();
-        Prescription pres = new Prescription(medicineType,PrescriptionStatus.PENDING,Integer.parseInt(dosageAmount));
-        System.out.print("Consultation note:");
-        String consultationNote = sc.nextLine();
+        int dosageAmount = InputValidator.getIntegerInput("The amount of prescribed medication of this diagnosis for the patient:", 1, 1000);
+        Prescription pres = new Prescription(medicineType,PrescriptionStatus.PENDING,dosageAmount);
+        String consultationNote = InputValidator.getConsultationNotes("Consultation note:");
         for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
         // Check if the slot matches the patient ID, doctor ID, and is confirmed
             if (selectedAppointmentID.equals(slot.getAppointmentID())) {
@@ -515,8 +470,6 @@ public class Doctor extends Staff{
 
     /**
      * Function to convert information of Doctor into a string to be added to staff CSV
-     * @param void
-     * @return void
      */
     public String toCSV() {
         // Combine all attributes into a CSV string
