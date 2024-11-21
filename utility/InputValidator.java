@@ -175,7 +175,7 @@ public class InputValidator {
         return getPatternedInput(
             prompt,
             PATIENT_ID_PATTERN,
-            "Invalid patient ID format. Please enter ID in format P001."
+            "Invalid patient ID format. Please enter ID in format P1001."
         ).toUpperCase();
     }
 
