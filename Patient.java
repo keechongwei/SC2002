@@ -1,30 +1,64 @@
 import java.util.ArrayList;
 import java.util.List;
 
-
-
+/**
+ * Represents a patient in the hospital management system, inheriting from the {@link User} class.
+ * The class manages the patient's medical record and provides various functionalities
+ * for the patient, including managing personal information, appointments, and viewing records.
+ * @author SCSKGroup2
+ * @version 1.0
+ * @since 2024-11-21
+ */
 public class Patient extends User{
-    //under medical record:
-    // protected String patientID;
-    // protected String patientName;
-    // protected int dateofBirth;
-    // protected String gender;
-    // protected String BloodType;
+
+    /**
+     * The medical record associated with the patient.
+     */
     private MedicalRecord medicalRecord;
 
-    //patient Constructor
+
+    /**
+     * Constructs a new {@code Patient} instance with the given details and initializes a medical record.
+     *
+     * @param patientID    the unique ID of the patient
+     * @param patientName  the name of the patient
+     * @param dateofBirth  the date of birth of the patient
+     * @param gender       the gender of the patient
+     * @param bloodType    the blood type of the patient
+     * @param phoneNumber  the phone number of the patient
+     * @param emailAddress the email address of the patient
+     * @param password     the password for the patient account
+     */
     public Patient(String patientID, String patientName, String dateofBirth, String gender, String bloodType, String phoneNumber, String emailAddress,String password) {
         super(patientID, password);
         this.medicalRecord = new MedicalRecord(patientID, patientName, dateofBirth, gender, phoneNumber, emailAddress, bloodType);
         this.medicalRecord.setPatient(this); 
     }
 
+    /**
+     * Constructs a new {@code Patient} instance with the given details, past diagnoses, and past treatments.
+     *
+     * @param patientID      the unique ID of the patient
+     * @param patientName    the name of the patient
+     * @param dateofBirth    the date of birth of the patient
+     * @param gender         the gender of the patient
+     * @param bloodType      the blood type of the patient
+     * @param phoneNumber    the phone number of the patient
+     * @param emailAddress   the email address of the patient
+     * @param pastDiagnoses  the list of past diagnoses for the patient
+     * @param pastTreatments the list of past treatments for the patient
+     * @param password       the password for the patient account
+     */
     public Patient(String patientID, String patientName, String dateofBirth, String gender, String bloodType, String phoneNumber, String emailAddress, ArrayList<String> pastDiagnoses, ArrayList<String> pastTreatments,String password) {
         super(patientID, password);
         this.medicalRecord = new MedicalRecord(patientID, patientName, dateofBirth, gender, phoneNumber, emailAddress, bloodType, pastDiagnoses, pastTreatments);
         this.medicalRecord.setPatient(this); 
     }
 
+    /**
+     * Displays the patient menu and provides various actions, including managing personal information
+     * and appointments.
+     */
     public void printMenu(){
         int choice = 0;
         while(choice != 10){
@@ -76,15 +110,27 @@ public class Patient extends User{
         }
     }
 
+    /**
+     * Sets a new password for the patient account.
+     *
+     * @param password the new password
+     */
     public void setPassword(String password){
         super.setPassword(password);
     }
 
+    /**
+     * Retrieves the medical record associated with the patient.
+     *
+     * @return the medical record of the patient
+     */
     public MedicalRecord getMedicalRecord() {
         return this.medicalRecord;
     }
 
-    //update contact info in medical record
+    /**
+     * Updates the personal contact information of the patient, such as phone number and email address.
+     */
     public void updatePersonalInfo() {
         int choice;
 
@@ -123,16 +169,10 @@ public class Patient extends User{
 
     }
 
+    /**
+     * Displays the medical record of the patient, including personal, contact, and medical history details.
+     */
     public void viewMedicalRecord() {
-    // private String patientID;
-    // private String name;
-    // private String dateOfBirth;
-    // private String gender;
-    // private String phoneNumber;
-    // private String emailAddress;
-    // private String bloodType;
-    // private ArrayList<String> pastDiagnoses;
-    // private ArrayList<String> pastTreatments;
 
         //title
         System.out.println("\n" + "=".repeat(50));
@@ -171,6 +211,9 @@ public class Patient extends User{
         }
     }
 
+    /**
+     * Displays the available appointment slots for scheduling.
+     */
     public void viewAvailAppointmentSlot() {
         //title
         System.out.println("\n=== Available Appointment Slots ===");
@@ -194,6 +237,9 @@ public class Patient extends User{
         System.out.println();
     }
 
+    /**
+     * Allows the patient to schedule a new appointment.
+     */
     public void scheduleAppointments() {
         //title
         System.out.println("\n=== Schedule New Appointment ===");
@@ -243,6 +289,9 @@ public class Patient extends User{
         System.out.println();
      }
 
+    /**
+     * Allows the patient to reschedule an existing appointment to a new slot.
+     */
     public void rescheduleAppointment() { 
 
         //title
@@ -339,6 +388,9 @@ public class Patient extends User{
 
     }
 
+    /**
+     * Allows the patient to cancel an existing appointment.
+     */
     public void cancelAppointment() {
 
         //title
@@ -386,8 +438,10 @@ public class Patient extends User{
         System.out.println();
     }
 
+    /**
+     * Displays the status of the patient's current appointments.
+     */
     public void viewAppointmentStatus() {
-        //to be done
 
         //title
         System.out.println("\n=== Current Appointments Status ===");
@@ -413,6 +467,10 @@ public class Patient extends User{
         System.out.println();
     }
 
+    /**
+     * Displays the outcomes of the patient's past appointments, including prescribed medications,
+     * consultation notes, and appointment details.
+     */
     public void viewAppointmentOutcomeRecord() {
 
         //title
