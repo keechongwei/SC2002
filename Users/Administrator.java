@@ -84,7 +84,7 @@ public class Administrator extends Staff {
             System.out.println("=== ADMINISTRATOR MENU, ENTER CHOICE ===");
             System.out.println("(1) View and Manage Hospital Staff");
             System.out.println("(2) View Appointments Details");
-            System.out.println("(3) View and Manage Medication History");
+            System.out.println("(3) View and Manage Medication Inventory");
             System.out.println("(4) Approve Replenishment Requests");
             System.out.println("(5) Logout");
             choice = InputValidator.getIntegerInput("Choice: ", 1, 5);
@@ -581,10 +581,7 @@ public class Administrator extends Staff {
             case 5:
                 System.out.println("=== Updating Stock ===");
                 String updated_choice = InputValidator.getName("Medication Name: ");
-                System.out.println("");
-
                 int updated_amount = InputValidator.getIntegerInput("Updated Amount: ", 1, 10000);
-                System.out.println("");
 
                 boolean add_or_remove = false;
                 int current_stock = 0;
@@ -593,9 +590,10 @@ public class Administrator extends Staff {
                 if(medication == null) {break;}
 
                 current_stock = medication.getStock();
+                System.out.print("Previous stock amount: " + current_stock + " ");
                 
                 if (updated_amount > current_stock) {
-                    updated_amount -= updated_amount;
+                    updated_amount -= current_stock;
                     add_or_remove = true;
                 } else if (updated_amount < current_stock) {
                     current_stock -= updated_amount;
@@ -666,6 +664,10 @@ public class Administrator extends Staff {
             String[] fields = lines.get(i).split(";");
 
             if (fields[REQID].equals(String.valueOf(index_to_approve))) {
+                if (fields[STATUS].equals("Approved")) {
+                    System.out.println("Invalid Choice, request already approved");
+                    return;
+                }
 
                 // Get list of medicine already available, run through list to see if requested med already in inventory
                 InventoryManager inventory = new InventoryManager("Medicine_List.csv");
