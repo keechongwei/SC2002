@@ -3,11 +3,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The {@code Pharmacist} class represents a pharmacist in the hospital system.
+ * Pharmacists manage prescriptions, appointments, and medication inventory.
+ * This class provides methods to interact with the hospital's database of
+ * appointments and inventory.
+ * @author SCSKGroup2
+ * @version 1.0
+ * @since 2024-11-21
+ */
 public class Pharmacist extends Staff {
+    /**
+     * A list of appointment slots assigned to the pharmacist.
+     */
     private List<AppointmentSlot> appointments;
+
+    /**
+     * An {@code InventoryManager} instance for managing medication inventory.
+     */
     private final InventoryManager inventory;
 
-    // Primary constructor with basic authentication details
+    /**
+     * Constructs a {@code Pharmacist} object with basic authentication details.
+     * 
+     * @param HospitalID the unique ID of the pharmacist within the hospital system.
+     * @param password   the password for the pharmacist's account.
+     */
     public Pharmacist(String HospitalID, String password) {
         super(HospitalID, password);
         this.appointments = new ArrayList<>();
@@ -15,7 +36,14 @@ public class Pharmacist extends Staff {
         loadAppointments();
     }
 
-    // Constructor with all the details
+    /**
+     * Constructs a {@code Pharmacist} object with detailed personal information.
+     * 
+     * @param HospitalID the unique ID of the pharmacist within the hospital system.
+     * @param name       the name of the pharmacist.
+     * @param gender     the gender of the pharmacist.
+     * @param age        the age of the pharmacist.
+     */
     public Pharmacist(String HospitalID, String name, String gender, String age) {
         super(HospitalID, "password");
         this.name = name;
@@ -26,6 +54,11 @@ public class Pharmacist extends Staff {
 
     }
 
+    /**
+     * Displays the pharmacist's menu and handles user interaction.
+     * Allows the pharmacist to perform tasks like viewing appointment outcomes,
+     * updating prescription statuses, and managing inventory.
+     */
     public void printMenu() {
         int choice = 0;
         boolean running = true;
@@ -65,8 +98,11 @@ public class Pharmacist extends Staff {
         System.out.println("Logging out...");
     }
 
-    // Load pending prescriptions from CSV file
-    private void loadAppointments() {
+    /**
+     * Loads completed appointment data from a CSV file and filters for appointments
+     * that have pending prescriptions.
+     */
+    public void loadAppointments() {
         appointments.clear();
         try (BufferedReader br = new BufferedReader(new FileReader("Appointments.csv"))) {
             String line;
@@ -113,7 +149,10 @@ public class Pharmacist extends Staff {
         }
     }
 
-    private void saveAppointments() {
+    /**
+     * Saves the updated appointment data back to the CSV file.
+     */
+    public void saveAppointments() {
         List<String> allLines = new ArrayList<>();
         allLines.add("Date;Time;AppointmentID;DoctorID;PatientID;Status;OutcomeRecord");
         
@@ -155,7 +194,11 @@ public class Pharmacist extends Staff {
         }
     }
 
-    public void viewAllAppointmentOutcomes() {
+    /**
+     * Displays all appointment outcomes sorted by prescription status,
+     * with pending prescriptions shown first.
+     */
+    private void viewAllAppointmentOutcomes() {
         loadAppointments();
         if (appointments.isEmpty()) {
             System.out.println("No appointments found.");
@@ -177,6 +220,11 @@ public class Pharmacist extends Staff {
         }
     }
 
+    /**
+     * Displays detailed information about a specific appointment, including prescription status.
+     * 
+     * @param appointment the appointment to display.
+     */
     private void displayAppointmentWithPrescriptionStatus(AppointmentSlot appointment) {
         AppointmentOutcomeRecord outcome = appointment.getAppointmentOutcomeRecord();
         Prescription prescription = outcome.getPrescribedMedication();
@@ -194,6 +242,9 @@ public class Pharmacist extends Staff {
         System.out.println("------------------------");
     }
 
+    /**
+     * Updates the status of a pending prescription to dispensed if sufficient stock is available.
+     */
     public void updatePrescriptionStatus() {
         loadAppointments();
         viewAllAppointmentOutcomes();
@@ -255,6 +306,9 @@ public class Pharmacist extends Staff {
         }
     }
 
+    /**
+     * Submits a request to replenish stock for a specific medication.
+     */
     public void submitReplenishmentRequest() {
         inventory.viewInventory();
         
@@ -276,6 +330,9 @@ public class Pharmacist extends Staff {
         }
     }
 
+    /**
+     * Displays the medication inventory along with any pending replenishment requests.
+     */
     public void viewMedicationInventory() {
         inventory.viewInventory();  // This will now show both inventory and pending requests
         
@@ -283,6 +340,12 @@ public class Pharmacist extends Staff {
         List<Medication> lowStockMeds = inventory.updateAllAlertLevels();
     }
 
+
+    /**
+     * Converts the pharmacist's details into a CSV-formatted string.
+     * 
+     * @return a CSV string representation of the pharmacist's details.
+     */
     public String toCSV() {
         // Combine all attributes into a CSV string
         return super.getHospitalID() + ";" + super.getPassword() + ";" + name + ";" + "Pharmacist" + ";" + gender + ";" + age;
