@@ -472,7 +472,7 @@ public class Administrator extends Staff {
      * @param role
      * @return nextID Next largest ID
      */
-    private static String agetNextID(List<List<String>> doubleList, String role) {
+    private static String getNextID(List<List<String>> doubleList, String role) {
         int largest_ID  = 0;
         String role_letter = "";
 
