@@ -216,7 +216,7 @@ public class InputValidator {
         return getPatternedInput(
             prompt,
             APPOINTMENT_ID_PATTERN,
-            "Invalid appointment ID format. Please enter ID in format A001."
+            "Invalid appointment ID format. Please enter ID in format APT1."
         ).toUpperCase();
     }
 
