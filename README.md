@@ -34,18 +34,10 @@ The **Hospital Management System** is a software solution designed to manage var
 ---
 
 ## Project Structure
-> '''
-Hospital Management System/ │   
-├── Users/ # User management module   
-├── appointment/ # Appointment scheduling and management   
-├── bin/ # Core application logic with DIP implementation   
-├── enums/ # Enumerations for user roles, status codes, etc.   
-├── managers/ # Manager-specific operations   
-├── utility/ # Helper utilities and debugging tools   
-├── Bills.csv # Billing details   
-├── Medicine_List.csv # Medicine inventory details   
-├── Patient_List.csv # Primary patient record   
-├── Staff_List.csv # Primary staff record   
-├── Replenish_Request_List.csv # Requests for resource replenishment   
-└── README.md # Project documentation
-'''
+
+- [Users](./Users): Manages user functionalities and roles.
+- [appointment](./appointment): Handles appointment scheduling and management.
+- [bin](./bin): Core application logic, including Dependency Injection for the manager interface.
+- [enums](./enums): Contains enumerations for defining constants such as roles or statuses.
+- [managers](./managers): Implements manager-specific features and interfaces.
+- [utility](./utility): Provides helper utilities like login handling and debugging tools.
