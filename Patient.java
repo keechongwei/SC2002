@@ -1,4 +1,3 @@
-import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +11,6 @@ public class Patient extends User{
     // protected String gender;
     // protected String BloodType;
     private MedicalRecord medicalRecord;
-    
-    private static Scanner sc = new Scanner(System.in);
 
     //patient Constructor
     public Patient(String patientID, String patientName, String dateofBirth, String gender, String bloodType, String phoneNumber, String emailAddress,String password) {
@@ -399,7 +396,7 @@ public class Patient extends User{
         List<AppointmentSlot> curSlots = AppointmentManager.getAppointmentsByPatient(this.medicalRecord.getPatientID());
 
         if(curSlots.isEmpty()) {
-            System.out.println("No current appointments.\n");
+            System.out.println("No current appointments.");
             return;
         }
 

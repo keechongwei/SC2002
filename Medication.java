@@ -1,115 +1,51 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-// import java.util.List;
-// import java.util.Scanner;
 
-
-// Should consider changing Medication to only get and set methods for each medicine. (updating is considered set method for alert)
-// All writing to csv, adding, subtracting, remove medication/stock done inventory 
-
+/**
+ * Represents a medication in the inventory system, including its name, stock level,
+ * low stock threshold, and a low stock alert status. Provides methods to manage
+ * stock updates and interact with a CSV file for persistence.
+ * @author SCSKGroup2
+ * @version 1.0
+ * @since 2024-11-21
+ */
 public class Medication {
+
+    /**
+     * The file path to the CSV file containing the medication inventory data.
+     */
     static String filePath = "Medicine_List.csv";
-    private String _medicationName;
-    private int _stock;
-    private boolean _lowStockAlert;
-    private int _lowStockValue;
 
-	// public static void main(String[] args) {
-    //     List<Medication> medications = Medication.readCSVFile();
-    //     Scanner scanner = new Scanner(System.in);
+    /**
+     * The name of the medication.
+     */
+    private String medicationName;
 
-    //     while (true) {
-    //         System.out.println("\n=== Medication Inventory Management ===");
-    //         System.out.println("1. View All Medications");
-    //         System.out.println("2. Add Stock");
-    //         System.out.println("3. Remove Stock");
-    //         System.out.println("4. Update Low Stock Value");
-    //         System.out.println("5. Exit and Save");
-    //         System.out.print("Choose an option: ");
-    //         int choice = scanner.nextInt();
-    //         scanner.nextLine(); // Consume newline
+    /**
+     * The current stock level of the medication.
+     */
+    private int stock;
 
-    //         switch (choice) {
-    //             case 1:
-    //                 System.out.println("\nCurrent Inventory:");
-    //                 for (Medication medication : medications) {
-    //                     System.out.println(
-    //                         medication.getMedicationName() + 
-    //                         " - Stock: " + medication.getStock() + 
-    //                         ", Low Stock Value: " + medication.getLowStockValue() + 
-    //                         ", Low Stock Alert: " + medication.isLowStockAlert());
-    //                 }
-    //                 break;
+    /**
+     * Indicates whether the medication's stock is below the low stock threshold.
+     */
+    private boolean lowStockAlert;
 
-    //             case 2:
-    //                 System.out.print("\nEnter Medication Name: ");
-    //                 String addName = scanner.nextLine();
-    //                 System.out.print("Enter Amount to Add: ");
-    //                 int addAmount = scanner.nextInt();
-    //                 scanner.nextLine(); // Consume newline
+    /**
+     * The stock threshold below which a low stock alert is triggered.
+     */
+    private int lowStockValue;
 
-    //                 medications.stream()
-    //                            .filter(m -> m.getMedicationName().equalsIgnoreCase(addName))
-    //                            .findFirst()
-    //                            .ifPresentOrElse(
-    //                                m -> {
-    //                                    m.addStock(addAmount);
-    //                                    System.out.println("Stock updated.");
-    //                                },
-    //                                () -> System.out.println("Medication not found.")
-    //                            );
-    //                 break;
-
-    //             case 3:
-    //                 System.out.print("\nEnter Medication Name: ");
-    //                 String removeName = scanner.nextLine();
-    //                 System.out.print("Enter Amount to Remove: ");
-    //                 int removeAmount = scanner.nextInt();
-    //                 scanner.nextLine(); // Consume newline
-
-    //                 medications.stream()
-    //                            .filter(m -> m.getMedicationName().equalsIgnoreCase(removeName))
-    //                            .findFirst()
-    //                            .ifPresentOrElse(
-    //                                m -> {
-    //                                    m.removeStock(removeAmount);
-    //                                    System.out.println("Stock updated.");
-    //                                },
-    //                                () -> System.out.println("Medication not found.")
-    //                            );
-    //                 break;
-
-    //             case 4:
-    //                 System.out.print("\nEnter Medication Name: ");
-    //                 String updateName = scanner.nextLine();
-    //                 System.out.print("Enter New Low Stock Value: ");
-    //                 int newLowStockValue = scanner.nextInt();
-    //                 scanner.nextLine(); // Consume newline
-
-    //                 medications.stream()
-    //                            .filter(m -> m.getMedicationName().equalsIgnoreCase(updateName))
-    //                            .findFirst()
-    //                            .ifPresentOrElse(
-    //                                m -> {
-    //                                    m.updateLowStockLevel(newLowStockValue);
-    //                                    System.out.println("Low stock value updated.");
-    //                                },
-    //                                () -> System.out.println("Medication not found.")
-    //                            );
-    //                 break;
-
-    //             case 5:
-    //                 Medication.writeCSVFile(medications);
-    //                 System.out.println("Changes saved to CSV file. Exiting...");
-    //                 return;
-
-    //             default:
-    //                 System.out.println("Invalid choice. Please try again.");
-    //         }
-    //     }
-    // }
-
+    /**
+     * Updates the stock of a medication by adding or removing the specified amount.
+     * Updates are persisted to the CSV file.
+     *
+     * @param medicationName the name of the medication to update
+     * @param amount         the amount to add or remove
+     * @param isAddition     {@code true} to add stock, {@code false} to remove stock
+     * @return {@code true} if the update was successful, {@code false} otherwise
+     */
     public static boolean updateStock(String medicationName, int amount, boolean isAddition) {
         List<Medication> medications = new ArrayList<>();
         boolean success = false;
@@ -171,54 +107,105 @@ public class Medication {
         return success;
     }
 
-    public Medication(String _medicationName, int _stock, int _lowStockValue) {
-        this._medicationName = _medicationName;
-        this._stock = _stock;
-        this._lowStockValue = _lowStockValue;
-        this._lowStockAlert = _stock <= _lowStockValue;
+    /**
+     * Constructs a new {@code Medication} instance.
+     *
+     * @param _medicationName the name of the medication
+     * @param _stock          the initial stock level
+     * @param _lowStockValue  the stock threshold for triggering a low stock alert
+     */
+    public Medication(String medicationName, int stock, int lowStockValue) {
+        this.medicationName = medicationName;
+        this.stock = stock;
+        this.lowStockValue = lowStockValue;
+        this.lowStockAlert = stock <= lowStockValue;
     }
 
+    /**
+     * Gets the name of the medication.
+     *
+     * @return the name of the medication
+     */
     public String getMedicationName() {
-        return _medicationName;
+        return medicationName;
     }
 
+    /**
+     * Gets the current stock level of the medication.
+     *
+     * @return the current stock level
+     */
     public int getStock() {
-        return _stock;
+        return stock;
     }
 
+    /**
+     * Checks whether the medication is under a low stock alert.
+     *
+     * @return {@code true} if the medication stock is below or equal to the low stock threshold,
+     *         {@code false} otherwise
+     */
     public boolean isLowStockAlert() {
-        return _lowStockAlert;
+        return lowStockAlert;
     }
 
+    /**
+     * Gets the stock threshold that triggers a low stock alert.
+     *
+     * @return the low stock threshold
+     */
     public int getLowStockValue() {
-        return _lowStockValue;
+        return lowStockValue;
     }
 
+    /**
+     * Adds stock to the medication and updates the low stock alert status.
+     *
+     * @param amount the amount of stock to add
+     */
     public void addStock(int amount) {
-        _stock += amount;
+        stock += amount;
         updateLowStockAlert();
     }
 
+    /**
+     * Removes stock from the medication and updates the low stock alert status.
+     * Ensures the stock does not drop below zero.
+     *
+     * @param amount the amount of stock to remove
+     */
     public void removeStock(int amount) {
-        if (_stock >= amount) {
-            _stock -= amount;
+        if (stock >= amount) {
+            stock -= amount;
             updateLowStockAlert();
         } else {
             System.out.println("Not enough stock!");
         }
     }
 
+    /**
+     * Updates the low stock threshold and recalculates the low stock alert status.
+     *
+     * @param newLimit the new low stock threshold
+     */
     public void updateLowStockLevel(int newLimit) {
-        _lowStockValue = newLimit;
+        lowStockValue = newLimit;
         updateLowStockAlert();
     }
 
+    /**
+     * Updates the low stock alert status based on the current stock and low stock threshold.
+     */
     public void updateLowStockAlert() {
-        _lowStockAlert = _stock <= _lowStockValue;
+        lowStockAlert = stock <= lowStockValue;
     }
 
-    @Override
+    /**
+     * Returns a string representation of the medication in CSV format.
+     *
+     * @return a string containing the medication name, stock, and low stock value separated by semicolons
+     */
     public String toString() {
-        return String.join(";", _medicationName, String.valueOf(_stock), String.valueOf(_lowStockValue));
+        return String.join(";", medicationName, String.valueOf(stock), String.valueOf(lowStockValue));
     }
 }

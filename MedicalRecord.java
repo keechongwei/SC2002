@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Represents the medical record of a patient, containing details such as personal information,
