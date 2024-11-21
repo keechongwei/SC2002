@@ -3,6 +3,9 @@
  * A prescription includes details such as the medication name, its status, and the required dosage.
  * It provides methods for accessing and modifying these details, as well as for converting
  * prescriptions to and from CSV format.
+ * @author SCSKGroup2
+ * @version 1.0
+ * @since 2024-11-21
  */
 public class Prescription {
 
