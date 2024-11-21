@@ -1,11 +1,9 @@
 package utility;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-
-import managers.InventoryManager;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
+import managers.InventoryManager;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
