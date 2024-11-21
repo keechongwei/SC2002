@@ -19,7 +19,7 @@ public class PatientRegistration {
     public static void printMenu() {
         int choice = 0;
         while (choice != 2) {
-            System.out.println("===PATIENT REGISTRATION===");
+            System.out.println("\n===PATIENT REGISTRATION===");
             System.out.println("(1) Register As New Patient");
             System.out.println("(2) Proceed to Hospital Login Management System");
             choice = InputValidator.getIntegerInput("Enter your choice: ", 1, 2);
