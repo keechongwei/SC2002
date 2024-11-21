@@ -98,6 +98,7 @@ public class AppointmentManager implements Manager {
      * @return List of AppointmentSlots that match PatientID
      */
     public static List<AppointmentSlot> getAppointmentsByPatient(String patientID) {
+        AppointmentManager.appointmentSlotArray.clear(); AppointmentCSVHandler.loadCSV();
         List<AppointmentSlot> result = new ArrayList<>();
         for (AppointmentSlot slot : appointmentSlotArray) {
             if (slot.getPatientID().equals(patientID)) {
@@ -114,6 +115,7 @@ public class AppointmentManager implements Manager {
      * @return List of AppointmentSlots that match DoctorID
      */
     public static List<AppointmentSlot> getAppointmentsByDoctor(String doctorID) {
+        AppointmentManager.appointmentSlotArray.clear(); AppointmentCSVHandler.loadCSV();
         List<AppointmentSlot> result = new ArrayList<>();
         for (AppointmentSlot slot : appointmentSlotArray) {
             if (slot.getDoctorID().equals(doctorID)) {
@@ -130,6 +132,7 @@ public class AppointmentManager implements Manager {
      * @return List of AppointmentSlots that have AppointmentStatus as AVAILABLE
      */
     public static List<AppointmentSlot> getAvailableAppointments(){
+        AppointmentManager.appointmentSlotArray.clear(); AppointmentCSVHandler.loadCSV();
         List<AppointmentSlot> availSlots = new ArrayList<AppointmentSlot>();
         for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
             if(slot.getStatus() == AppointmentStatus.AVAILABLE) {
@@ -145,6 +148,7 @@ public class AppointmentManager implements Manager {
      * @return void
      */
     public static void viewAllAppointments() {
+        AppointmentManager.appointmentSlotArray.clear(); AppointmentCSVHandler.loadCSV();
         System.out.printf("%-5s %-12s %-8s %-10s %-10s%n", "Appointment ID.", "Date", "Time", "Doctor", "PatientID", "Status");
         System.out.println("-".repeat(50));
 

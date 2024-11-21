@@ -51,5 +51,8 @@ public class PatientRegistration {
         Patient p = new Patient(patientID, name, dob, gender, bloodType, phoneNumber, email, "password");
         PatientManager.addPatient(p);
         System.out.println("Patient Successfully Created!\n");
+        System.out.print("PatientID: ");
+        System.out.println(p.getHospitalID());
+        System.out.print("Default Password set to: password");
     }
 }
