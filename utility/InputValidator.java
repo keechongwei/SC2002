@@ -1,6 +1,9 @@
 package utility;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import managers.InventoryManager;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -25,7 +28,7 @@ public class InputValidator {
     private static final String EMAIL_PATTERN = "^[A-Za-z0-9+_.-]+@(.+)$";
     private static final String NAME_PATTERN = "^[A-Za-z\\s'-]+$";
     private static final String BLOOD_TYPE_PATTERN = "^(A|B|AB|O)[+-]$";
-    private static final String GENDER_PATTERN = "^(M|F|Male|Female|Other)$";
+    private static final String GENDER_PATTERN = "^(Male|Female|Other)$";
     private static final String DATE_PATTERN = "dd/MM/yyyy";
     private static final String TIME_PATTERN = "HH:mm";
     private static final String PASSWORD_PATTERN = "^(?=.*\\d).{8,}$";
@@ -325,7 +328,7 @@ public class InputValidator {
         
         System.out.println("Enter your notes (type 'END' on a new line to finish):");
         while (!(line = scanner.nextLine()).equals("END")) {
-            notes.append(line).append("\n");
+            notes.append(line).append(",");
         }
         
         return notes.toString().trim();
