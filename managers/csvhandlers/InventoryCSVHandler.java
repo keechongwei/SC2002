@@ -27,7 +27,7 @@ public class InventoryCSVHandler implements CSVHandler {
     /**
      * The file where replenishment request data is stored.
      */
-    public static final File replenishFile = new File("src/Replenish_Request_List.csv");
+    public static final File replenishFile = new File("Replenish_Request_List.csv");
 
     /**
      * Loads replenishment requests from the replenishment request CSV file.
