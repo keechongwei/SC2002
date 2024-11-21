@@ -8,6 +8,6 @@ package managers;
  * @see InventoryManager
  * @see PatientManager
  */
-interface Manager {
-    public static void initialise(){};
+public interface Manager {
+    void initialise();
 }

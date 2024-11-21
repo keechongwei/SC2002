@@ -6,13 +6,8 @@ import Users.Doctor;
 import Users.Patient;
 import Users.Pharmacist;
 import Users.User;
-import managers.AppointmentManager;
-import managers.InventoryManager;
-import managers.PatientManager;
-import managers.StaffManager;
-import managers.csvhandlers.AppointmentCSVHandler;
-import managers.csvhandlers.PatientManagerCSVHandler;
-import managers.csvhandlers.StaffCSVHandler;
+import managers.*;
+import managers.csvhandlers.*;
 
 /**
  * Handles the login process for the Hospital Management System, including 
@@ -58,36 +53,28 @@ public class Login {
      * Initializes the system by loading patient, staff, medicine, and appointment data.
      * Displays success or error messages depending on the outcome of each initialization step.
      */
-    public static void initialise(){
-        try{
-            PatientManager.initialise();
-            System.out.println("Patients Information Retrieved Successfully!");
-        } catch (Exception e){
-            System.out.println("Unable to Retrieve Patients Information!");
+    public static void initialise() {
+        initialiseManager(new PatientManager(), "Patients");
+        initialiseManager(new StaffManager(), "Staff");
+        initialiseManager(new InventoryManager("Medicine_List.csv"), "Medicine");
+        initialiseManager(new AppointmentManager(), "Appointments");
+    }
+    
+    /**
+     * Helper method to initialise alls manager and show success or error message.
+     * @param manager 
+     * @param managerType A string representing the type of manager to intialise
+     */
+    private static void initialiseManager(Manager manager, String managerType) {
+        try {
+            manager.initialise();
+            System.out.printf("%s Information Retrieved Successfully!%n", managerType);
+        } catch (Exception e) {
+            System.out.printf("Unable to Retrieve %s Information!%n", managerType);
             e.printStackTrace();
-        }
-        try{
-            StaffManager.initialise();
-            System.out.println("Staff Information Retrieved Successfully!");
-            //System.out.println(staffs);
-        } catch (Exception e){
-            System.out.println("Unable to Retrieve Staff Information!");
-            e.printStackTrace();
-        }
-        try{
-            InventoryManager.initialise();
-            System.out.println("Medicine Information Retrieved Successfully!");
-        } catch (Exception e){
-            System.out.println("Unable to Retrieve Medicine Information!");
-            e.printStackTrace();
-        }
-        try{
-            AppointmentManager.initialise();
-        } catch (Exception e){
-            System.out.println("Unable to Initialise Appointments!");
-            e.printStackTrace(); 
         }
     }
+    
     
     /**
      * Validates the provided ID against known IDs for patients, doctors, pharmacists, and administrators.
@@ -273,3 +260,42 @@ public class Login {
         sc.close();
     }   
 }
+
+    /**
+     * Initializes the system by loading patient, staff, medicine, and appointment data.
+     * Displays success or error messages depending on the outcome of each initialization step.
+     */
+    // public static void initialise(){
+    //     Manager manager = null;
+    //     try{
+    //         manager = new PatientManager();
+    //         manager.initialise();
+    //         System.out.println("Patients Information Retrieved Successfully!");
+    //     } catch (Exception e){
+    //         System.out.println("Unable to Retrieve Patients Information!");
+    //         e.printStackTrace();
+    //     }
+    //     try{
+    //         manager = new StaffManager();
+    //         manager.initialise();
+    //         System.out.println("Staff Information Retrieved Successfully!");
+    //     } catch (Exception e){
+    //         System.out.println("Unable to Retrieve Staff Information!");
+    //         e.printStackTrace();
+    //     }
+    //     try{
+    //         manager = new InventoryManager("Medicine_List.csv");
+    //         manager.initialise();
+    //         System.out.println("Medicine Information Retrieved Successfully!");
+    //     } catch (Exception e){
+    //         System.out.println("Unable to Retrieve Medicine Information!");
+    //         e.printStackTrace();
+    //     }
+    //     try{
+    //         manager = new AppointmentManager();
+    //         manager.initialise();
+    //     } catch (Exception e){
+    //         System.out.println("Unable to Initialise Appointments!");
+    //         e.printStackTrace(); 
+    //     }
+    // }

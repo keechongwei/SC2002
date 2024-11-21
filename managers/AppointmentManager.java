@@ -15,7 +15,7 @@ import managers.csvhandlers.AppointmentCSVHandler;
  * @version 1.0
  * @since 2024-11-21
  */
-public class AppointmentManager implements Manager{
+public class AppointmentManager implements Manager {
     /**
      * List of Appointment Slots
      */
@@ -162,7 +162,7 @@ public class AppointmentManager implements Manager{
      * @param void
      * @return void
      */
-    public static void initialise() {
+    public void initialise() {
         if (!((AppointmentCSVHandler.csvFile).exists()) || (AppointmentCSVHandler.csvFile).length() == 0) {
             // File doesn't exist or is empty, create daily appointments
             System.out.println("appointments.csv is empty or missing. Generating daily appointments...");

@@ -40,7 +40,7 @@ public class StaffManager implements Manager {
      * @return void
      * @see StaffCSVHandler
      */
-    public static void initialise() {
+    public void initialise() {
         if (!((StaffCSVHandler.csvFile).exists()) || (StaffCSVHandler.csvFile).length() == 0) {
             // File doesn't exist or is empty, create daily appointments
             System.out.println("Staff_List.csv is empty or missing.");

@@ -57,7 +57,7 @@ public class InventoryManager implements Manager {
      * Initializes the inventory by loading medication data from the CSV file.
      * If the file is missing or empty, a message is displayed.
      */
-    public static void initialise() {
+    public void initialise() {
         if (!((InventoryCSVHandler.csvFile).exists()) || (InventoryCSVHandler.csvFile).length() == 0) {
             // File doesn't exist or is empty, create daily appointments
             System.out.println("Medicine_List.csv is empty or missing.");

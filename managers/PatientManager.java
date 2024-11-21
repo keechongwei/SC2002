@@ -113,7 +113,7 @@ public class PatientManager implements Manager {
      * Initializes the patient manager by loading patient data from the CSV file.
      * If the file is missing or empty, displays a message indicating the issue.
      */
-    public static void initialise() {
+    public void initialise() {
         if (!((PatientManagerCSVHandler.csvFile).exists()) || (PatientManagerCSVHandler.csvFile).length() == 0) {
             // File doesn't exist or is empty, create daily appointments
             System.out.println("Patient_List.csv is empty or missing.");
