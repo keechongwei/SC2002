@@ -1,4 +1,0 @@
-BillID;PatientID;AppointmentID;Date;ServiceType;ServiceFee;Prescriptions;MedicationTotal;TotalAmount;IsPaid
-B8126;P0005;APT7;2024-11-21T12:00:00;CONSULTATION;50.00;Paracetamol^100|;10.00;60.00;true
-B9499;P0004;APT1;2024-11-22T09:00:00;CONSULTATION;50.00;;0.00;50.00;false
-B7810;P0005;APT5;2024-11-22T11:00:00;BLOOD_TEST;150.00;Paracetamol^100|;10.00;160.00;true
