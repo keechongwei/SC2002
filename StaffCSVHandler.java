@@ -34,7 +34,7 @@ public class StaffCSVHandler implements CSVHandler{
         try (Scanner scanner = new Scanner(csvFile)){
             while (scanner.hasNextLine()) {
                 if(headerline){
-                    String line = scanner.nextLine();
+                    scanner.nextLine();
                     headerline = false;
                     continue;
                 }
