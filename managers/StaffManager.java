@@ -7,7 +7,6 @@ import Users.Administrator;
 import Users.Doctor;
 import Users.Pharmacist;
 import Users.Staff;
-import managers.csvhandlers.PatientManagerCSVHandler;
 import managers.csvhandlers.StaffCSVHandler;
 import utility.InputValidator;
 
@@ -44,7 +43,6 @@ public class StaffManager implements Manager {
     public static void initialise() {
         if (!((StaffCSVHandler.csvFile).exists()) || (StaffCSVHandler.csvFile).length() == 0) {
             // File doesn't exist or is empty, create daily appointments
-            System.out.println(PatientManagerCSVHandler.csvFile.getAbsolutePath());
             System.out.println("Staff_List.csv is empty or missing.");
         } else {
             System.out.println("Loading Staff from Staff_List.csv...");
