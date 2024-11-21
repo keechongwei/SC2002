@@ -2,48 +2,73 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manages the inventory of medications by performing various operations such as 
+ * adding, removing, updating, and viewing medications. It also handles 
+ * replenishment requests and tracks low stock alerts.
+ * @author SCSKGroup2
+ * @version 1.0
+ * @since 2024-11-21
+ */
 public class InventoryManager implements Manager {
+    /**
+     * List containing all the medications in the inventory.
+     */
     public static List<Medication> listOfMedications;
+    /**
+     * Tracks the ID of the last replenishment request.
+     */
     public static int lastRequestId = 0;
 
+    /**
+     * Gets the ID of the last replenishment request.
+     *
+     * @return the last replenishment request ID
+     */
     public static int getLastRequestID(){
         return InventoryManager.lastRequestId;
     }
 
+    /**
+     * Sets the ID of the last replenishment request.
+     *
+     * @param ID the new last request ID
+     */
     public static void setLastRequestID(int ID){
          InventoryManager.lastRequestId = ID;
     }
 
-	// public static void main(String[] args) {		
-	
-	// 	// Create an Inventory object
-	// 	Inventory inventory = new Inventory(csvFilePath);
-	
-	// 	// View the loaded inventory
-	// 	System.out.println("=== View Initial Inventory ===");
-	// 	inventory.viewInventory();
-	
-	// 	// Search for a specific medication
-	// 	System.out.println("\n=== Search for a Medication ===");
-	// 	String searchMedication = "Paracetamol"; // Replace with an actual medication name in your CSV
-	// 	Medication search_med = inventory.getMedication(searchMedication);
-	// 	System.out.println("Found: " + search_med.getMedicationName() + " with stock: " + search_med.getStock());
-	
-	// 	// Display the full inventory again to verify no changes
-	// 	System.out.println("\n=== Full Inventory List ===");
-	// 	inventory.viewInventory();
-	// }
-
-
+    /**
+     * Constructs an instance of {@code InventoryManager} and initializes the list of 
+     * medications by loading data from the CSV file.
+     *
+     * @param csvFilePath the path to the CSV file containing medication data
+     */
     public InventoryManager(String csvFilePath) {
         listOfMedications = new ArrayList<>();
         InventoryCSVHandler.loadCSV();
     }
 
+    /**
+     * Initializes the inventory by loading medication data from the CSV file.
+     * If the file is missing or empty, a message is displayed.
+     */
     public static void initialise() {
-        InventoryCSVHandler.loadCSV();
+        if (!((InventoryCSVHandler.csvFile).exists()) || (InventoryCSVHandler.csvFile).length() == 0) {
+            // File doesn't exist or is empty, create daily appointments
+            System.out.println("Medicine_List.csv is empty or missing.");
+        } else {
+            System.out.println("Loading Medicine from Medicine_List.csv...");
+            InventoryCSVHandler.loadCSV();
+        }
     }
 
+    /**
+     * Retrieves a medication by its name from the inventory.
+     *
+     * @param medicationName the name of the medication
+     * @return the {@code Medication} object if found, otherwise {@code null}
+     */
     public Medication getMedication(String medicationName) {
 		for(Medication med : listOfMedications) {
 			if (med.getMedicationName().equalsIgnoreCase(medicationName)) {
@@ -55,10 +80,18 @@ public class InventoryManager implements Manager {
 		return null;
     }
 
+    /**
+     * Retrieves the entire inventory of medications.
+     *
+     * @return a list of {@code Medication} objects
+     */
     public List<Medication> getInventory() {
         return listOfMedications;
     }
 
+    /**
+     * Displays the inventory of medications, including stock levels and low stock alerts.
+     */
     public void viewInventory() {
         
         for (Medication medication : listOfMedications) {
@@ -66,12 +99,24 @@ public class InventoryManager implements Manager {
         }
     }
 
+    /**
+     * Adds a new medication to the inventory.
+     *
+     * @param medName        the name of the medication
+     * @param stock          the initial stock level
+     * @param lowStockValue  the threshold for triggering low stock alerts
+     */
 	public void addNewMedication(String medName, int stock, int lowStockValue) {
 		Medication medication = new Medication(medName, stock, lowStockValue);
 		listOfMedications.add(medication);
 		InventoryCSVHandler.writeCSV();
 	}
 
+    /**
+     * Removes a medication from the inventory by its name.
+     *
+     * @param medName the name of the medication to remove
+     */
 	public void removeMedication(String medName) {
 		List<Medication> temp = new ArrayList<>();
 		for(Medication medication: listOfMedications) {
@@ -85,7 +130,15 @@ public class InventoryManager implements Manager {
 		InventoryCSVHandler.writeCSV();
 	}
 
-	// add is true, remove is false
+
+    /**
+     * Updates the stock level of a medication in the inventory.
+     *
+     * @param medicationName the name of the medication
+     * @param amount         the amount to add or remove
+     * @param add_or_remove  {@code true} to add stock, {@code false} to remove stock
+     * @return {@code true} if the stock was successfully updated, otherwise {@code false}
+     */
 	public boolean updateMedication(String medicationName, int amount, boolean add_or_remove) {
 
 		boolean checker = false;
@@ -111,6 +164,11 @@ public class InventoryManager implements Manager {
 	}
 
 
+    /**
+     * Updates low stock alerts for all medications in the inventory.
+     *
+     * @return a list of medications that are low in stock
+     */
 	public List<Medication> updateAllAlertLevels() {
         List<Medication> lowStockMeds = new ArrayList<>();
         for (Medication medication : listOfMedications) {
@@ -135,6 +193,12 @@ public class InventoryManager implements Manager {
         return lowStockMeds;
     }
 
+    /**
+     * Checks if a replenishment request exists for a specific medication.
+     *
+     * @param medicationName the name of the medication
+     * @return {@code true} if a pending replenishment request exists, otherwise {@code false}
+     */
     public boolean checkReplenishRequestExists(String medicationName) {
         List<String[]> requests = InventoryCSVHandler.loadReplenishRequests();
         return requests.stream()
@@ -142,6 +206,12 @@ public class InventoryManager implements Manager {
                                         request[3].equals("Pending"));
     }
 
+    /**
+     * Submits a replenishment request for a medication.
+     *
+     * @param medicationName the name of the medication
+     * @param amount         the quantity to replenish
+     */
     public void submitReplenishRequest(String medicationName, int amount) {
         List<String[]> existingRequests = InventoryCSVHandler.loadReplenishRequests();
         int newRequestId = lastRequestId + 1;
@@ -164,17 +234,4 @@ public class InventoryManager implements Manager {
         }
     }
 
-    public void displayInventoryForReplenishment() {
-        viewInventory();
-    }
-
-    // public static void initialiseMedicine() {
-    //     if (!((InventoryCSVHandler.csvFilePath).exists()) || (InventoryCSVHandler.cs).length() == 0) {
-    //         // File doesn't exist or is empty, create daily appointments
-    //         System.out.println("Medicine_List.csv is empty or missing.");
-    //     } else {
-    //         System.out.println("Loading Medicine from Medicine_List.csv...");
-    //         InventoryCSVHandler.loadRecordsCSV();
-    //     }
-    // }
 }
