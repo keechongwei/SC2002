@@ -126,7 +126,7 @@ public class InventoryManager implements Manager {
 				temp.add(medication);
 			}
 		}
-		this.listOfMedications = temp;
+		InventoryManager.listOfMedications = temp;
 		InventoryCSVHandler.writeCSV();
 	}
 

@@ -1,7 +1,17 @@
-
-
+/**
+ * The {@code Patient Registration} class handles the registration of a new patient
+ * Through command-line inputs, it creates a {@code Patient} class and updates
+ * {@code PatientManager} to update PatientRecords in the Hospital Management System
+ * @author SCSKGroup2
+ * @version 1.0
+ * @since 2024-11-21
+ */
 public class PatientRegistration {
 
+    /**
+     * Displays the patient registration menu and provides a choice to register as a new patient
+     * Or proceed to the Login page if the patient had registered before or if they are a staff member
+     */
     public static void printMenu() {
         int choice = 0;
         while (choice != 2) {
@@ -22,6 +32,9 @@ public class PatientRegistration {
         }
     }
     
+    /**
+     * Prompts user for key details required to generate a patient and their medical record
+     */
     public static void register() {
         String name = InputValidator.getName("===[1/6] NAME ===\n");
         String dob = InputValidator.getDateInput("===[2/6] DATE OF BIRTH\n").toString();
