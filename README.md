@@ -33,11 +33,3 @@ The **Hospital Management System** is a software solution designed to manage var
 
 ---
 
-## Project Structure
-
-- [Users](./Users): Manages user functionalities and roles.
-- [appointment](./appointment): Handles appointment scheduling and management.
-- [bin](./bin): Core application logic, including Dependency Injection for the manager interface.
-- [enums](./enums): Contains enumerations for defining constants such as roles or statuses.
-- [managers](./managers): Implements manager-specific features and interfaces.
-- [utility](./utility): Provides helper utilities like login handling and debugging tools.
