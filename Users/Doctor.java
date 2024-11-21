@@ -157,14 +157,13 @@ public class Doctor extends Staff{
         System.out.println("Manage Availability for Appointments:");
         System.out.println("(1) Set Slot as Available");
         System.out.println("(2) Set Slot as Unavailable");
-        System.out.print("Enter your choice: ");
-        int pick = sc.nextInt();
-        sc.nextLine();
+        
+        int pick = InputValidator.getIntegerInput("Enter you choice (1-2)", 1, 2);
+
         if (pick != 1 && pick != 2) {
         System.out.println("Invalid choice. Exiting.");
         return;}
-        System.out.println("Enter Date in (YYYY-MM-DD) format, eg: 2024-11-15 :");
-        String dateinput = sc.nextLine();
+        String dateinput = InputValidator.getDateInput("Enter Date").toString();
         LocalDate date = LocalDate.parse(dateinput, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
            if (pick == 1) {
@@ -176,7 +175,7 @@ public class Doctor extends Staff{
         }
 
         System.out.println("Enter Appointment ID of Slot To Be Added (E.g APT1): ");
-        String choice = sc.nextLine().trim();
+        String choice = InputValidator.getAppointmentId("Enter Appointment ID of Slot To Be Added (E.g APT1): ");
         for (AppointmentSlot changedslot : schedule){
             if (changedslot.getAppointmentID().equals(choice)){
                 changedslot.setStatus(AppointmentStatus.AVAILABLE);
@@ -197,8 +196,7 @@ public class Doctor extends Staff{
                 System.out.printf("Appointment ID: %s, Time: %s\n", slot.getAppointmentID(), slot.getTime().toString());
             }
         }
-        System.out.println("Enter Appointment ID of Slot To Be Removed (E.g APT1): ");
-        String choice = sc.nextLine().trim();
+        String choice = InputValidator.getAppointmentId("Enter Appointment ID of Slot To Be Removed (E.g APT1): ");
         for (AppointmentSlot changedslot : schedule){
             if (changedslot.getAppointmentID().equals(choice)){
                 changedslot.setStatus(AppointmentStatus.UNAVAILABLE);
@@ -241,8 +239,7 @@ public class Doctor extends Staff{
      * @see Patient
      */
     public void updatePatientRecord() {
-    System.out.print("Enter patient ID to update their record: ");
-    String id = sc.nextLine();
+    String id = InputValidator.getPatientId("Enter patient ID to update their record: ");
     Patient patientToUpdate = null;
     for (Patient patient : patientList) {
     if (patient.getMedicalRecord().getPatientID().equalsIgnoreCase(id)) { // Case-insensitive match
@@ -330,8 +327,7 @@ public class Doctor extends Staff{
             System.out.println("(1) ACCEPT APPOINTMENT");
             System.out.println("(2) DECLINE APPOINTMENT");
             System.out.println("(3) QUIT");
-            choice = sc.nextInt();
-            sc.nextLine();
+            choice = InputValidator.getIntegerInput("Enter a number from 1-3", 1, 3);
             switch(choice){
                 case 1:
                 System.out.println("PENDING APPOINTMENTS");
@@ -345,8 +341,7 @@ public class Doctor extends Staff{
                         System.out.println("----------------------------------------------");
                     }
                 }
-                System.out.println("Enter Appointment ID to Accept: ");
-                choice2 = sc.nextLine().trim();
+                choice2 = InputValidator.getAppointmentId("Enter appointment ID to accept (eg. APT1):");
                 for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
                     if (slot.getAppointmentID().equals(choice2) ){ 
                         slot.setStatus(AppointmentStatus.CONFIRMED);
@@ -368,8 +363,8 @@ public class Doctor extends Staff{
                         System.out.println("----------------------------------------------");
                     }
                 }
-                System.out.println("Enter Appointment ID to Decline: ");
-                choice2 = sc.nextLine().trim();
+                
+                choice2 = InputValidator.getAppointmentId("Enter appointment ID to decline (APT1): ");
                 for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
                     if (slot.getAppointmentID().equals(choice2)){ 
                         slot.setStatus(AppointmentStatus.CANCELLED);
@@ -397,8 +392,7 @@ public class Doctor extends Staff{
         boolean validAppointmentID = false;
         boolean validService = false;
         boolean validMedication = false;
-        System.out.println("Patient ID to update his/her record[E.g P1001]:");
-        id = sc.nextLine().trim();
+        id = InputValidator.getPatientId("Patient ID to update his/her record[E.g P1001]:");
         while (!validpatientID){
             for (Patient p : PatientManager.allPatients){
                 if (p.getHospitalID().equals(id)){
@@ -410,8 +404,7 @@ public class Doctor extends Staff{
                 break;
             }
             System.out.println("Invalid Patient ID");
-            System.out.println("Patient ID to update his/her record[E.g P1001]:");
-            id = sc.nextLine().trim();
+            id = InputValidator.getPatientId("Patient ID to update his/her record[E.g P1001]:");
         }
         confirmedAppointmentSlots.retainAll(AppointmentManager.getAppointmentsByPatient(id));
         for (AppointmentSlot slot : confirmedAppointmentSlots){
@@ -427,8 +420,8 @@ public class Doctor extends Staff{
             System.out.println("Time:" + slot.getTime().toString());
             System.out.println("----------------------------------------------");
         }
-        System.out.println("ENTER APPOINTMENT ID OF APPOINTMENT TO MAKE APPOINTMENT OUTCOME RECORD FOR [E.g APT1]: ");
-        String selectedAppointmentID = sc.nextLine().trim().toUpperCase();
+       
+        String selectedAppointmentID = InputValidator.getAppointmentId("ENTER APPOINTMENT ID OF APPOINTMENT TO MAKE APPOINTMENT OUTCOME RECORD FOR [E.g APT1]: ");
         while (!validAppointmentID){
             for (AppointmentSlot slot : confirmedAppointmentSlots){
                 if (slot.getAppointmentID().equals(selectedAppointmentID)){
@@ -450,8 +443,8 @@ public class Doctor extends Staff{
             }
             selectedAppointmentID = InputValidator.getAppointmentId("ENTER APPOINTMENT ID OF APPOINTMENT TO MAKE APPOINTMENT OUTCOME RECORD FOR [E.g APT1]:\n");
         }
-        System.out.println("The type of service of this diagnosis for the patient:");
-        String serviceType = sc.nextLine().trim();
+        
+        String serviceType = InputValidator.getNonEmptyString("The type of service of this diagnosis for the patient:");
         while (!validService){
             for (TypeOfService tos : TypeOfService.values()){
                 if (serviceType.equalsIgnoreCase(tos.toString())){
@@ -469,8 +462,7 @@ public class Doctor extends Staff{
                 System.out.println(tos.toString());
             }
             System.out.println("----------------------------------------------"); 
-            System.out.println("The type of service of this diagnosis for the patient:");
-            serviceType = sc.nextLine().trim();
+            serviceType = InputValidator.getNonEmptyString("The type of service of this diagnosis for the patient:");
         }
         System.out.print("The prescribed medication of this diagnosis for the patient:");
         String medicineType = sc.nextLine().trim();
@@ -497,8 +489,7 @@ public class Doctor extends Staff{
         System.out.print("The amount of prescribed medication of this diagnosis for the patient:");
         String dosageAmount = sc.nextLine();
         Prescription pres = new Prescription(medicineType,PrescriptionStatus.PENDING,Integer.parseInt(dosageAmount));
-        System.out.print("Consultation note:");
-        String consultationNote = sc.nextLine();
+        String consultationNote = InputValidator.getConsultationNotes("Enter Consultation notes: ");
         for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
         // Check if the slot matches the patient ID, doctor ID, and is confirmed
             if (selectedAppointmentID.equals(slot.getAppointmentID())) {

@@ -1,3 +1,4 @@
 RequestID;MedicationName;AddedAmount;Status
+3;Paracetamol;100;Approved
 2;Ibuprofen;100;Approved
 1;PARACETAMol;50;Approved
