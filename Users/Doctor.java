@@ -77,7 +77,7 @@ public class Doctor extends Staff{
             System.out.println("(6) View Upcoming Appointments");
             System.out.println("(7) Record Appointment Outcome");
             System.out.println("(8) Logout");
-            choice = sc.nextInt();
+            choice = InputValidator.getIntegerInput("Enter Selection from 1-8",1, 8);
             switch(choice){
                 case 1:
                 this.viewPatientRecords();
@@ -217,8 +217,7 @@ public class Doctor extends Staff{
      * @see Patient
      */
     public void updatePatientRecord() {
-    System.out.print("Enter patient ID to update their record: ");
-    String id = sc.nextLine();
+    String id = InputValidator.getPatientId("Enter patient ID to update their record: ");
     Patient patientToUpdate = null;
     for (Patient patient : patientList) {
     if (patient.getMedicalRecord().getPatientID().equalsIgnoreCase(id)) { // Case-insensitive match
@@ -233,11 +232,9 @@ public class Doctor extends Staff{
 
 
     // Update the patient's records
-    System.out.print("Enter the diagnosis for the patient: ");
-    String diagnosis = sc.nextLine();
+    String diagnosis = InputValidator.getConsultationNotes("Enter the diagnosis for the patient: ");
 
-    System.out.print("Enter the treatment plan for the patient: ");
-    String treatmentPlan = sc.nextLine();
+    String treatmentPlan = InputValidator.getConsultationNotes("Enter the treatment for the patient: ");
 
     // Update appointment status and patient records
     //matchedSlot.setStatus(AppointmentStatus.COMPLETED); // Update the slot's status
@@ -304,10 +301,9 @@ public class Doctor extends Staff{
                         System.out.println("----------------------------------------------");
                     }
                 }
-                System.out.println("Enter Appointment ID to Accept: ");
-                choice2 = sc.nextLine().trim();
+                choice2 = InputValidator.getAppointmentId("Enter Appointment ID to Accept: ");
                 for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
-                    if (slot.getAppointmentID().equals(choice2) ){ 
+                    if (slot.getAppointmentID().equals(choice2) && slot.getStatus() == AppointmentStatus.PENDING){ 
                         slot.setStatus(AppointmentStatus.CONFIRMED);
                         this.patientList.add(PatientManager.findPatient(slot.getPatientID()));
                         AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
@@ -327,10 +323,9 @@ public class Doctor extends Staff{
                         System.out.println("----------------------------------------------");
                     }
                 }
-                System.out.println("Enter Appointment ID to Decline: ");
-                choice2 = sc.nextLine().trim();
+                choice2 = InputValidator.getAppointmentId("Enter Appointment ID to Decline: ");
                 for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray) {
-                    if (slot.getAppointmentID().equals(choice2)){ 
+                    if (slot.getAppointmentID().equals(choice2) && slot.getStatus() == AppointmentStatus.PENDING){ 
                         slot.setStatus(AppointmentStatus.CANCELLED);
                         AppointmentCSVHandler.writeCSV(AppointmentManager.appointmentSlotArray);
                         System.out.println("Appointment ID " + choice2 + " has been DECLINED.");
