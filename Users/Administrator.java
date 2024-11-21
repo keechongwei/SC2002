@@ -640,12 +640,13 @@ public class Administrator extends Staff {
 	public void approveReplenishmentRequest() {
         //Show all pending requests
         List<String> lines = readCSVFile(replenishRecordsCSV);
-
+        int idmax = 0;
         // Split each line into fields (excluding the header)
         System.out.println("=== Pending Replishment Requests ===");
 
         for (int i = 1; i < lines.size(); i++) { // Start from index 1 to skip header
             String[] fields = lines.get(i).split(";");
+            idmax++;
 
             // If request is already approved, skip entry
             if(fields[STATUS].equals("Approved")) {
@@ -659,7 +660,7 @@ public class Administrator extends Staff {
         //Select to approve by index
         System.out.println("Select by index, press 0 to exit: ");
         int index_to_approve = 0;
-        index_to_approve = InputValidator.getIntegerInput("Choice: ", index_to_approve, index_to_approve);
+        index_to_approve = InputValidator.getIntegerInput("Choice, enter 0 to exit: ", index_to_approve, idmax);
         if(index_to_approve == 0) {return;}
 
         for (int i = 0; i<lines.size(); i++) { // Start from index 1 to skip header
