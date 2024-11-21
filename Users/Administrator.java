@@ -490,9 +490,6 @@ public class Administrator extends Staff {
             role_letter = "?";
         }
 
-        System.out.println(role_letter);
-        Administrator.printDoubleList(doubleList);
-
         for (List<String> singlList : doubleList) {
             if (singlList.get(0).substring(0,1).equalsIgnoreCase(role_letter)) {
                 String temp = singlList.get(0);

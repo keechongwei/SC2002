@@ -83,27 +83,21 @@ public class Doctor extends Staff{
                 this.viewPatientRecords();
                 break;
                 case 2:
-                sc.nextLine();
                 this.updatePatientRecord();
                 break;
                 case 3:
-                sc.nextLine();
                 this.viewPersonalSchedule(); // View Personal Schedule
                 break;
                 case 4:
-                sc.nextLine();
                 this.setAvailabilityForAppointments();// Set Availability For Appointments
                 break;
                 case 5:
-                sc.nextLine();
                 this.acceptOrDeclineAppointments();// Accept Or Decline Appointment Requests
                 break;
                 case 6:
-                sc.nextLine();
                 this.viewUpcomingAppointment();
                 break;
                 case 7:
-                sc.nextLine();
                 this.makeAppointmentOutcomeRecord();
                 break;
                 case 8:
@@ -158,8 +152,7 @@ public class Doctor extends Staff{
             }
         }
 
-        System.out.println("Enter Appointment ID of Slot To Be Added (E.g APT1): ");
-        String choice = sc.nextLine().trim();
+        String choice = InputValidator.getAppointmentId("Enter Appointment ID of Slot To Be Added (E.g APT1): ");
         for (AppointmentSlot changedslot : schedule){
             if (changedslot.getAppointmentID().equals(choice)){
                 changedslot.setStatus(AppointmentStatus.AVAILABLE);
@@ -183,7 +176,7 @@ public class Doctor extends Staff{
         System.out.println("Enter Appointment ID of Slot To Be Removed (E.g APT1): ");
         String choice = sc.nextLine().trim();
         for (AppointmentSlot changedslot : schedule){
-            if (changedslot.getAppointmentID().equals(choice)){
+            if (changedslot.getAppointmentID().equals(choice) && changedslot.getDate().equals(date)){
                 changedslot.setStatus(AppointmentStatus.UNAVAILABLE);
                 for (AppointmentSlot slot : AppointmentManager.appointmentSlotArray){
                     if (slot.getAppointmentID().equals(changedslot.getAppointmentID())){
@@ -220,7 +213,8 @@ public class Doctor extends Staff{
      * @see Patient
      */
     public void updatePatientRecord() {
-    String id = InputValidator.getPatientId("Enter patient ID to update their record: ");
+    System.out.print("Enter patient ID to update their record: ");
+    String id = sc.nextLine();
     Patient patientToUpdate = null;
     for (Patient patient : patientList) {
     if (patient.getMedicalRecord().getPatientID().equalsIgnoreCase(id)) { // Case-insensitive match
