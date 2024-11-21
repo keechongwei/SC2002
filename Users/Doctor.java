@@ -87,27 +87,21 @@ public class Doctor extends Staff{
                 this.viewPatientRecords();
                 break;
                 case 2:
-                sc.nextLine();
                 this.updatePatientRecord();
                 break;
                 case 3:
-                sc.nextLine();
                 this.viewPersonalSchedule(); // View Personal Schedule
                 break;
                 case 4:
-                sc.nextLine();
                 this.setAvailabilityForAppointments();// Set Availability For Appointments
                 break;
                 case 5:
-                sc.nextLine();
                 this.acceptOrDeclineAppointments();// Accept Or Decline Appointment Requests
                 break;
                 case 6:
-                sc.nextLine();
                 this.viewUpcomingAppointment();
                 break;
                 case 7:
-                sc.nextLine();
                 this.makeAppointmentOutcomeRecord();
                 break;
                 case 8:
@@ -174,7 +168,6 @@ public class Doctor extends Staff{
             }
         }
 
-        System.out.println("Enter Appointment ID of Slot To Be Added (E.g APT1): ");
         String choice = InputValidator.getAppointmentId("Enter Appointment ID of Slot To Be Added (E.g APT1): ");
         for (AppointmentSlot changedslot : schedule){
             if (changedslot.getAppointmentID().equals(choice)){
