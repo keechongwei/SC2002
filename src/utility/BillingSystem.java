@@ -102,7 +102,8 @@ public class BillingSystem {
          * @param serviceType TypeOfService representing serviceType
          */
         public Bill(String patientId, String appointmentId, LocalDateTime date, TypeOfService serviceType) {
-            this.billId = "B" + String.format("%04d", new Random().nextInt(10000));
+            String timestamp = String.valueOf(System.currentTimeMillis());
+            this.billId = "B" + timestamp.substring(timestamp.length() - 4);
             this.patientId = patientId;
             this.appointmentId = appointmentId;
             this.date = date;
@@ -147,8 +148,6 @@ public class BillingSystem {
 
     /**
      * Loads bills from Bills.csv
-     * @param void
-     * @return void
      */
     private void loadBills() {
         File file = new File(BILLING_FILE);
@@ -208,8 +207,6 @@ public class BillingSystem {
 
     /**
      * Makes bills from completed points
-     * @param void
-     * @return void
      */
     public void processCompletedAppointments() {
         try (BufferedReader br = new BufferedReader(new FileReader(APPOINTMENTS_FILE))) {
@@ -294,7 +291,6 @@ public class BillingSystem {
     /**
      * Calculate total amount of bill including medication and service fee
      * @param bill Bill object with total amount to be calculated
-     * @return void
      */
     private void calculateTotals(Bill bill) {
         double medicationTotal = 0.0;
@@ -309,8 +305,6 @@ public class BillingSystem {
 
     /**
      * Writes Bills to bills.csv
-     * @param void
-     * @return void
      */
     private void saveBills() {
         try (PrintWriter writer = new PrintWriter(new FileWriter(BILLING_FILE))) {
@@ -326,7 +320,6 @@ public class BillingSystem {
     /**
      * Mark a bill as paid
      * @param billId Unique Bill ID for bill to be marked as paid
-     * @return void
      */
     public void markAsPaid(String billId) {
         Bill bill = findBill(billId);
@@ -342,7 +335,6 @@ public class BillingSystem {
     /**
      * Prints information of bill
      * @param billId Unique Bill ID for bill to be printed
-     * @return void
      */
     public void displayBill(String billId) {
         Bill bill = findBill(billId);
@@ -383,7 +375,6 @@ public class BillingSystem {
     /**
      * Prints all bills addressed to a certain patient
      * @param patientId Unique Patient ID for bills to be viewed for
-     * @return void
      */
     public void viewPatientBills(String patientId) {
         boolean found = false;
@@ -415,8 +406,6 @@ public class BillingSystem {
 
     /**
      * Payment Processing System for payment of bills
-     * @param void
-     * @return void
      */
     public void processPayment() {
             while (true) {
@@ -459,7 +448,6 @@ public class BillingSystem {
     /**
      * Prints Billing System Menu
      * @param patientID Unique patient ID to view bills with respect to
-     * @return void
      */
     public static void BillingMenu(String patientID) {
         BillingSystem billingSystem = new BillingSystem();

@@ -31,8 +31,6 @@ public class AppointmentCSVHandler implements CSVHandler{
     /** 
     * Write header to appointments.csv file
     * This header is an attribute of AppointmentsCSVHandler as appointmentsCSVHeader
-    * @param void
-    * @return void
     */ 
     public static void writeHeader(String header){
         try (FileWriter writer = new FileWriter(csvFile, true)) {
@@ -47,8 +45,6 @@ public class AppointmentCSVHandler implements CSVHandler{
     * Overridden Method from CSVHandler Interface.
     * Loads information from a csv file
     * For this class, loads appointments based on csvFile attribute of AppointmentCSVHandler from appointments.csv
-    * @param void
-    * @return void
     */
     public static void loadCSV() {
     boolean headerline = true;
@@ -85,7 +81,6 @@ public class AppointmentCSVHandler implements CSVHandler{
     /**
      * Appends an appointment slot to appointments.csv
      * @param AppointmentSlot An AppointmentSlot object containing details such as Date,Time,Appointment ID, etc.
-     * @return void
      * @see AppointmentSlot
      */
     public static void appendAppointmentToCSV(AppointmentSlot slot) {
@@ -100,7 +95,6 @@ public class AppointmentCSVHandler implements CSVHandler{
      * Writes AppointmentSlots to appointments.csv
      * Retrieves Data From AppointmentManager to update appointments.csv
      * @param appointments Static List Of AppointmentSlots from AppointmentManager
-     * @return void
      * @see AppointmentManager
      */   // function to edit values of AppointmentSlots without creating rows
     public static void writeCSV(List<AppointmentSlot> appointments) {

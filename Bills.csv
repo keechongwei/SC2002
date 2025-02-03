@@ -1,2 +1,2 @@
 BillID;PatientID;AppointmentID;Date;ServiceType;ServiceFee;Prescriptions;MedicationTotal;TotalAmount;IsPaid
-B8126;P0005;APT7;2024-11-21T12:00:00;CONSULTATION;50.00;Paracetamol^100|;10.00;60.00;true
+B8753;P0004;APT1;2024-11-22T09:00:00;XRAY;200,00;Ibuprofen^10|;5,00;205,00;true

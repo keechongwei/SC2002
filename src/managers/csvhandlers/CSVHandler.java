@@ -10,7 +10,7 @@ package managers.csvhandlers;
  * @see PatientManagerCSVHandler
  */
 
-interface CSVHandler {
+public interface CSVHandler {
     public static void loadCSV(){};
     public static void writeCSV(){};
 }

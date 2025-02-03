@@ -36,8 +36,6 @@ public class StaffManager implements Manager {
     /**
      * Check if Staff_List.csv exists
      * If yes, uses StaffCSVHandler to load Staff details into separate static lists
-     * @param void
-     * @return void
      * @see StaffCSVHandler
      */
     public void initialise() {
@@ -56,8 +54,6 @@ public class StaffManager implements Manager {
      * Queries for udpate details, uses switch cases to handle different changes to name, role, gender and age
      * If changing roles, create new respective staff Object, appends to respective static list and remove old Oject from list
      * Write changes back to CSV using StaffCSVHandler
-     * @param void
-     * @return void
      * @see StaffCSVHandler
      */
     public static void updateStaff() {
@@ -208,7 +204,6 @@ public class StaffManager implements Manager {
      * Adds or removes appointments tagged to Doctor Object from Appointment.csv using AppointmentManager
      * @param Doctor 
      * @param addOrRemove If true, adds appointments for Doctor Object, if false, removes appointments for Doctor Object
-     * @return void
      * @see AppointmentManager
      */
     public static boolean doctorHandling(Doctor doctor, boolean addOrRemove) {

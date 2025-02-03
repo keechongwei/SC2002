@@ -52,6 +52,5 @@ public class PatientRegistration {
         PatientManager.addPatient(p);
         System.out.println("Patient Successfully Created!\n");
         System.out.println("Your ID is:" + patientID);
-        System.out.println("Your default password is: password");
     }
 }

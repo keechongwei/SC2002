@@ -1,4 +1,5 @@
 package appointment;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -64,7 +65,6 @@ public class AppointmentOutcomeRecord {
     /**
      * Returns AppointmentOutcomeRecord as a String with Delimiters 
      * Utilised by AppointmentSlot
-     * @param void
      * @return AppointmentOutcomeRecord as a String with Delimiters to store in AppointmentSlot
      */
     public String toCSV() {
@@ -90,7 +90,6 @@ public class AppointmentOutcomeRecord {
 
     /**
      * Get method to return date attribute 
-     * @param void
      * @return LocalDate object with information from date attribute
      */
     public LocalDate getDate() {
@@ -100,7 +99,6 @@ public class AppointmentOutcomeRecord {
     /**
      * Set  method to change date attribute 
      * @param date LocalDate object to be set as new date of AppointmentOutcomeRecord
-     * @return void
      */
     public void setDate(LocalDate date) {
         this.date = date;
@@ -108,7 +106,6 @@ public class AppointmentOutcomeRecord {
 
     /**
      * Get method to return time attribute 
-     * @param void
      * @return LocalTime object with information from time attribute
      */
     public LocalTime getTime() {
@@ -118,7 +115,6 @@ public class AppointmentOutcomeRecord {
     /**
      * Set method to change time attribute 
      * @param time LocalTime object to be set as new time of AppointmentOutcomeRecord
-     * @return void
      */
     public void setTime(LocalTime time) {
         this.time = time;
@@ -126,7 +122,6 @@ public class AppointmentOutcomeRecord {
 
     /**
      * Get method to return TypeOfService attribute 
-     * @param void
      * @return TypeOfService object with information from typeOfService attribute
      */
     public TypeOfService getTypeOfService() {
@@ -136,7 +131,6 @@ public class AppointmentOutcomeRecord {
     /**
      * Set  method to change typeOfService attribute 
      * @param tos String to be set as new typeOfService of AppointmentOutcomeRecord
-     * @return void
      */
     public void setTypeOfService(TypeOfService tos) {
         this.typeOfService = tos;
@@ -144,7 +138,6 @@ public class AppointmentOutcomeRecord {
 
     /**
      * Get method to return prescribedMedication attribute 
-     * @param void
      * @return Prescription object with information from prescribedMedication attribute
      */
     public Prescription getPrescribedMedication() {
@@ -154,7 +147,6 @@ public class AppointmentOutcomeRecord {
     /**
      * Set  method to change prescribedMedication attribute 
      * @param pres Prescription to be set as new prescribedMedication of AppointmentOutcomeRecord
-     * @return void
      */
     public void setPrescribedMedication(Prescription pres){
         this.prescribedMedication = pres;
@@ -162,7 +154,6 @@ public class AppointmentOutcomeRecord {
 
     /**
      * Get method to return consultationNotes attribute 
-     * @param void
      * @return String object with information from consultationNotes attribute
      */
     public String getConsultationNotes() {
@@ -172,7 +163,6 @@ public class AppointmentOutcomeRecord {
     /**
      * Set method to change consultationNotes attribute 
      * @param notes String to be set as new consultationNotes of AppointmentOutcomeRecord
-     * @return void
      */
     public void setConsultationNotes(String notes){
         this.consultationNotes = notes;

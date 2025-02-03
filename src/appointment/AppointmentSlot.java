@@ -80,7 +80,6 @@ public class AppointmentSlot {
     /**
      * Set method for changing patientID
      * @param patientID String representing new patientID
-     * @return void
      */
     public void setPatientID(String patientID){
         this.patientID = patientID;
@@ -105,7 +104,6 @@ public class AppointmentSlot {
     /**
      * Set method for changing doctorID
      * @param doctorID String representing new doctorID
-     * @return void
      */
     public void setDoctorID(String doctorID){
         this.doctorID = doctorID;
@@ -146,7 +144,6 @@ public class AppointmentSlot {
     /**
      * Set method for changing AppointmentStatus
      * @param status AppointmentStatus representing new status
-     * @return void
      * @see AppointmentStatus
      */
     public void setStatus(AppointmentStatus status) {
@@ -202,7 +199,6 @@ public class AppointmentSlot {
 
     /**
      * Returns AppointmentSlot as a String to be added to appointments.csv
-     * @param void
      * @return String object containing of AppointmentSlot as a String delimited appropriately
      */
     public String toCSV() {

@@ -1,35 +1,18 @@
-# Hospital Management System
+## Getting Started
 
-## Overview
-The **Hospital Management System** is a software solution designed to manage various operations within a hospital, such as patient management, appointment scheduling, billing, staff management, and medicine inventory tracking. The system supports multiple user roles (Administrator, Manager, Staff) to streamline workflows and ensure effective data management.
+Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
 
----
+## Folder Structure
 
-## Features
+The workspace contains two folders by default, where:
 
-- **User Management**
-  - Create, update, and manage users with roles such as Administrator, Manager, and Staff.
+- `src`: the folder to maintain sources
+- `lib`: the folder to maintain dependencies
 
-- **Appointment Management**
-  - Schedule, update, and cancel appointments.
-  - Track patient appointment history.
+Meanwhile, the compiled output files will be generated in the `bin` folder by default.
 
-- **Patient and Staff Records**
-  - Maintain detailed records of patients, including medical histories.
-  - Manage staff roles and employee information.
+> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
 
-- **Billing System**
-  - Generate, update, and manage patient billing records.
+## Dependency Management
 
-- **Medicine Inventory**
-  - Track medicine stock levels and restock as needed.
-  - Maintain detailed records of medicine information, including expiration dates.
-
-- **Request Management**
-  - Handle staff requests for replenishing medical supplies or resources.
-
-- **Utility Tools**
-  - Provide debugging, login management, and common helper functions.
-
----
-
+The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
