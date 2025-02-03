@@ -1,6 +1,11 @@
 Staff ID; Password ; Name ; Role ; Gender ; Age
 D001;asdfghjkl1;John Smith;Doctor;Male;45
 D002;password;Emily Clarke;Doctor;Female;38
+<<<<<<< HEAD
 D003;password;Chong;Doctor;Male;30
 P001;asdfghjkl1;Mark Lee;Pharmacist;Male;29
 A001;asdfghjkl1;Sarah Lee;Administrator;Female;40
+=======
+P001;password;Mark Lee;Pharmacist;Male;29
+A001;password;Sarah Lee;Administrator;Female;40
+>>>>>>> 37d53f008ad5321010b5eb65aa6152697a587406
