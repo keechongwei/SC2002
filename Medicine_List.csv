@@ -1,8 +1,4 @@
 MedicationName;Stock;LowStockValue
 Paracetamol;100;20
-<<<<<<< HEAD
 Ibuprofen;190;10
-=======
-Ibuprofen;150;10
->>>>>>> 37d53f008ad5321010b5eb65aa6152697a587406
 Amoxicillin;75;15

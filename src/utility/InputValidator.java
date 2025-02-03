@@ -328,7 +328,7 @@ public class InputValidator {
         
         System.out.println("Enter your notes (type 'END' on a new line to finish):");
         while (!(line = scanner.nextLine()).equals("END")) {
-            notes.append(line);
+            notes.append(line).append(",");
         }
         
         return notes.toString().trim();
